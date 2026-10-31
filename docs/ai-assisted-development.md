@@ -1,6 +1,6 @@
-# AI-assisted development for Iustitia
+# AI-assisted development for MilkItAC
 
-AI coding tools are welcome in Iustitia, including Claude Code and other repository-aware agents. The project uses a verification-first policy: an agent may help produce a change, but a human contributor owns the result and must be able to explain, review, test, and support it.
+AI coding tools are welcome in MilkItAC, including Claude Code and other repository-aware agents. The project uses a verification-first policy: an agent may help produce a change, but a human contributor owns the result and must be able to explain, review, test, and support it.
 
 ## The rule in one sentence
 
@@ -28,7 +28,7 @@ Point the agent to:
 - `.claude/skills/iustitia-contributor/SKILL.md`
 - The relevant package and documentation files
 
-Ask it to inspect before editing. For Iustitia, broad changes often cross config, command, persistence, render, mixin, and documentation layers.
+Ask it to inspect before editing. For MilkItAC, broad changes often cross config, command, persistence, render, mixin, and documentation layers.
 
 ### 3. Ask for a plan before implementation
 
@@ -133,7 +133,7 @@ Whether an agent can create a commit or open a draft PR is a project-owner decis
 | Changed area | Minimum verification |
 |---|---|
 | Pure math or data structure | Static verifier, tests, build |
-| Config or presets | Static verifier, config migration tests, build, manual `/ius config` if UI changed |
+| Config or presets | Static verifier, config migration tests, build, manual `/milk config` if UI changed |
 | Commands or screens | Build, `runClient`, execute changed command/screen path |
 | Detection check | Tests where possible, build, clean/edge-case trace, live client with verbose logs |
 | Packet signals or inference | Build, live client packet/inference scenario, disconnect/world-change test |
@@ -171,5 +171,5 @@ Known limitations: [list them, or say none].
 ## Prompt starter
 
 ```text
-You are contributing to Iustitia. Read README.md, CONTRIBUTING.md, SUPPORT.md, docs/ai-assisted-development.md, and .claude/skills/iustitia-contributor/SKILL.md before editing. Inspect the current architecture and worktree first. Propose a focused plan, identify required static and live verification, preserve local-only behavior and fail-open guarantees, then implement only after the plan is clear. Never claim a live test without running it.
+You are contributing to MilkItAC. Read README.md, CONTRIBUTING.md, SUPPORT.md, docs/ai-assisted-development.md, and .claude/skills/iustitia-contributor/SKILL.md before editing. Inspect the current architecture and worktree first. Propose a focused plan, identify required static and live verification, preserve local-only behavior and fail-open guarantees, then implement only after the plan is clear. Never claim a live test without running it.
 ```

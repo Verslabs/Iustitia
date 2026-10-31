@@ -76,7 +76,7 @@ object Iustitia {
 
     val allChecks: List<Check> get() = checks
 
-    private val logger = org.slf4j.LoggerFactory.getLogger("Iustitia")
+    private val logger = org.slf4j.LoggerFactory.getLogger("MilkItAC")
 
     /** Last wall-clock ms a [warnChokepoint] was emitted per subsystem key (10s rate limit). */
     private val lastChokeWarnMs = java.util.concurrent.ConcurrentHashMap<String, Long>()
@@ -95,7 +95,7 @@ object Iustitia {
             val now = System.currentTimeMillis()
             if (now - (lastChokeWarnMs[where] ?: 0L) < 10_000L) return
             lastChokeWarnMs[where] = now
-            logger.warn("[Iustitia] $where threw (fail-open, rate-limited 10s): $e", e)
+            logger.warn("[MilkItAC] $where threw (fail-open, rate-limited 10s): $e", e)
         } catch (_: Throwable) {}
     }
 
@@ -112,13 +112,13 @@ object Iustitia {
             val missingSlice = registered - sliced
             val orphanSlice = sliced - registered
             if (missingSlice.isNotEmpty()) {
-                logger.warn("[Iustitia] checks registered without a config slice() branch: ${missingSlice.sorted()} — slice() returns the safe default (disabled + max threshold) for these")
+                logger.warn("[MilkItAC] checks registered without a config slice() branch: ${missingSlice.sorted()} — slice() returns the safe default (disabled + max threshold) for these")
             }
             if (orphanSlice.isNotEmpty()) {
-                logger.warn("[Iustitia] config slice() ids with no registered check: ${orphanSlice.sorted()} — orphan slices (stale config key, or a check that wasn't registered)")
+                logger.warn("[MilkItAC] config slice() ids with no registered check: ${orphanSlice.sorted()} — orphan slices (stale config key, or a check that wasn't registered)")
             }
             if (missingSlice.isEmpty() && orphanSlice.isEmpty()) {
-                logger.info("[Iustitia] check registry self-check OK: ${registered.size} checks, ${sliced.size} slices")
+                logger.info("[MilkItAC] check registry self-check OK: ${registered.size} checks, ${sliced.size} slices")
             }
         } catch (_: Throwable) {}
     }
@@ -183,12 +183,12 @@ object Iustitia {
         // individual checks self-subscribe to the bus in their constructors.
 
         // Companion-mod coexistence: SnapClip / Scrollback / FollowCam are single-feature extracts
-        // of Iustitia. When installed alongside it, Iustitia yields the overlapping feature to the
+        // of MilkItAC. When installed alongside it, MilkItAC yields the overlapping feature to the
         // standalone mod (see dev.iustitia.compat.CompanionMods) so the two never run the same
         // machinery twice. One-line notice so the deferral is discoverable in latest.log.
         try {
             dev.iustitia.compat.CompanionMods.yieldSummary()?.let {
-                logger.info("[Iustitia] companion mod(s) detected — yielding: $it (core detection unaffected)")
+                logger.info("[MilkItAC] companion mod(s) detected — yielding: $it (core detection unaffected)")
             }
         } catch (_: Throwable) {}
     }
@@ -219,7 +219,7 @@ object Iustitia {
             // (gated by config.replayCapture inside). Runs before the replay playhead advance so a
             // live recordTick and a playback tick never overlap on the same frame confusingly.
             try { dev.iustitia.replay.ReplayBuffer.recordTick(tick, tracked) } catch (_: Throwable) {}
-            // Manual long-recording (`/ius record`): same per-tick snap work, into a growable 10-min
+            // Manual long-recording (`/milk record`): same per-tick snap work, into a growable 10-min
             // buffer. No-op unless a recording is active (gated inside). Fail-open.
             try { dev.iustitia.replay.RecordManager.recordTick(tick, tracked) } catch (_: Throwable) {}
 
@@ -227,7 +227,7 @@ object Iustitia {
             // finished, chat the reason + restore rendering (hide-live snaps back automatically).
             try {
                 val done = dev.iustitia.replay.ReplayState.tick()
-                if (done != null) chat(client, "§8[§diustitia§8] §7replay §c$done§7 — live view restored.")
+                if (done != null) chat(client, "§8[§dMilkItAC§8] §7replay §c$done§7 — live view restored.")
             } catch (_: Throwable) {}
 
             // FREECAM free-spectate (v1.2.0 pure camera-override): advance the freecam pose
@@ -260,7 +260,7 @@ object Iustitia {
             // exit and chats the reason. All client-thread-safe (option writes stay here).
             try {
                 val exitReason = dev.iustitia.render.WatchState.tickSafety()
-                if (exitReason != null) chat(client, "§8[§diustitia§8] §7watch follow-cam §c$exitReason§7 — view restored.")
+                if (exitReason != null) chat(client, "§8[§dMilkItAC§8] §7watch follow-cam §c$exitReason§7 — view restored.")
             } catch (_: Throwable) {}
         } catch (e: Throwable) {
             // the driver itself must never crash the client — but the failure must be visible
@@ -293,13 +293,13 @@ object Iustitia {
             when (id) {
                 "snapshot" -> {
                     val t = crosshairTarget()
-                    if (t == null) chat(mc, "§8[§diustitia§8] §7look at a player to snapshot them.")
-                    else { Snapshot.capture(t.first, t.second); chat(mc, "§8[§diustitia§8] §7snapshot of §f${t.second}§7 posted + copied to clipboard") }
+                    if (t == null) chat(mc, "§8[§dMilkItAC§8] §7look at a player to snapshot them.")
+                    else { Snapshot.capture(t.first, t.second); chat(mc, "§8[§dMilkItAC§8] §7snapshot of §f${t.second}§7 posted + copied to clipboard") }
                 }
                 "transcript" -> {
                     if (mc.currentScreen is TranscriptPanelScreen) { mc.setScreen(null); return }
                     val t = crosshairTarget()
-                    if (t == null) chat(mc, "§8[§diustitia§8] §7look at a player to open their transcript panel.")
+                    if (t == null) chat(mc, "§8[§dMilkItAC§8] §7look at a player to open their transcript panel.")
                     else mc.execute { try { mc.setScreen(TranscriptPanelScreen(t.first, t.second, null)) } catch (_: Throwable) {} }
                 }
                 "session" -> mc.execute { try { mc.setScreen(SessionScreen(mc.currentScreen)) } catch (_: Throwable) {} }
@@ -307,25 +307,25 @@ object Iustitia {
                 "config" -> {
                     mc.execute {
                         try { mc.setScreen(dev.iustitia.config.YaclScreenBuilder.build(mc.currentScreen)) }
-                        catch (_: Throwable) { chat(mc, "§8[§diustitia§8] §cfailed to open config screen") }
+                        catch (_: Throwable) { chat(mc, "§8[§dMilkItAC§8] §cfailed to open config screen") }
                     }
                 }
                 "note" -> {
                     val t = crosshairTarget()
-                    if (t == null) { chat(mc, "§8[§diustitia§8] §7look at a player to read their note."); return }
+                    if (t == null) { chat(mc, "§8[§dMilkItAC§8] §7look at a player to read their note."); return }
                     val n = NoteStore.get(t.first)
-                    if (n == null) chat(mc, "§8[§diustitia§8] §f${t.second} §7has no note.")
-                    else chat(mc, "§8[§diustitia§8] §f${t.second} §7— ${NoteStore.categoryLabel(n.category)}§7: §f${n.text}")
+                    if (n == null) chat(mc, "§8[§dMilkItAC§8] §f${t.second} §7has no note.")
+                    else chat(mc, "§8[§dMilkItAC§8] §f${t.second} §7— ${NoteStore.categoryLabel(n.category)}§7: §f${n.text}")
                 }
                 "compact" -> {
                     ConfigManager.config.compactMode = !ConfigManager.config.compactMode
                     try { ConfigManager.save() } catch (_: Throwable) {}
-                    chat(mc, "§8[§diustitia§8] §7compact mode = ${if (ConfigManager.config.compactMode) "§aON" else "§cOFF"}")
+                    chat(mc, "§8[§dMilkItAC§8] §7compact mode = ${if (ConfigManager.config.compactMode) "§aON" else "§cOFF"}")
                 }
                 "watch" -> {
                     // Companion ownership: FollowCam owns the follow-cam when installed.
                     if (dev.iustitia.compat.CompanionMods.followCam) {
-                        chat(mc, "§8[§diustitia§8] §7the follow-cam is handled by §fFollowCam§7 (installed) — use §f/follow§7.")
+                        chat(mc, "§8[§dMilkItAC§8] §7the follow-cam is handled by §fFollowCam§7 (installed) — use §f/follow§7.")
                         return
                     }
                     // Feature disabled → stay silent (don't print a watch chat line when the user
@@ -334,59 +334,59 @@ object Iustitia {
                     if (!ConfigManager.config.watchFollowCam) return
                     if (dev.iustitia.render.WatchState.active) {
                         val reason = dev.iustitia.render.WatchState.disableNow("disabled")
-                        chat(mc, "§8[§diustitia§8] §7watch follow-cam §c$reason§7 — view restored.")
+                        chat(mc, "§8[§dMilkItAC§8] §7watch follow-cam §c$reason§7 — view restored.")
                         return
                     }
                     val t = crosshairTarget()
                     if (t == null) {
-                        chat(mc, "§8[§diustitia§8] §7look at a player to watch them, then press the bind again to stop.")
+                        chat(mc, "§8[§dMilkItAC§8] §7look at a player to watch them, then press the bind again to stop.")
                     } else {
                         dev.iustitia.render.WatchState.enable(t.first)
-                        chat(mc, "§8[§diustitia§8] §7watching §f${t.second}§7 — orbit follow-cam §aON§7. Mouse to look around; move or get hit to stop.")
+                        chat(mc, "§8[§dMilkItAC§8] §7watching §f${t.second}§7 — orbit follow-cam §aON§7. Mouse to look around; move or get hit to stop.")
                     }
                 }
                 "replayPause" -> {
                     if (!dev.iustitia.replay.ReplayState.active) return
                     val paused = dev.iustitia.replay.ReplayState.togglePause()
-                    chat(mc, "§8[§diustitia§8] §7replay ${if (paused) "§e⏸ paused" else "§aresumed"}§7.")
+                    chat(mc, "§8[§dMilkItAC§8] §7replay ${if (paused) "§e⏸ paused" else "§aresumed"}§7.")
                 }
                 "replaySeekBack" -> {
                     if (!dev.iustitia.replay.ReplayState.active) return
                     dev.iustitia.replay.ReplayState.seekBy(-5f)
-                    chat(mc, "§8[§diustitia§8] §7replay §e−5s§7.")
+                    chat(mc, "§8[§dMilkItAC§8] §7replay §e−5s§7.")
                 }
                 "replaySeekFwd" -> {
                     if (!dev.iustitia.replay.ReplayState.active) return
                     dev.iustitia.replay.ReplayState.seekBy(5f)
-                    chat(mc, "§8[§diustitia§8] §7replay §e+5s§7.")
+                    chat(mc, "§8[§dMilkItAC§8] §7replay §e+5s§7.")
                 }
                 "replayExit" -> {
                     if (!dev.iustitia.replay.ReplayState.active) return
                     dev.iustitia.replay.ReplayState.stop("stopped")
-                    chat(mc, "§8[§diustitia§8] §7replay §cstopped§7 — live view restored.")
+                    chat(mc, "§8[§dMilkItAC§8] §7replay §cstopped§7 — live view restored.")
                 }
                 "replayToggle" -> {
                     // Companion ownership: SnapClip owns replay/clip/record when installed.
                     if (dev.iustitia.compat.CompanionMods.snapClip) {
-                        chat(mc, "§8[§diustitia§8] §7replay is handled by §fSnapClip§7 (installed) — use its §f/replay§7.")
+                        chat(mc, "§8[§dMilkItAC§8] §7replay is handled by §fSnapClip§7 (installed) — use its §f/replay§7.")
                         return
                     }
                     if (dev.iustitia.replay.ReplayState.active) {
                         dev.iustitia.replay.ReplayState.stop("stopped")
-                        chat(mc, "§8[§diustitia§8] §7replay §cstopped§7 — live view restored.")
+                        chat(mc, "§8[§dMilkItAC§8] §7replay §cstopped§7 — live view restored.")
                         return
                     }
                     val cfg = ConfigManager.config
-                    if (!cfg.replayCapture) { chat(mc, "§8[§diustitia§8] §7replay capture is §cdisabled§7 in config (enable via §f/ius config§7)."); return }
+                    if (!cfg.replayCapture) { chat(mc, "§8[§dMilkItAC§8] §7replay capture is §cdisabled§7 in config (enable via §f/milk config§7)."); return }
                     val secs = try { cfg.replayKeybindSeconds.coerceIn(1, dev.iustitia.replay.ReplayBuffer.MAX_SECONDS) } catch (_: Throwable) { 30 }
                     val speed = dev.iustitia.replay.ReplayState.SPEED_FULL
                     val now = tickCounter
                     val window = try { dev.iustitia.replay.ReplayBuffer.snapshot(secs, now) } catch (_: Throwable) { dev.iustitia.replay.ReplayBuffer.Window(emptyList(), emptyList()) }
-                    if (window.frames.isEmpty()) { chat(mc, "§8[§diustitia§8] §7no buffered data for the last §f${secs}s§7."); return }
+                    if (window.frames.isEmpty()) { chat(mc, "§8[§dMilkItAC§8] §7no buffered data for the last §f${secs}s§7."); return }
                     val started = try { dev.iustitia.replay.ReplayState.start(window, null, speed, cfg.replayHideLive, relocate = false, legacy = false) } catch (_: Throwable) { false }
-                    if (!started) { chat(mc, "§8[§diustitia§8] §7couldn't start the replay (empty window)."); return }
+                    if (!started) { chat(mc, "§8[§dMilkItAC§8] §7couldn't start the replay (empty window)."); return }
                     val hideTxt = if (cfg.replayHideLive) " §7(live players hidden)" else ""
-                    chat(mc, "§8[§diustitia§8] §7replaying last §f${secs}s§7 at §f${NumFmt.d(digits = 2, v = speed)}×§7 — ghosts drawn in-world$hideTxt. Press again (or §f/ius replay off§7) to stop.")
+                    chat(mc, "§8[§dMilkItAC§8] §7replaying last §f${secs}s§7 at §f${NumFmt.d(digits = 2, v = speed)}×§7 — ghosts drawn in-world$hideTxt. Press again (or §f/milk replay off§7) to stop.")
                 }
                 else -> { /* unknown id: no-op */ }
             }
@@ -417,7 +417,7 @@ object Iustitia {
     }
 
     /**
-     * Wipe one player's flags mid-session (`/ius clear <player>`): purges every check's per-player
+     * Wipe one player's flags mid-session (`/milk clear <player>`): purges every check's per-player
      * VL context, clears the flag timeline + tier + alert routing for [uuid], and persists the
      * cleared history. Tracking/replay/render keep running (the player is still tracked); only the
      * detection record is reset, so the player's tier snaps to GREEN. Exemption is untouched —
@@ -429,13 +429,13 @@ object Iustitia {
         AlertManager.clearPlayer(uuid)
         try { dev.iustitia.persistence.PersistenceManager.saveHistory() } catch (_: Throwable) {}
         val name = dev.iustitia.history.FlagHistory.nameFor(uuid) ?: uuid.toString().take(8)
-        "§8[§diustitia§8] §7cleared all flags for §f$name§7 — tier reset to §aGREEN§7."
+        "§8[§dMilkItAC§8] §7cleared all flags for §f$name§7 — tier reset to §aGREEN§7."
     } catch (_: Throwable) {
-        "§8[§diustitia§8] §cclear failed."
+        "§8[§dMilkItAC§8] §cclear failed."
     }
 
     /**
-     * Wipe EVERY player's flags mid-session (`/ius clear all`): resets every check, the full flag
+     * Wipe EVERY player's flags mid-session (`/milk clear all`): resets every check, the full flag
      * timeline + tiers, and the alert routing, then persists. A clean slate for the whole session.
      * Exemptions are NOT touched (a trusted-player list shouldn't wipe on a flag clear). Fail-open.
      */
@@ -444,9 +444,9 @@ object Iustitia {
         dev.iustitia.history.FlagHistory.reset()
         AlertManager.reset()
         try { dev.iustitia.persistence.PersistenceManager.saveHistory() } catch (_: Throwable) {}
-        "§8[§diustitia§8] §7cleared §fall§7 flags — every player's tier reset to §aGREEN§7."
+        "§8[§dMilkItAC§8] §7cleared §fall§7 flags — every player's tier reset to §aGREEN§7."
     } catch (_: Throwable) {
-        "§8[§diustitia§8] §cclear failed."
+        "§8[§dMilkItAC§8] §cclear failed."
     }
 
     /** Full reset on dimension change / game-join. */
@@ -472,7 +472,7 @@ object Iustitia {
             // back to live rendering the instant active flips false).
             try { dev.iustitia.replay.ReplayState.stop("world changed") } catch (_: Throwable) {}
             try { dev.iustitia.replay.ReplayBuffer.reset() } catch (_: Throwable) {}
-            // Manual long-recording auto-split: if `/ius record` is active, silently save the current
+            // Manual long-recording auto-split: if `/milk record` is active, silently save the current
             // segment + capture a fresh map for the new world + keep recording (one segment per world).
             // No-op when not recording. Fail-open.
             try { dev.iustitia.replay.RecordManager.onWorldChange() } catch (_: Throwable) {}

@@ -4,7 +4,7 @@ import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 
 /**
- * In-memory moderator-notation store for `/ius note`. Notes follow a player for the rest of the
+ * In-memory moderator-notation store for `/milk note`. Notes follow a player for the rest of the
  * session regardless of the persistence toggle — the toggle only controls whether they're written
  * to `%APPDATA%/.iustitia/notes.json` (via [PersistenceManager]) so they survive a restart.
  *

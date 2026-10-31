@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify an Iustitia contribution without requiring a Minecraft server.
+"""Verify a MilkItAC contribution without requiring a Minecraft server.
 
 The verifier is intentionally stdlib-only so contributors and CI can run it on a
 fresh checkout. It checks repository invariants that are easy for a human or AI
@@ -392,7 +392,7 @@ def check_docs(errors: list[str], warnings: list[str]) -> None:
 
 def check_privacy_signals(errors: list[str], warnings: list[str]) -> None:
     # This is deliberately a review signal, not a simplistic ban on networking APIs. Minecraft
-    # client mods must use Minecraft's existing connection, while Iustitia's documented observer
+    # client mods must use Minecraft's existing connection, while MilkItAC's documented observer
     # boundary forbids new remote reporting/telemetry.
     # Comments are not code: strip /* */ and // before matching (a `//` right after `:` is
     # part of a URL, so string literals keep being scanned).

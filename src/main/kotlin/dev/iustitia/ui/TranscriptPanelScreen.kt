@@ -15,7 +15,7 @@ import java.util.UUID
  * pause; [shouldPause] = false) and shows the live transcript of a single watched player — last
  * ~15 events drawn from [SessionStats] (swings/hits/velocity) and [FlagHistory.flags] (checks
  * fired, with evidence), plus the tier, confidence score, and any moderator note. Refreshed every
- * render; toggled by the transcript keybind, `/ius transcript panel`, or `cfg.transcriptPanel`.
+ * render; toggled by the transcript keybind, `/milk transcript panel`, or `cfg.transcriptPanel`.
  *
  * This is a non-fullscreen overlay Screen — build-verifiable. Whole body fail-open; a reader error
  * shows "(unavailable)".
@@ -42,7 +42,7 @@ class TranscriptPanelScreen(
             var y = 6
             val tier = FlagHistory.tierFor(uuid)
             val glyph = when (tier) { FlagHistory.Tier.GREEN -> "§a[+]"; FlagHistory.Tier.YELLOW -> "§e[!]"; FlagHistory.Tier.RED -> "§c[X]" }
-            context.drawTextWithShadow(tr, Text.literal("§8[§diustitia§8]"), x0 + 4, y, WHITE); y += 11
+            context.drawTextWithShadow(tr, Text.literal("§8[§dMilkItAC§8]"), x0 + 4, y, WHITE); y += 11
             context.drawTextWithShadow(tr, Text.literal("$glyph §f$name"), x0 + 4, y, WHITE); y += 11
             val score = FlagHistory.confidenceScore(uuid)
             context.drawTextWithShadow(tr, Text.literal("§7tier §f${tier.name} §7[$score]"), x0 + 4, y, WHITE); y += 13
@@ -89,7 +89,7 @@ class TranscriptPanelScreen(
     override fun close() { client?.setScreen(parent) }
 
     companion object {
-        private val TITLE = Text.literal("Iustitia — transcript")
+        private val TITLE = Text.literal("MilkItAC — transcript")
         private const val WHITE = -1
         private val BG = 0xCC101010.toInt()
         private fun fmt2(v: Double?): String =

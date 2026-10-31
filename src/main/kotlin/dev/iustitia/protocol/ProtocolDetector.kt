@@ -22,7 +22,7 @@ object ProtocolDetector {
      *  (protocol 774). The old 767 (1.21.0) was wrong — on the native target it falsely read
      *  below the full-float-look boundary (768). 767 and 774 are both > 47, so this change is
      *  behavior-neutral for every existing consumer (all branch on [is1_8OrLess]); it only
-     *  corrects [fullFloatLook] and the `/ius status` protocol display. */
+     *  corrects [fullFloatLook] and the `/milk status` protocol display. */
     private const val FALLBACK = 774
 
     @Volatile

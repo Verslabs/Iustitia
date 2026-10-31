@@ -8,9 +8,9 @@ import org.spongepowered.asm.mixin.injection.Inject
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 
 /**
- * Hides the **live world's terrain** while a chunk-bearing `/ius playclip` runs, so the clip's
+ * Hides the **live world's terrain** while a chunk-bearing `/milk playclip` runs, so the clip's
  * captured chunk world (rendered as solid textured blocks by [dev.iustitia.render.ChunkWorldRenderer])
- * replaces it instead of z-fighting / bleeding through. The Iustitia-native equivalent of ReplayMod's
+ * replaces it instead of z-fighting / bleeding through. The MilkItAC-native equivalent of ReplayMod's
  * "no live world" without ReplayMod's connection-replacement — we coexist with the live server.
  *
  * ## Target + why this is the surgical point
@@ -27,7 +27,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
  * ## Gating — back-compat + fail-open
  *
  * Cancels **only** when `ReplayState.active && ReplayState.chunks != null` — i.e. a v6+ chunk-bearing
- * playclip. A wireframe-terrain clip (`chunks == null`, terrain-only) and a plain `/ius replay` (no map)
+ * playclip. A wireframe-terrain clip (`chunks == null`, terrain-only) and a plain `/milk replay` (no map)
  * are completely unaffected: the live world renders as normal and the ghosts / wireframe overlay sit
  * on top, exactly as before. The whole body is try/caught (project fail-open posture): a throw leaves
  * the live terrain running (worst case = live world shows through the clip, never a crash).

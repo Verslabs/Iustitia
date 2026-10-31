@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
  * `WorldChunk.setBlockState` is the single funnel for every block change this client applies — an
  * incoming block-update packet from the server, a chunk load, or a local prediction. Injecting at
  * `HEAD` and diffing the old vs new state records `(tick, pos, before, after)` into
- * [BlockDeltaBuffer] (and into an active `/ius record` via [RecordManager.recordDelta]), so a replay
+ * [BlockDeltaBuffer] (and into an active `/milk record` via [RecordManager.recordDelta]), so a replay
  * or clip can play back the world **as it changed** — a wall broken mid-fight, a temporary block —
  * on top of the captured chunk snapshot.
  *
@@ -36,7 +36,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
  *
  * Skipped entirely while SnapClip is installed (it owns replay/clip and has its own equivalent hook —
  * see [CompanionMods.snapClip]) and while replay capture is off, so the per-change work is paid only
- * when Iustitia actually owns and records replay. The bridge is the line before vanilla's own write:
+ * when MilkItAC actually owns and records replay. The bridge is the line before vanilla's own write:
  * `getBlockState` still returns the pre-change state at `HEAD`.
  */
 @Mixin(WorldChunk::class)

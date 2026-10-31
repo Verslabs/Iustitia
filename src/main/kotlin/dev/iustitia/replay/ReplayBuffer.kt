@@ -18,8 +18,8 @@ import java.util.UUID
 /**
  * Rolling capture buffer of every OTHER player's server-space state (+ yaw/pitch/body-yaw/head-yaw/
  * pose/combat-sync/equipment), every nearby non-player entity, and every real alert event, kept for
- * the last [MAX_SECONDS] (60s) of ticks. The single data source for `/ius replay` (replay the last N
- * seconds in-world) and `/ius clip` (dump the last N seconds to a portable `.iusclip` file).
+ * the last [MAX_SECONDS] (60s) of ticks. The single data source for `/milk replay` (replay the last N
+ * seconds in-world) and `/milk clip` (dump the last N seconds to a portable `.iusclip` file).
  *
  * ## Why this exists separately from [dev.iustitia.tracking.PositionRingBuffer]
  *
@@ -31,7 +31,7 @@ import java.util.UUID
  *
  * ## Merge provenance
  *
- * This is Iustitia's original buffer (positions + alerts + totems + equipment + health) extended with
+ * This is MilkItAC's original buffer (positions + alerts + totems + equipment + health) extended with
  * SnapClip's replay-engine additions: [EntitySnap] non-player entity capture, per-snap body/head yaw,
  * the [POSE_SIT]/[POSE_CRAWL] poses, per-frame [Frame.segmentId] and multi-segment [Segment]s. The
  * **alert timeline is preserved** (SnapClip dropped it) — see [AlertRec] / [Window.alerts].
@@ -55,7 +55,7 @@ import java.util.UUID
  */
 object ReplayBuffer {
 
-    /** Max replay/clip window in seconds. `/ius replay|clip` clamp their `seconds` arg to this. */
+    /** Max replay/clip window in seconds. `/milk replay|clip` clamp their `seconds` arg to this. */
     const val MAX_SECONDS = 60
     private const val MAX_FRAMES = MAX_SECONDS * 20
     private const val MAX_PLAYERS_PER_FRAME = 64
@@ -183,7 +183,7 @@ object ReplayBuffer {
     /**
      * Snapshot frames + alerts + totems + optional terrain/chunks/segments for a replay/clip, copied
      * out so live recording can't mutate playback. [terrain] (v5+) and [chunks] (v6+) are only set on
-     * clip exports ([TerrainCapture]/[ChunkCapture] run in the export handler); a live `/ius replay`
+     * clip exports ([TerrainCapture]/[ChunkCapture] run in the export handler); a live `/milk replay`
      * snapshot leaves both null — replay never bundles the map (you're already on it). [segments]
      * (v13+) carries per-segment world snapshots + block deltas.
      */
@@ -194,8 +194,8 @@ object ReplayBuffer {
         val segments: List<Segment> = emptyList(),
     )
 
-    /** True when the capture buffer is turned on AND Iustitia owns replay/clip capture. When SnapClip
-     *  is installed it owns the rolling capture, so Iustitia stops buffering entirely (frames, alerts
+    /** True when the capture buffer is turned on AND MilkItAC owns replay/clip capture. When SnapClip
+     *  is installed it owns the rolling capture, so MilkItAC stops buffering entirely (frames, alerts
      *  and totems all gate on this) — no duplicate per-tick work and no second `IUSC` writer. Fail-open. */
     private val enabled: Boolean get() = try {
         ConfigManager.config.replayCapture && !dev.iustitia.compat.CompanionMods.snapClip
@@ -343,9 +343,9 @@ object ReplayBuffer {
 
     /**
      * [snapshot] **plus** the per-segment worlds + block deltas from [segmentsFor] — the export variant
-     * used by `/ius clip` and `/ius replay save`.
+     * used by `/milk clip` and `/milk replay save`.
      *
-     * `/ius replay` deliberately keeps calling [snapshot] so it still renders ghosts over the **live**
+     * `/milk replay` deliberately keeps calling [snapshot] so it still renders ghosts over the **live**
      * world (instant, same server/dimension — it never bundles the map). Only an explicit export
      * switches to the captured-world path.
      */
@@ -486,7 +486,7 @@ object ReplayBuffer {
     } catch (_: Throwable) { null }
 
     /**
-     * Capture the LOCAL player (the recorder) as an ordinary snap, so `/ius replay` + `/ius playclip`
+     * Capture the LOCAL player (the recorder) as an ordinary snap, so `/milk replay` + `/milk playclip`
      * draw your own body alongside everyone else's. This is the only capture path for self: the tracker
      * polls `OtherClientPlayerEntity` exclusively, so [buildSnap] never sees you.
      *

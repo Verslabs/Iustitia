@@ -32,7 +32,7 @@ private const val DEDUP_WINDOW_TICKS = 1
 private const val DEDUP_SCAN_TAIL = 16
 
 /**
- * Per-player chat history for `/ius chathist`. Captures messages sent by tracked OTHER players (not
+ * Per-player chat history for `/milk chathist`. Captures messages sent by tracked OTHER players (not
  * the local player, not system/game messages) at the packet level — the
  * [dev.iustitia.mixin.ClientPlayNetworkHandlerMixin] `onChatMessage` inject pulls the raw sender UUID
  * + plaintext straight off `ChatMessageS2CPacket` before decoration, which is the only hook that
@@ -52,7 +52,7 @@ private const val DEDUP_SCAN_TAIL = 16
  *
  * ## Lazy page fetch
  *
- * `/ius chathist` renders only the requested page: `rows.drop((page-1)*8).take(8)` — never the full
+ * `/milk chathist` renders only the requested page: `rows.drop((page-1)*8).take(8)` — never the full
  * list — so a huge history is not laggy to browse. Capture is packet-driven (rare vs the per-tick
  * check load) and persistence is debounced on a daemon writer (mirrors
  * [dev.iustitia.persistence.PersistenceManager]) so a burst of chat coalesces into one write. All
@@ -64,7 +64,7 @@ object ChatHistory {
     /** One captured chat message. [tick] = [Iustitia.tickCounter]; [wallClockMs] for the `[HH:mm:ss]` UI. */
     data class Row(val tick: Int, val wallClockMs: Long, val uuid: UUID, val name: String, val text: String)
 
-    /** Rows per page for `/ius chathist` (the user spec: ~8 rows). */
+    /** Rows per page for `/milk chathist` (the user spec: ~8 rows). */
     const val PAGE_SIZE_ROWS = PAGE_SIZE
 
     private val gson: Gson = Gson()   // compact, one object per line (JSONL)
@@ -79,8 +79,8 @@ object ChatHistory {
     }
     private val chathistDir: Path get() = dataDir.resolve("chathist")
 
-    /** Capture gate: the user's toggle AND Iustitia owning chat history. When Scrollback is
-     *  installed it owns per-player chat history, so Iustitia stops capturing (no duplicate rows, no
+    /** Capture gate: the user's toggle AND MilkItAC owning chat history. When Scrollback is
+     *  installed it owns per-player chat history, so MilkItAC stops capturing (no duplicate rows, no
      *  second `history.jsonl` writer). Every capture path checks this, so gating here is enough. */
     private val enabled: Boolean get() = try {
         ConfigManager.config.chathistEnabled && !dev.iustitia.compat.CompanionMods.scrollback
@@ -94,9 +94,9 @@ object ChatHistory {
     @Volatile private var dirty = false
     @Volatile private var writerStarted = false
     private val writerThread: Thread by lazy {
-        Thread(::writerLoop, "Iustitia-ChatHistWriter").apply { isDaemon = true }
+        Thread(::writerLoop, "MilkItAC-ChatHistWriter").apply { isDaemon = true }
     }
-    private val flushHook = Thread({ try { flush() } catch (_: Throwable) {} }, "Iustitia-ChatHistFlush")
+    private val flushHook = Thread({ try { flush() } catch (_: Throwable) {} }, "MilkItAC-ChatHistFlush")
     @Volatile private var hookAdded = false
 
     /** The current server-address key (`currentServerEntry?.address` ?: `"singleplayer"`). Fail-open. */

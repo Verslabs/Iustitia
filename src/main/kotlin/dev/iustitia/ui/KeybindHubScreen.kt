@@ -8,11 +8,11 @@ import net.minecraft.client.option.KeyBinding
 import net.minecraft.text.Text
 
 /**
- * #14 (keybind hub): a manual-render screen listing every Iustitia keybind, its currently bound
+ * #14 (keybind hub): a manual-render screen listing every MilkItAC keybind, its currently bound
  * key, and a one-line description. Any bind whose key is also held by another (non-identical)
  * keybinding is highlighted `§c` red with the conflicting binding's name, so the user knows to
  * rebind before it collides at runtime. Display-only — rebinds happen in vanilla Controls →
- * Iustitia (the binds are standard [net.minecraft.client.option.KeyBinding]s). Fail-open.
+ * MilkItAC (the binds are standard [net.minecraft.client.option.KeyBinding]s). Fail-open.
  */
 class KeybindHubScreen(private val parent: Screen?) : Screen(TITLE) {
 
@@ -50,8 +50,8 @@ class KeybindHubScreen(private val parent: Screen?) : Screen(TITLE) {
             context.fill(0, 0, this.width, this.height, BG)
             super.render(context, mouseX, mouseY, delta)
             val tr = this.textRenderer
-            context.drawTextWithShadow(tr, Text.literal("§8[§diustitia§8] §f§lKeybind hub"), 10, 10, WHITE)
-            context.drawTextWithShadow(tr, Text.literal("§7Rebind any of these in §fOptions → Controls → Iustitia§7. Red = key conflict."), 10, 24, WHITE)
+            context.drawTextWithShadow(tr, Text.literal("§8[§dMilkItAC§8] §f§lKeybind hub"), 10, 10, WHITE)
+            context.drawTextWithShadow(tr, Text.literal("§7Rebind any of these in §fOptions → Controls → MilkItAC§7. Red = key conflict."), 10, 24, WHITE)
             var y = 44
             for (r in rows) {
                 try {
@@ -79,7 +79,7 @@ class KeybindHubScreen(private val parent: Screen?) : Screen(TITLE) {
     override fun close() { client?.setScreen(parent) }
 
     companion object {
-        private val TITLE = Text.literal("Iustitia — keybind hub")
+        private val TITLE = Text.literal("MilkItAC — keybind hub")
         private const val WHITE = -1  // opaque 0xFFFFFFFF (see PlayerSearchScreen for the gotcha)
         private val BG = 0xCC101010.toInt()
     }

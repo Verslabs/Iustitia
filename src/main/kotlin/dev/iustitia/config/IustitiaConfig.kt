@@ -1,8 +1,8 @@
 package dev.iustitia.config
 
 /**
- * On-disk configuration for Iustitia. Persisted as `config/iustitia.json` (see
- * [ConfigManager]) and editable live via YACL + `/iustitia`. Serialized by hand
+ * On-disk configuration for MilkItAC. Persisted as `config/iustitia.json` (see
+ * [ConfigManager]) and editable live via YACL + `/milkitac`. Serialized by hand
  * through Gson's JsonObject (see [ConfigManager]) so we avoid pulling in the
  * kotlinx.serialization compiler plugin and its Kotlin-constructor pitfalls.
  *
@@ -59,20 +59,20 @@ data class IustitiaConfig(
     var creativeFlightExempt: Boolean = true,
 
     // --- usability / display ---
-    /** Global chat-alerts switch (toggled by bare `/ius alerts`). When false, NO chat alert lines
+    /** Global chat-alerts switch (toggled by bare `/milk alerts`). When false, NO chat alert lines
      *  are shown, but detection + [FlagHistory] tiering/history + the nametag prefix keep running —
      *  this is a "silence the chat noise" mute, not a "stop detecting" switch. To stop detection
-     *  entirely, flip [enabled] off (via `/ius config`). */
+     *  entirely, flip [enabled] off (via `/milk config`). */
     var alertsEnabled: Boolean = true,
     /** Master switch for the nametag cheat-tier prefix (green [+] / yellow [!] / red [X]). */
     var nametagPrefixes: Boolean = true,
     /** Show the green [+] on clean/low-flag players. Flip off to only mark yellow/red when a
      *  lobby full of green ticks feels noisy. No effect on yellow/red. */
     var nametagGreenEnabled: Boolean = true,
-    /** Check ids whose chat alerts are muted (`/ius alerts <check>`). Detection, history and
+    /** Check ids whose chat alerts are muted (`/milk alerts <check>`). Detection, history and
      *  the nametag tier keep running — only the chat line is suppressed. */
     var mutedChecks: MutableList<String> = mutableListOf(),
-    /** Player uuids (as strings) whose chat alerts are muted (`/ius alerts <name>`). Muting by
+    /** Player uuids (as strings) whose chat alerts are muted (`/milk alerts <name>`). Muting by
      *  uuid survives rejoin. As with mutedChecks, only chat is silenced. */
     var mutedPlayers: MutableList<String> = mutableListOf(),
 
@@ -107,9 +107,9 @@ data class IustitiaConfig(
     var nametagBurstPulse: Boolean = true,
     /** Reduce alert lines + history/session/transcript rows to one-line summaries. */
     var compactMode: Boolean = false,
-    /** `/ius evidence <name>` lookback window in ticks. 200 = 10s. */
+    /** `/milk evidence <name>` lookback window in ticks. 200 = 10s. */
     var evidenceWindowTicks: Int = 200,
-    /** Auto-show the transcript side panel for the crosshair target. Off = keybind/`/ius transcript` only. */
+    /** Auto-show the transcript side panel for the crosshair target. Off = keybind/`/milk transcript` only. */
     var transcriptPanel: Boolean = false,
     /** Phase B HUD: draw a small top-left `⚠ lag` indicator while a server-lag burst is recent, so a
      *  moderator sees WHY alerts are being softened (or distance flagged) without opening a screen.
@@ -157,11 +157,11 @@ data class IustitiaConfig(
     // --- Phase 2 instant-replay / clip ---
     /** Master toggle for the rolling replay capture buffer ([dev.iustitia.replay.ReplayBuffer]). On by
      *  default — the per-tick work is tiny (≤64 players × ≤1200 frames), and turning it off only
-     *  disables `/ius replay` + `/ius clip` (no in-world ghost playback, no `.iusclip` export). The
+     *  disables `/milk replay` + `/milk clip` (no in-world ghost playback, no `.iusclip` export). The
      *  live game + detection run regardless. Flip off if you never use replay/clip and want the
      *  per-tick capture skipped entirely. */
     var replayCapture: Boolean = true,
-    /** "Rewind feel" for `/ius replay` + `/ius playclip`: while a replay is active, hide every live
+    /** "Rewind feel" for `/milk replay` + `/milk playclip`: while a replay is active, hide every live
      *  OTHER player so only the buffered ghost copies render (a rewind-the-world look). Off = overlay
      *  the ghosts on top of the live players instead. Render-only — the live game keeps running. */
     var replayHideLive: Boolean = true,
@@ -174,27 +174,27 @@ data class IustitiaConfig(
      *  runtime-only-verifiable (see [dev.iustitia.render.ReplayRenderer]). The box outline remains the
      *  fail-open fallback per ghost, so a render error never blanks a replay. Display-only — adds NO detection. */
     var replayPlayerModels: Boolean = true,
-    /** Relocate a `/ius playclip` scene to YOUR current position so the ghosts (and the bundled chunk
+    /** Relocate a `/milk playclip` scene to YOUR current position so the ghosts (and the bundled chunk
      *  world) render around you instead of at the recorded absolute coords — which would float in air /
      *  sit in the ground / clip walls when you play a clip back somewhere else. The focus player's
      *  recorded start maps to where you stand. ON by default; flip off to render a clip where it was
-     *  actually recorded. **Applies to `/ius playclip` only** — `/ius replay` always renders ghosts at
+     *  actually recorded. **Applies to `/milk playclip` only** — `/milk replay` always renders ghosts at
      *  their exact recorded coordinates (it's instant, same server/dimension — no relocation needed).
      *  Display-only. */
     var replayRelocate: Boolean = true,
-    /** Bundle the loaded terrain around the action into a `.iusclip` when `/ius clip` runs, so
-     *  `/ius playclip` can render the map (relocated to you) alongside the ghosts — a clip recorded on
+    /** Bundle the loaded terrain around the action into a `.iusclip` when `/milk clip` runs, so
+     *  `/milk playclip` can render the map (relocated to you) alongside the ghosts — a clip recorded on
      *  server A is then watchable in full on server B. The capture is bounded to the action bbox + a
      *  margin (the client only has loaded chunks in render distance, not the whole server map) and is
      *  volume-capped. Flip off to save clips without terrain (smaller file, ghosts-only playback). */
     var clipTerrain: Boolean = true,
     /** Capture every **loaded chunk** (full 16×16 columns, all Y sections — includes underground) around
-     *  the player into a `.iusclip` when `/ius clip` runs, so `/ius playclip` can render the clip's world
+     *  the player into a `.iusclip` when `/milk clip` runs, so `/milk playclip` can render the clip's world
      *  as **solid, textured blocks** (the real map, relocated to you) and you can free-spectate anywhere
      *  — including underground — like ReplayMod. The live world is hidden during playback and restored on
-     *  `/ius playclip off`. The capture is **rolling, not one-shot**: the live buffer rolls each segment's
+     *  `/milk playclip off`. The capture is **rolling, not one-shot**: the live buffer rolls each segment's
      *  world up in small per-tick pieces ([dev.iustitia.replay.ChunkRollingCapture]) while the scene is
-     *  still live, so `/ius clip` doesn't freeze on a ~300-chunk sweep and a window that spans a teleport
+     *  still live, so `/milk clip` doesn't freeze on a ~300-chunk sweep and a window that spans a teleport
      *  keeps one world per segment — only the chunks loaded *during* the window and within [clipChunkRadius]
      *  are captured, bounded by [clipRollingChunkCap] sections. A window the rolling capture has nothing
      *  for (fresh session, or this toggle just enabled) falls back to a single sweep at save time. Flip
@@ -205,12 +205,12 @@ data class IustitiaConfig(
      *  player; 8 → 17×17 = 289 chunks). Larger = more of the map captured + a bigger `.iusclip` file +
      *  a heavier bake at playclip start. Display/UX only — the radius is clamped 1..32 at capture. */
     var clipChunkRadius: Int = 8,
-    /** Render distance (in chunks) for the chunk world during `/ius playclip` — only chunks within this
+    /** Render distance (in chunks) for the chunk world during `/milk playclip` — only chunks within this
      *  radius of the camera are drawn each frame, bounding per-frame cost (the captured area can be much
      *  larger via [clipChunkRadius]; this is how much of it you actually render at once). Default 6,
      *  clamped 4..12 at render. Display/UX only. */
     var clipChunkRenderDistance: Int = 6,
-    /** `/ius playclip` generation: **LEGACY** = the v1.1.0 playclip experience (ghosts over the live
+    /** `/milk playclip` generation: **LEGACY** = the v1.1.0 playclip experience (ghosts over the live
      *  world, no chunk/terrain capture, no relocation, no auto-freecam, no spectator input/packet
      *  suppression — the player walks + acts normally while watching). **MODERN** = the current feature
      *  set (solid captured chunk world + free-spectate freecam + relocated scene + spectator-like
@@ -226,27 +226,27 @@ data class IustitiaConfig(
      *  bump; a pre-field config keeps the default. */
     var replayKeybindSeconds: Int = 30,
     /** Show a numeric **health indicator** (`§c<hp>§r/§f<max>`, e.g. `14/20`) above each ghost's
-     *  nametag during `/ius playclip`, plus a transient `§c-<dmg>` popup for ~40 ticks when a recorded
+     *  nametag during `/milk playclip`, plus a transient `§c-<dmg>` popup for ~40 ticks when a recorded
      *  player's health drops (damage amount = health-diff; attack SOURCE is not available client-side
-     *  for other players). Natively OFF so a default playclip looks like vanilla; turn on in `/ius
+     *  for other players). Natively OFF so a default playclip looks like vanilla; turn on in `/milk
      *  config`. Additive — no CONFIG_VERSION bump; a pre-field config keeps the default (off). */
     var clipHealthIndicator: Boolean = false,
-    /** Show a **totem-pop counter** (`§6⚡<count>` badge) on each ghost's nametag during `/ius playclip`,
+    /** Show a **totem-pop counter** (`§6⚡<count>` badge) on each ghost's nametag during `/milk playclip`,
      *  counting that recorded player's Totem-of-Undying pops within the clip window (captured via the
-     *  EntityStatusS2C status-35 broadcast). Natively OFF; turn on in `/ius config`. Additive — no
+     *  EntityStatusS2C status-35 broadcast). Natively OFF; turn on in `/milk config`. Additive — no
      *  CONFIG_VERSION bump. */
     var clipTotemPopCounter: Boolean = false,
     /** Render each playclip/replay ghost's **held items + armor** (main hand, off hand, head, chest,
      *  legs, feet) — recorded per tick as registry-id strings and reconstructed into `ItemStack`s so a
      *  ghost holds what the player held and wears the armor they wore at the recorded tick. Lossy (no
      *  enchant-glint / custom-model-data components). Natively ON (the default playclip shows what the
-     *  recorded players were holding/wearing); turn off in `/ius config` to revert to skin-only ghosts.
+     *  recorded players were holding/wearing); turn off in `/milk config` to revert to skin-only ghosts.
      *  Additive — no CONFIG_VERSION bump; a pre-field config keeps the default (on). Requires a live
      *  `OrderedRenderCommandQueue` from the world render context — if unavailable, degrades fail-open to
      *  the skin-only ghost (features silently skip). */
     var clipGhostEquipment: Boolean = true,
     /** Capture + render **non-player entity ghosts** (mobs, animals, boats, minecarts) during
-     *  `/ius replay` / `/ius playclip`, so a replay shows the whole scene and not just players. Living
+     *  `/milk replay` / `/milk playclip`, so a replay shows the whole scene and not just players. Living
      *  entities are drawn through their vanilla entity renderer model (mobs/animals), non-living ones
      *  (boats/minecarts) through their entity renderer. ON by default. Display/capture only — adds NO
      *  detection. Additive — no CONFIG_VERSION bump; a pre-field config keeps the default (on). */
@@ -255,13 +255,13 @@ data class IustitiaConfig(
      *  and the per-frame snap payload written into a clip. Clamped 0..256 at capture. Display/UX only.
      *  Additive — no CONFIG_VERSION bump; a pre-field config keeps the default (64). */
     var clipEntityCap: Int = 64,
-    /** Total non-empty-section budget for the **rolling** per-segment chunk capture used by `/ius
+    /** Total non-empty-section budget for the **rolling** per-segment chunk capture used by `/milk
      *  record` and the live replay buffer ([dev.iustitia.replay.ChunkRollingCapture]); past it the
      *  oldest segment (never the current one) is evicted. Larger = more of a long recording's world is
      *  retained + more memory: a section is up to 4096 bytes of palette indices, so the 24 000 default
      *  is roughly 20–95 MB of live captured world depending on how full the segments are (a fully
      *  captured 17×17 radius is ~3 500 sections ≈ 14 MB, so ~7 segments fit). Lower it on a memory-tight
-     *  client; raise it if a long `/ius record` keeps losing its earliest world. Clamped 4096..131072 at
+     *  client; raise it if a long `/milk record` keeps losing its earliest world. Clamped 4096..131072 at
      *  capture. Display/UX only. Additive — no CONFIG_VERSION bump; a pre-field config keeps the default
      *  (24000, matched to SnapClip's own default). */
     var clipRollingChunkCap: Int = 24_000,
@@ -272,14 +272,14 @@ data class IustitiaConfig(
      *  pre-field config keeps the default (64). */
     var clipSegmentTeleportThreshold: Double = 64.0,
 
-    /** `/ius chathist` capture master toggle (on by default). When on, messages from tracked OTHER
+    /** `/milk chathist` capture master toggle (on by default). When on, messages from tracked OTHER
      *  players (not the local player, not system messages) are captured at the packet level and
      *  queryable per-player / per-phrase. Per-server persistence follows [persistenceEnabled] (on →
      *  survives reconnects under `.iustitia/chathist/<server>/`; off → in-memory, cleared on leave).
      *  Additive — no CONFIG_VERSION bump; a pre-field config keeps the default (on). */
     var chathistEnabled: Boolean = true,
 
-    /** `/ius chathist` permissive / cross-server capture (OFF by default). Decorated chat
+    /** `/milk chathist` permissive / cross-server capture (OFF by default). Decorated chat
      *  (`onGameMessage` / `onProfilelessChatMessage`) normally anchors the sender to the tab list —
      *  when the sender isn't in the tab list the row is dropped. With this on, the parser instead
      *  falls back to the last word-token before the separator and still captures the row, so
@@ -372,7 +372,7 @@ data class IustitiaConfig(
         const val CONFIG_VERSION = 5
     }
 
-    /** `/ius playclip` generation selector — see [IustitiaConfig.playclipMode]. */
+    /** `/milk playclip` generation selector — see [IustitiaConfig.playclipMode]. */
     enum class PlayclipMode { LEGACY, MODERN }
 
     data class CheckConfig(

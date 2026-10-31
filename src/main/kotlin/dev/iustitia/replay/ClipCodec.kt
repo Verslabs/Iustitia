@@ -15,7 +15,7 @@ import java.util.UUID
  *
  * ## Format (big-endian `DataOutput/InputStream`, length-prefixed UTF)
  *
- * v13 (this writer) = the **merge** of Iustitia's v8 (alerts + terrain + chunks + totems) and
+ * v13 (this writer) = the **merge** of MilkItAC's v8 (alerts + terrain + chunks + totems) and
  * SnapClip's v12 (bodyYaw/headYaw, non-player entities, per-frame segment id, block deltas, segments):
  *
  * ```
@@ -66,13 +66,13 @@ object ClipCodec {
 
     private const val MAGIC = "IUSC"
 
-    /** Current write version: the merged Iustitia v8 + SnapClip v12 superset. */
+    /** Current write version: the merged MilkItAC v8 + SnapClip v12 superset. */
     const val VERSION = 13
 
     /** Lowest version [read] will accept (v2 = no per-snap pitch; loaded with pitch defaulting to 0). */
     const val MIN_VERSION = 2
 
-    /** Last Iustitia-only layout version (v2–v8 carry the alert timeline; v9–v12 are SnapClip). */
+    /** Last MilkItAC-only layout version (v2–v8 carry the alert timeline; v9–v12 are SnapClip). */
     private const val LAST_LEGACY_VERSION = 8
 
     /** A decoded clip: frames + alerts + the optional focus player + optional terrain + chunks snapshots. */
@@ -148,7 +148,7 @@ object ClipCodec {
 
     /**
      * Why the last [read] returned null (`null` = it succeeded). [ClipStore.load] feeds this to
-     * [ClipPlayback] so `/ius playclip` can say what was wrong. Diagnostics only — never branch on it.
+     * [ClipPlayback] so `/milk playclip` can say what was wrong. Diagnostics only — never branch on it.
      */
     @Volatile
     var lastReadReason: String? = null
@@ -195,7 +195,7 @@ object ClipCodec {
         }
         val focus = readFocus(d)
         val frames = readFrames(d, version) ?: throw ClipFormatException("malformed frame table")
-        // Alerts are present for the Iustitia lineage (v2–v8) and for the merged v13+; SnapClip's
+        // Alerts are present for the MilkItAC lineage (v2–v8) and for the merged v13+; SnapClip's
         // v9–v12 dropped them entirely, so those clips read back with no alerts.
         val alerts = if (version <= LAST_LEGACY_VERSION || version >= 13) readAlerts(d) else emptyList()
         val terrain = if (version >= 5) readTerrainFlag(d) else null
@@ -447,7 +447,7 @@ object ClipCodec {
         return frames
     }
 
-    // ---- alerts (Iustitia feature; not present in SnapClip v9-12) ----
+    // ---- alerts (MilkItAC feature; not present in SnapClip v9-12) ----
 
     private fun writeAlerts(d: DataOutputStream, alerts: List<ReplayBuffer.AlertRec>) {
         d.writeInt(alerts.size)

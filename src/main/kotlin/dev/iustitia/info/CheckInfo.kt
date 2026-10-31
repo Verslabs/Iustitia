@@ -1,8 +1,8 @@
 package dev.iustitia.info
 
 /**
- * Human-readable one-line descriptions for every check id, used to make Iustitia self-documenting:
- * the alert hover tooltip shows the description of the check that fired, and `/ius help <check>`
+ * Human-readable one-line descriptions for every check id, used to make MilkItAC self-documenting:
+ * the alert hover tooltip shows the description of the check that fired, and `/milk help <check>`
  * prints it alongside the live config. Keeps users out of the docs — the alert explains itself.
  *
  * Also exposes the severity legend string and [isDefinitive] (delegates to the canonical set in
@@ -12,14 +12,14 @@ object CheckInfo {
 
     /** One-line description for a check id, or a generic fallback. */
     fun describe(checkId: String): String = DESCRIPTIONS[checkId]
-        ?: "Iustitia check '$checkId'."
+        ?: "MilkItAC check '$checkId'."
 
     /** Whether a check is primary red-capable: its alert can self-standing mark a player YELLOW
      *  (and contributes toward RED, which needs ≥2 distinct red-capable checks — see
      *  [dev.iustitia.history.FlagHistory.tierFor]). killAura is a corroborator, not primary. */
     fun isDefinitive(checkId: String): Boolean = dev.iustitia.history.FlagHistory.DEFINITIVE.contains(checkId)
 
-    /** Severity color legend shown in alert hover + `/ius help` + `/ius status`. */
+    /** Severity color legend shown in alert hover + `/milk help` + `/milk status`. */
     val SEVERITY_LEGEND: String = "§7sev: §e<2× §6<3× §c≥3× §7setbackVL"
 
     private val DESCRIPTIONS: Map<String, String> = mapOf(

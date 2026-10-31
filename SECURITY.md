@@ -1,6 +1,6 @@
 # Security and privacy policy
 
-Iustitia is designed to be client-side and local-only. It observes incoming state that the Minecraft client already receives and stores optional evidence on the user's machine. It should not upload detections, read unrelated files, or send gameplay actions while observing.
+MilkItAC is designed to be client-side and local-only. It observes incoming state that the Minecraft client already receives and stores optional evidence on the user's machine. It should not upload detections, read unrelated files, or send gameplay actions while observing.
 
 ## Report privately
 
@@ -14,7 +14,7 @@ Include:
 - The expected behavior.
 - The actual behavior and impact.
 - Logs or screenshots with secrets and personal information removed.
-- Whether the issue is reproducible with only Iustitia and required dependencies.
+- Whether the issue is reproducible with only MilkItAC and required dependencies.
 
 Do not include live tokens, account credentials, private server credentials, unredacted IPs, or another person's private data.
 

@@ -12,7 +12,7 @@ assignees: ''
 
 ## Environment
 
-- Iustitia version/commit:
+- MilkItAC version/commit:
 - Minecraft version:
 - Fabric Loader:
 - Fabric API:

@@ -5,7 +5,7 @@ import net.minecraft.text.Text
 import java.util.UUID
 
 /**
- * Decorated-chat capture for `/ius chathist`. The signed player-chat path
+ * Decorated-chat capture for `/milk chathist`. The signed player-chat path
  * ([ChatMessageS2CPacket][net.minecraft.network.packet.s2c.play.ChatMessageS2CPacket], handled in
  * [dev.iustitia.mixin.ClientPlayNetworkHandlerMixin.iustitia_onChatMessage]) only fires on servers
  * that keep chat signing. The servers most users want chathist on — Hypixel, ArchMC, Minemen,

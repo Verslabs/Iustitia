@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicLong
  *
  * [log] hands the line to a bounded queue drained by a single daemon thread; the caller never
  * touches the appender. Measured on a 20+-player fight, the previous synchronous path parked the
- * render thread inside `logger.info` for half the wall clock — 97% of all Iustitia render-thread
+ * render thread inside `logger.info` for half the wall clock — 97% of all MilkItAC render-thread
  * time — because log4j writes to the console *and* latest.log on the calling thread, and flag
  * volume scales with the number of nearby players. Detection was never the cost; the transcript
  * was.
@@ -31,13 +31,13 @@ import java.util.concurrent.atomic.AtomicLong
  * so a truncated capture cannot be mistaken for a complete one. Note what is dropped is only a
  * *transcript* line: the authoritative per-flag record
  * ([dev.iustitia.history.FlagHistory.recordFlag]) is written synchronously and is unaffected, so
- * `/ius hist` and the report timeline stay exact under any load.
+ * `/milk hist` and the report timeline stay exact under any load.
  *
  * All paths fail-open — verbose logging must never throw or block the tick.
  */
 object VerboseLog {
 
-    private val logger = LoggerFactory.getLogger("Iustitia")
+    private val logger = LoggerFactory.getLogger("MilkItAC")
 
     /** Heartbeat interval in ticks (200 = 10s); avoids per-tick spam on busy servers. */
     private const val HEARTBEAT_TICKS = 200
@@ -105,7 +105,7 @@ object VerboseLog {
 
     /**
      * Lines queued but not yet written, and the **session-cumulative** drop total. Read by
-     * `/ius verbose` when a capture ends, so the transcript on disk can be judged complete or
+     * `/milk verbose` when a capture ends, so the transcript on disk can be judged complete or
      * truncated before it is compared against another client. Deliberately not the heartbeat's
      * per-interval delta — a windowed count would read 0 for a capture that dropped lines earlier
      * in the session, which is the opposite of what "can I trust this transcript?" needs.
@@ -166,7 +166,7 @@ object VerboseLog {
         if (drainThread != null) return
         synchronized(this) {
             if (drainThread != null) return
-            val t = Thread({ drainLoop() }, "Iustitia verbose-log")
+            val t = Thread({ drainLoop() }, "MilkItAC verbose-log")
             t.isDaemon = true
             t.start()
             drainThread = t

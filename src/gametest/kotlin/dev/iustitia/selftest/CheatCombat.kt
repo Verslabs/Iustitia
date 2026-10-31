@@ -623,7 +623,7 @@ object CheatCombat {
                 bot.swing()
                 victim.hurt(attackerEntityId = bot.entityId)
                 // The reset hop is set in the SAME action block: the hurt is published on the
-                // Iustitia clock at tick T, and motion written in that block is first observed
+                // MilkItAC clock at tick T, and motion written in that block is first observed
                 // during tick T+1 -- which is exactly the `since == 1` tick the check's hit
                 // window looks at. Writing the hop in the next block instead lands it at
                 // `since == 2`, outside the window, and the drive silently misses the check.

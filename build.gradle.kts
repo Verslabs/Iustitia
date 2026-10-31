@@ -7,7 +7,7 @@ plugins {
 version = "1.4.0"
 group = "dev.iustitia"
 
-base { archivesName.set("iustitia") }
+base { archivesName.set("milkitac") }
 
 loom {
     mixin {
@@ -69,7 +69,7 @@ kotlin {
 // `./gradlew runClientGameTest`  — full three-pass verification (legit + cheat + replay)
 // `./gradlew compileGametestKotlin` — just typecheck the harness
 //
-// The test mod carries no mixins of its own; it reaches Iustitia's pipeline
+// The test mod carries no mixins of its own; it reaches MilkItAC's pipeline
 // through the public facade + SelfTestHooks. `eula = true` is required by Loom
 // because the gametest runner can boot a dedicated server for server-side
 // gametests; we only run client gametests, but the flag is global.
@@ -96,7 +96,7 @@ fabricApi {
 // A filter that matches nothing FAILS the run, so a typo can never look like a pass.
 tasks.withType(JavaExec::class.java).named("runClientGameTest") {
     jvmArgs("-Dfabric.selftest=1")
-    // Iustitia observes packets by hooking the netty pipeline (ClientPlayNetworkHandlerMixin),
+    // MilkItAC observes packets by hooking the netty pipeline (ClientPlayNetworkHandlerMixin),
     // which is exactly the "interfacing with packets at a lower level" case the Fabric client
     // gametest API's network synchronizer cannot model. With the synchronizer active, full runs
     // intermittently die inside the framework's own phase machine: the server thread parks

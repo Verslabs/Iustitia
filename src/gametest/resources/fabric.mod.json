@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "iustitia_testmod",
   "version": "1.0.0",
-  "name": "Iustitia Self-Test Harness",
+  "name": "MilkItAC Self-Test Harness",
   "license": "MIT",
   "environment": "client",
   "entrypoints": {

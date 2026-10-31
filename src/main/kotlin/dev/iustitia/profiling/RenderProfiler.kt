@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * investigation (post pass #3: static analysis identified and fixed the most clearly wasteful
  * substrate, but the symptom persisted, so we now measure rather than guess).
  *
- * Started by `/ius debugfps` and stopped by `/ius debugfps stop`; nothing runs otherwise. It is
+ * Started by `/milk debugfps` and stopped by `/milk debugfps stop`; nothing runs otherwise. It is
  * deliberately **not** gated on [dev.iustitia.VerboseLog] — gating it there meant a profile could
  * only ever be taken with verbose on, so the tool could not measure the verbose-off configuration
  * at all (and the dense-player FPS bug only reproduced with verbose on, which is exactly the case
@@ -30,12 +30,12 @@ import java.util.concurrent.atomic.AtomicInteger
  *  1. **Flat top-frame** — `stack[0]` (innermost method). Shows raw hotspots across vanilla AND
  *     ours (e.g. `BlockState.getCollisionShape`, vanilla entity render, a check's `process`).
  *     This is the ground truth for "what is the render thread actually doing".
- *  2. **Iustitia-attributed** — the first `dev.iustitia.*` frame from the top. Attributes the
- *     cost of vanilla calls made on Iustitia's behalf (e.g. `getCollisionShape` reached from
- *     `SpiderCheck.process`) to the Iustitia method that drove them. A sample with no
+ *  2. **MilkItAC-attributed** — the first `dev.iustitia.*` frame from the top. Attributes the
+ *     cost of vanilla calls made on MilkItAC's behalf (e.g. `getCollisionShape` reached from
+ *     `SpiderCheck.process`) to the MilkItAC method that drove them. A sample with no
  *     `dev.iustitia.*` frame is pure vanilla (rendering, chunk meshing, GC) — NOT counted here.
  *  3. **Pairs** — `iustitia_method -> current top frame` (top 40). The most actionable view: it
- *     says e.g. "SpiderCheck.process -> BlockStateAbstract.getCollisionShape ×N" — which Iustitia
+ *     says e.g. "SpiderCheck.process -> BlockStateAbstract.getCollisionShape ×N" — which MilkItAC
  *     method is paying for which vanilla call.
  *
  * GC / safepoint gaps are detected by the sampler's own `Thread.sleep(5)` overrunning >3× (a
@@ -75,7 +75,7 @@ object RenderProfiler {
     fun isRunning(): Boolean = running
 
     /**
-     * Start sampling. MUST be called on the render thread (the `/ius debugfps` command handler is),
+     * Start sampling. MUST be called on the render thread (the `/milk debugfps` command handler is),
      * so [renderThread] is captured correctly. Returns `null` on success, or an error string
      * (`"already running"`) if a session is already in progress.
      */
@@ -139,7 +139,7 @@ object RenderProfiler {
         val top = stack[0]
         val topLabel = label(top)
         topFrames.computeIfAbsent(topLabel) { AtomicInteger() }.incrementAndGet()
-        // First dev.iustitia.* frame from the top — the Iustitia method driving the stack.
+        // First dev.iustitia.* frame from the top — the MilkItAC method driving the stack.
         var iustitiaLabel: String? = null
         for (e in stack) {
             if (e.className.startsWith("dev.iustitia.")) { iustitiaLabel = label(e); break }
@@ -166,22 +166,22 @@ object RenderProfiler {
         val sb = StringBuilder()
         val durMs = System.currentTimeMillis() - startMs
         val iusPct = if (totalSamples > 0) iustitiaSamples * 100.0 / totalSamples else 0.0
-        sb.appendLine("=== Iustitia render-thread profile ===")
+        sb.appendLine("=== MilkItAC render-thread profile ===")
         sb.appendLine("render thread: ${renderThread?.name ?: "?"}")
         sb.appendLine("duration: ${durMs} ms (${durMs / 1000}s)")
         sb.appendLine("sample interval: ${INTERVAL_MS} ms")
         sb.appendLine("total samples: $totalSamples")
-        sb.appendLine("iustitia-attributed samples: $iustitiaSamples (${pct(iusPct)}% of total)")
+        sb.appendLine("MilkItAC-attributed samples: $iustitiaSamples (${pct(iusPct)}% of total)")
         sb.appendLine("  (samples with NO dev.iustitia.* frame = pure vanilla: rendering / chunk mesh / GC)")
         sb.appendLine("GC/safepoint gaps (sampler sleep >${GC_GAP_THRESHOLD_MS}ms): $gaps  (max ${maxGapMs}ms)")
         sb.appendLine()
-        sb.appendLine("--- Top 40 flat top-frames (vanilla + iustitia: raw hotspots) ---")
+        sb.appendLine("--- Top 40 flat top-frames (vanilla + MilkItAC: raw hotspots) ---")
         appendTop(sb, topFrames, 40, totalSamples)
         sb.appendLine()
-        sb.appendLine("--- Top 40 iustitia-attributed methods (first dev.iustitia.* frame) ---")
+        sb.appendLine("--- Top 40 MilkItAC-attributed methods (first dev.iustitia.* frame) ---")
         appendTop(sb, iustitiaFrames, 40, iustitiaSamples)
         sb.appendLine()
-        sb.appendLine("--- Top 40 pairs (iustitia_method -> current top frame) ---")
+        sb.appendLine("--- Top 40 pairs (MilkItAC_method -> current top frame) ---")
         appendTop(sb, pairs, 40, iustitiaSamples)
         // Atomic (staged temp + move): a crash mid-write can't leave a half report; the
         // previous report (if any) stays intact. Returns the path regardless so the caller

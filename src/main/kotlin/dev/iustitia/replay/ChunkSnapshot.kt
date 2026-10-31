@@ -1,10 +1,10 @@
 package dev.iustitia.replay
 
 /**
- * A captured set of full chunks bundled into a v6+ `.iusclip`, so `/ius playclip` can render the
+ * A captured set of full chunks bundled into a v6+ `.iusclip`, so `/milk playclip` can render the
  * clip's world as **solid, textured blocks** (the real map) relocated around the user — letting
  * them free-spectate anywhere, including underground. See [ChunkCapture] for the capture (a
- * one-shot snapshot of every loaded chunk at `/ius clip` save time) and [dev.iustitia.render.ChunkMesher]
+ * one-shot snapshot of every loaded chunk at `/milk clip` save time) and [dev.iustitia.render.ChunkMesher]
  * for the bake-into-`VertexBuffer` render path.
  *
  * ## Storage

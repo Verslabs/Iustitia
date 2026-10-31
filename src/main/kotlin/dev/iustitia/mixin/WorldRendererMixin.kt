@@ -73,7 +73,7 @@ class WorldRendererMixin {
      *
      * Recorded block-entity NBT (sign text, chest contents) is a documented v1 follow-up
      * (`ChunkCapture.kt:22-23`); until then chunk playclip shows the recorded block models with no
-     * block-entity overlay. The legacy `/ius playclip` + `/ius replay` paths (no chunks) skip this.
+     * block-entity overlay. The legacy `/milk playclip` + `/milk replay` paths (no chunks) skip this.
      *
      * Target verified against the named 1.21.11 jar: single public method
      * `renderBlockEntities(MatrixStack, WorldRenderState, OrderedRenderCommandQueueImpl)`.
@@ -105,7 +105,7 @@ class WorldRendererMixin {
      *
      * Gate: `freecamActive` (any FREECAM — the camera isn't the live player, so the live target is
      * meaningless) OR the MODERN gate (`active && chunks != null && !legacyPlayclip` — the recorded
-     * chunk world is what's on screen, the live target is wrong). The legacy `/ius replay` + FREE view
+     * chunk world is what's on screen, the live target is wrong). The legacy `/milk replay` + FREE view
      * (camera IS the live player, live world on screen) is NOT gated → the outline stays correct there.
      *
      * Target verified against the named 1.21.11 jar: single private method

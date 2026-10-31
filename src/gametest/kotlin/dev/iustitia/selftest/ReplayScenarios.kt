@@ -181,7 +181,7 @@ object ReplayScenarios {
 
     /**
      * Relocated playback of a clip whose window carries captured world state: the observer's
-     * `/ius playclip` path. Asserting the relocation offset and the captured-terrain snapshot are
+     * `/milk playclip` path. Asserting the relocation offset and the captured-terrain snapshot are
      * populated is what separates "the clip loaded" from "the clip can actually be shown where the
      * observer is standing" -- a clip that loads without its world renders as ghosts in the wrong
      * place.
@@ -269,7 +269,7 @@ object ReplayScenarios {
      * snap list, which is why show-self needs no clip-format change. This scenario proves the three
      * links in that chain instead of trusting them: (1) the rolling buffer carries a snap for the local
      * uuid, (2) that snap survives a `.iusclip` save/load round trip, which is what makes it work for
-     * `/ius playclip` in both MODERN and LEGACY (a Legacy export skips terrain, chunks and relocation
+     * `/milk playclip` in both MODERN and LEGACY (a Legacy export skips terrain, chunks and relocation
      * but never frames), and (3) [ReplayState.selfGhost] arms the live-body hide, including staying
      * false for a window with no self snap so an older clip can never leave the observer bodiless.
      */
@@ -311,7 +311,7 @@ object ReplayScenarios {
                     "ReplayState.selfGhost is false for a window carrying a self snap."
                 }
                 check(ReplayState.shouldHideEntity(false, isSelf = true, isOtherPlayer = false)) {
-                    "/ius replay shape: the live body is NOT hidden while a self ghost draws, so you " +
+                    "/milk replay shape: the live body is NOT hidden while a self ghost draws, so you " +
                         "appear twice, once where you really are and once walking the replayed path."
                 }
                 check(ReplayState.shouldHideEntity(true, isSelf = true, isOtherPlayer = false)) {
@@ -364,7 +364,7 @@ object ReplayScenarios {
             }
 
             // (2) Round trip through the codec. ClipPlayback feeds ReplayState from the file, so a hidden
-            // decision here means the snap survived write + read and is drawable during /ius playclip.
+            // decision here means the snap survived write + read and is drawable during /milk playclip.
             // Checked for the LEGACY shape (no captured chunks), which is the one that renders over the
             // live world and therefore the one where the live body would otherwise double up.
             val name = "selftest_showself"
@@ -387,7 +387,7 @@ object ReplayScenarios {
                 }
                 check(armedAfterLoad) {
                     "SHOW-SELF round-trip failure: a saved clip did not hide the live body, so the local " +
-                        "player's snap did not survive the codec and /ius playclip would show no self ghost."
+                        "player's snap did not survive the codec and /milk playclip would show no self ghost."
                 }
             } finally {
                 // Belt-and-braces cleanup so a failed assertion never leaves a stray file.

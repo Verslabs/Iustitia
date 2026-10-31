@@ -40,7 +40,7 @@ import java.util.UUID
  * Fail-open everywhere: no network handler / no tab entry / unknown mode → not exempt →
  * checks run as before. A minigame server that spoofs or hides game modes can therefore
  * under-exempt (creative still flags — the pre-fix behavior) or over-exempt (a survival
- * shown as creative skips movement checks); both are bounded, visible in `/ius hist`
+ * shown as creative skips movement checks); both are bounded, visible in `/milk hist`
  * (no flags where you'd expect them), and curable with the toggle.
  */
 object CreativeFlight {

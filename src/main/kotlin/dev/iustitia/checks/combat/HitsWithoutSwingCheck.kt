@@ -38,7 +38,7 @@ import java.util.UUID
  *
  * That episode flag clears setbackVL in a single flag — it has to, because the gate allows at most
  * one flag per [EPISODE] (60) ticks, i.e. ~1/60/tick against a 0.5/tick decay, so the old level-1.0
- * form could never alert at all (measured live: a swing-suppressing drive recorded in `/ius hist`
+ * form could never alert at all (measured live: a swing-suppressing drive recorded in `/milk hist`
  * and stayed at 0.0 of the 5.0 needed). setbackVL 5.
  *
  * This check is event-driven (HurtSignal + SwingSignal); it does not override [process].

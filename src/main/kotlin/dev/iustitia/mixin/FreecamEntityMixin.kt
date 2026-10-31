@@ -9,8 +9,8 @@ import org.spongepowered.asm.mixin.injection.Inject
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 
 /**
- * Redirects mouse-look onto the FREECAM pose while a chunk-bearing `/ius playclip` runs in FREECAM
- * mode — the Iustitia port of xolt's Freecam `EntityMixin.turn` redirect (v1.4.1-alpha.1, MC 1.21.11).
+ * Redirects mouse-look onto the FREECAM pose while a chunk-bearing `/milk playclip` runs in FREECAM
+ * mode — the MilkItAC port of xolt's Freecam `EntityMixin.turn` redirect (v1.4.1-alpha.1, MC 1.21.11).
  *
  * ## Why
  *

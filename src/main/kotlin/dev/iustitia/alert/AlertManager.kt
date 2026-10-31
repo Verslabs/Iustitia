@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap
  * and, under the quiet preset, a non-red drop during a server-lag burst), (2) preset-gated by
  * [IustitiaConfig.alertLevel] (quiet=red only / normal=orange+red / verbose=all — display-only), (3)
  * formatted (collapsed "Reach ×4, Backtrack ×2 (last 5s)" or single, compact when enabled), (4) sent
- * to chat, and (5) optionally an audio cue plays (yellow/red). Mute (`/ius alerts`) and the
+ * to chat, and (5) optionally an audio cue plays (yellow/red). Mute (`/milk alerts`) and the
  * global chat-alerts switch suppress only the chat send — detection, [FlagHistory] tier/history and
  * the nametag prefix keep reflecting the player. So [FlagHistory.recordAlert] is called AFTER the
  * throttle passes (a real alert event) but BEFORE the mute/preset checks return, meaning a muted or
@@ -68,12 +68,12 @@ object AlertManager {
             FlagHistory.recordAlert(player, checkId, name, tick)
 
             // Phase 2 instant-replay: record this real alert event into the rolling buffer so a later
-            // /ius replay or /ius clip includes the alert timeline, not just positions. Recorded
+            // /milk replay or /milk clip includes the alert timeline, not just positions. Recorded
             // here (after the throttle passes = a real alert event) so mute/preset suppression does
             // not strip it from the replay timeline — a replay shows every real flag regardless of
             // the current chat filter. Gated by config.replayCapture inside. Fail-open.
             try { dev.iustitia.replay.ReplayBuffer.recordAlert(tick, player, name, checkId, check, vl) } catch (_: Throwable) {}
-            // Mirror into the manual long-recording buffer too (no-op unless `/ius record` is active).
+            // Mirror into the manual long-recording buffer too (no-op unless `/milk record` is active).
             try { dev.iustitia.replay.RecordManager.recordAlert(tick, player, name, checkId, check, vl) } catch (_: Throwable) {}
 
             // Phase B burst-spark: on a fresh tier-relevant alert (the ones that move the tier),
@@ -211,7 +211,7 @@ object AlertManager {
     }
 
     /**
-     * Wipe one player's in-flight alert state (used by `/ius clear <player>`). Drops the pending
+     * Wipe one player's in-flight alert state (used by `/milk clear <player>`). Drops the pending
      * batch + every per-(player,check) throttle key so a freshly-cleared player isn't immediately
      * re-alered by a straggling buffered flag. The tier/history wipe is [FlagHistory.clearPlayer]'s
      * job; this only clears the alert-routing layer. Fail-open.

@@ -48,7 +48,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 /**
  * Client entrypoint. Wires the check registry to the [Iustitia] facade, drives the
  * per-tick pipeline from `ClientTickEvents.END_CLIENT_TICK`, and registers the
- * `/iustitia` command. The mixin (loaded by `iustitia.mixins.json`) feeds packet
+ * `/milkitac` command. The mixin (loaded by `iustitia.mixins.json`) feeds packet
  * signals into the same facade independently.
  */
 class IustitiaClientMod : ClientModInitializer {
@@ -62,7 +62,7 @@ class IustitiaClientMod : ClientModInitializer {
         Iustitia.init()
 
         // Phase 2 keybinds (snapshot/transcript/session/keybinds/config/note/compact/watch-stub).
-        // Registered with Fabric so they appear in Controls → Iustitia; polled each tick below.
+        // Registered with Fabric so they appear in Controls → MilkItAC; polled each tick below.
         try { Keybinds.register() } catch (_: Throwable) {}
 
         // Phase B HUD overlays (crosshair confidence panel + server-lag indicator) via the stable
@@ -78,7 +78,7 @@ class IustitiaClientMod : ClientModInitializer {
         // player, drawn at WorldRenderEvents.AFTER_ENTITIES (depth-tested, no wallhack).
         try { dev.iustitia.render.TargetHighlightRenderer.register() } catch (_: Throwable) {}
 
-        // Phase 2 instant-replay renderer: while a replay (/ius replay or /ius playclip) is active,
+        // Phase 2 instant-replay renderer: while a replay (/milk replay or /milk playclip) is active,
         // draws translucent ghost copies of every player at the playhead frame's buffered positions
         // (AFTER_ENTITIES, depth-tested) + a bottom-center progress HUD. The hide-live mixin (in
         // iustitia.mixins.json) suppresses the real players during a hide-live replay. Render-only.
@@ -142,7 +142,7 @@ class IustitiaClientMod : ClientModInitializer {
 
         // First-launch setup wizard: opens once (until wizardCompleted is stamped) on the first
         // tick the player is actually in-game. Guarded so it never fires from a non-foreground
-        // context; a failure to open is non-fatal (the user can re-run /ius wizard).
+        // context; a failure to open is non-fatal (the user can re-run /milk wizard).
         // The stamp itself lives in SetupWizardScreen.finish() — it runs on EVERY exit path
         // (apply, skip, Esc → close()), so an open that's immediately dismissed still counts as
         // seen; stamping it here instead would mark the wizard "done" the instant it opened and

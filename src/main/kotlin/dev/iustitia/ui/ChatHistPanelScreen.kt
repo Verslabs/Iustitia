@@ -8,9 +8,9 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 /**
- * `/ius chathist panel ...` — a narrow side-panel overlay that reuses the same chrome + render
+ * `/milk chathist panel ...` — a narrow side-panel overlay that reuses the same chrome + render
  * layout as [TranscriptPanelScreen] (right-edge panel, same `0xCC101010` background, same
- * `§8[§diustitia§8]` header, `drawTextWithShadow` rows, `shouldPause = false` so the game keeps
+ * `§8[§dMilkItAC§8]` header, `drawTextWithShadow` rows, `shouldPause = false` so the game keeps
  * running) but draws captured chat rows instead of flag events. The panel is a bit wider than the
  * transcript panel (~220px vs ~150px) and wraps long rows to the panel width, so a long message or
  * a long username continues on the next line instead of clipping off the right edge. Refreshed
@@ -45,7 +45,7 @@ class ChatHistPanelScreen(
             super.render(context, mouseX, mouseY, delta)
             val tr = this.textRenderer
             var y = 6
-            context.drawTextWithShadow(tr, Text.literal("§8[§diustitia§8]"), x0 + 4, y, WHITE); y += 11
+            context.drawTextWithShadow(tr, Text.literal("§8[§dMilkItAC§8]"), x0 + 4, y, WHITE); y += 11
             context.drawTextWithShadow(tr, Text.literal("§8chathist"), x0 + 4, y, WHITE); y += 11
             context.drawTextWithShadow(tr, Text.literal("§f$subtitle"), x0 + 4, y, WHITE); y += 13
             val rows = rowsProvider().take(limit)
@@ -80,7 +80,7 @@ class ChatHistPanelScreen(
     override fun close() { client?.setScreen(parent) }
 
     companion object {
-        private val TITLE = Text.literal("Iustitia — chathist")
+        private val TITLE = Text.literal("MilkItAC — chathist")
         private const val WHITE = -1
         private val BG = 0xCC101010.toInt()
         private val FMT = SimpleDateFormat("HH:mm:ss")

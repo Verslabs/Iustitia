@@ -5,7 +5,7 @@ import net.minecraft.client.MinecraftClient
 /**
  * Incremental, per-segment chunk snapshotting. Instead of one big synchronous [ChunkCapture.capture]
  * sweep at export time, this fills a per-segment chunk map a few chunks per tick while the scene is
- * captured, so `/ius replay`, `/ius clip` and `/ius record` can all bundle the world without a hitch —
+ * captured, so `/milk replay`, `/milk clip` and `/milk record` can all bundle the world without a hitch —
  * and a long recording keeps the world it had at each segment.
  *
  * Fed from [ReplayBuffer.updateSegment] (`onSegmentStart` on a new segment, `tickCapture` every tick)

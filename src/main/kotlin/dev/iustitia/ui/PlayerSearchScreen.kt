@@ -10,7 +10,7 @@ import net.minecraft.text.Text
 import java.util.UUID
 
 /**
- * #1 (search half): the `/ius hist` landing screen. A filter text field + a manually-rendered,
+ * #1 (search half): the `/milk hist` landing screen. A filter text field + a manually-rendered,
  * scrollable list of every player known this session — the **union** of players currently
  * tracked ([EntityTrackerManager.all], even those with zero flags) and players who ever
  * flagged ([FlagHistory.knownNames], even after despawn). This fixes the gap that
@@ -76,7 +76,7 @@ class PlayerSearchScreen(private val parent: Screen?) : Screen(TITLE) {
             context.fill(0, 0, this.width, this.height, BG)
             super.render(context, mouseX, mouseY, delta)
             val tr = this.textRenderer
-            context.drawTextWithShadow(tr, Text.literal("§8[§diustitia§8] §f§lPlayer history"), 10, 10, WHITE)
+            context.drawTextWithShadow(tr, Text.literal("§8[§dMilkItAC§8] §f§lPlayer history"), 10, 10, WHITE)
             context.drawTextWithShadow(tr, Text.literal("§7Search players by name — click a row for its flag history"), 10, 24, WHITE)
             if (rows.isEmpty()) {
                 context.drawTextWithShadow(tr, Text.literal("§7No players match. (tracked+flagged this session)"), 10, listTop + 2, WHITE)
@@ -157,7 +157,7 @@ class PlayerSearchScreen(private val parent: Screen?) : Screen(TITLE) {
     }
 
     companion object {
-        private val TITLE = Text.literal("Iustitia — player history")
+        private val TITLE = Text.literal("MilkItAC — player history")
         private const val ROW_H = 12
         private fun glyphFor(tier: FlagHistory.Tier): String = when (tier) {
             FlagHistory.Tier.GREEN -> "§a[+]§r"

@@ -68,7 +68,7 @@ object ConfigManager {
     @Volatile private var writerStarted: Boolean = false
 
     private val writerThread: Thread by lazy {
-        Thread(::writerLoop, "Iustitia-ConfigWriter").apply { isDaemon = true }
+        Thread(::writerLoop, "MilkItAC-ConfigWriter").apply { isDaemon = true }
     }
 
     /**
@@ -76,7 +76,7 @@ object ConfigManager {
      * made right before the client closes is not lost (the writer is a daemon — the JVM won't
      * wait for it). Registered once on the first [save]; fail-open.
      */
-    private val flushHook: Thread = Thread({ try { flush() } catch (_: Throwable) {} }, "Iustitia-ConfigFlush")
+    private val flushHook: Thread = Thread({ try { flush() } catch (_: Throwable) {} }, "MilkItAC-ConfigFlush")
     @Volatile private var hookAdded: Boolean = false
 
     fun load() {

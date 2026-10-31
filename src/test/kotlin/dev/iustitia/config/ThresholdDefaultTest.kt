@@ -7,7 +7,7 @@ import kotlin.test.assertTrue
 
 /**
  * Pure-JVM tests for the shipped-default lookup behind
- * `/ius threshold <check> default|reset` (issue #5). The command restores
+ * `/milk threshold <check> default|reset` (issue #5). The command restores
  * `IustitiaConfig().slice(id).threshold`, so these pin that lookup as the single
  * source of truth. No Minecraft/Fabric objects (`IustitiaConfig` has no imports).
  */

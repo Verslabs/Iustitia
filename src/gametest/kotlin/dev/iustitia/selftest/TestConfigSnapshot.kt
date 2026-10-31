@@ -86,7 +86,7 @@ class TestConfigSnapshot private constructor(
                 c.persistenceEnabled = false
                 c.alertsEnabled = true
                 // Every check ON: an applied preset (standard ships seven checks off) or a manual
-                // /ius toggle would otherwise read as a bypass on a drive that works. See the
+                // /milk toggle would otherwise read as a bypass on a drive that works. See the
                 // class doc.
                 c.checks().forEach { (_, cc) -> cc.enabled = true }
                 // Verbose is normally off (the flag tap is what the report reads), but the

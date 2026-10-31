@@ -8,7 +8,7 @@ import java.nio.file.Path
 
 /**
  * Named configuration presets — five built-ins ([builtIns]) plus user-created custom presets
- * persisted as JSON under the presets dir (see [presetsDir]). `/ius preset <name>` resolves a
+ * persisted as JSON under the presets dir (see [presetsDir]). `/milk preset <name>` resolves a
  * built-in first, then a custom file, and **applies** it onto the live [ConfigManager.config] IN
  * PLACE (never replacing the reference — other subsystems hold it), then [ConfigManager.save] +
  * [Iustitia.onConfigReloaded]. Custom presets are snapshots of the current config's PRESET CONTENT
@@ -60,15 +60,15 @@ import java.nio.file.Path
 object PresetManager {
 
     /**
-     * A built-in preset's identity and the words used to describe it: the [name] `/ius preset <name>`
+     * A built-in preset's identity and the words used to describe it: the [name] `/milk preset <name>`
      * resolves, the [label] a wizard button or a listing line shows, whether it is the recommended
      * default, whether it is a diagnostic profile the setup wizard leaves out, and the [blurb] lines
      * that say what the profile costs.
      *
      * This list is the single source for the built-ins ([builtInNames] is derived from it), so the
-     * wizard, the `/ius help` row, the preset listing, the apply-failure message and the docs cannot
+     * wizard, the `/milk help` row, the preset listing, the apply-failure message and the docs cannot
      * disagree about which presets exist or what they do. [label] is deliberately the name in display
-     * case: someone who picks "Strict" in the wizard then types `/ius preset strict`, and nothing has
+     * case: someone who picks "Strict" in the wizard then types `/milk preset strict`, and nothing has
      * to be translated in their head. The recommended and diagnostic markers are separate flags
      * rather than baked into the label, because each surface renders them its own way (the wizard
      * appends a marker, the listing colors one).
@@ -141,7 +141,7 @@ object PresetManager {
      *  a server feature cannot fake.
      *
      *  This is a detection-scope choice, not a statement that the checks are wrong. They stay
-     *  implemented, they stay in the registry, they stay switchable in `/ius config`, and every one
+     *  implemented, they stay in the registry, they stay switchable in `/milk config`, and every one
      *  of them has a live-test gate. A competitive or moderation profile that wants the full set
      *  should turn them back on rather than assume this list is empty. Note that `enabled` is preset
      *  content, so applying this preset writes the flag for all 36 checks: these seven go off and
@@ -315,7 +315,7 @@ object PresetManager {
         // Diagnostic: every boolean in the config true, every check on, the same detection tuning as
         // strict, and neither suppression timer. `alertBatching` stays true because it IS a boolean;
         // `verbose` carries the per-flag detail that batching would collapse in chat. The setup
-        // wizard does not offer this one; reach it with `/ius preset debug`.
+        // wizard does not offer this one; reach it with `/milk preset debug`.
         "debug" -> IustitiaConfig().apply {
             enabled = true; verbose = true; legitScaffoldStrictGates = true; sensitivitySubstrate = true
             alertsEnabled = true; nametagPrefixes = true; nametagGreenEnabled = true
@@ -382,7 +382,7 @@ object PresetManager {
         return presetsDir().resolve("$safe.json")
     }
 
-    /** Presets dir, matching the rest of Iustitia's data layout: `%APPDATA%/.iustitia/presets` on
+    /** Presets dir, matching the rest of MilkItAC's data layout: `%APPDATA%/.iustitia/presets` on
      *  Windows (roaming, same tree as clips/exemptions/notes), `<gameDir>/.iustitia/presets`
      *  elsewhere. A legacy game-dir preset directory is still READ when the roaming one has no
      *  presets, so presets saved by older builds keep loading after the move. */

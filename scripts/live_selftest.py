@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run Iustitia's automated live tests and turn the result into a verdict.
+"""Run MilkItAC's automated live tests and turn the result into a verdict.
 
 This is the command an AI agent (or a human) runs to verify a change against the
 real client without anyone touching the game. It wraps the Fabric client gametest
@@ -81,7 +81,7 @@ FAST_PASSES = (PASS_LEGIT, PASS_CHEAT)
 
 
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="Run Iustitia's automated live tests.")
+    p = argparse.ArgumentParser(description="Run MilkItAC's automated live tests.")
     p.add_argument(
         "--check", "--scenario",
         dest="check",
@@ -499,7 +499,7 @@ def summarise(reports: list[dict], require_multi_source: int, verbose: bool) -> 
             findings.append(f"[{r.get('scenario')}] {line}")
             if line.startswith("FALSE POSITIVE"):
                 documented_fp.append(line)
-    # Harness gaps are NOT findings about Iustitia: the drive never reached the check, so the
+    # Harness gaps are NOT findings about MilkItAC: the drive never reached the check, so the
     # assertion is unestablished. Kept in their own bucket so they are never mistaken for a
     # detector bypass, and never counted in the bypass total.
     harness_gaps: list[str] = []
@@ -528,7 +528,7 @@ def summarise(reports: list[dict], require_multi_source: int, verbose: bool) -> 
 
     print()
     print("=" * 78)
-    print("Iustitia automated live tests")
+    print("MilkItAC automated live tests")
     print("=" * 78)
     for r in reports:
         status = "PASS" if r.get("passed") else "FAIL"
@@ -582,7 +582,7 @@ def summarise(reports: list[dict], require_multi_source: int, verbose: bool) -> 
 
 
 def write_markdown(reports: list[dict], verdict: int, findings: list[str]) -> None:
-    lines = ["# Iustitia automated live tests", ""]
+    lines = ["# MilkItAC automated live tests", ""]
     lines.append(f"- scenarios: {len(reports)} - passed: {sum(1 for r in reports if r.get('passed'))}")
     header = "| pass | scenario | source | result | notes |"
     lines += [header, "|---|---|---|---|---|"]

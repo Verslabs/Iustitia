@@ -57,7 +57,7 @@ class SelfTestEntrypoint : FabricClientGameTest {
                     ?: "missed=${r.missedChecks} falsePositives=${r.falsePositives} vl=${r.vl}")
             }
             throw AssertionError(
-                "Iustitia self-test: ${failed.size}/${reports.size} scenario(s) FAILED:\n$lines\n" +
+                "MilkItAC self-test: ${failed.size}/${reports.size} scenario(s) FAILED:\n$lines\n" +
                     "See docs/automated-live-testing.md for the scenario definitions and tuning knobs."
             )
         }
@@ -238,7 +238,7 @@ class SelfTestEntrypoint : FabricClientGameTest {
         if (body.isEmpty()) {
             val available = scenarios.joinToString("\n  ") { "${it.pass}/${it.name} [${it.source}]" }
             throw AssertionError(
-                "Iustitia self-test filter matched no scenarios " +
+                "MilkItAC self-test filter matched no scenarios " +
                     "(pass='$pass', filter='$filter', source='$source', tag='$tag').\n" +
                     "Available:\n  $available"
             )
@@ -272,7 +272,7 @@ class SelfTestEntrypoint : FabricClientGameTest {
         val ordered = scenarios.sortedBy { it.name }
         val selected = ordered.filterIndexed { i, _ -> i % count == index - 1 }
         if (selected.isEmpty()) {
-            throw AssertionError("Iustitia self-test shard $spec selected no scenarios out of ${scenarios.size}.")
+            throw AssertionError("MilkItAC self-test shard $spec selected no scenarios out of ${scenarios.size}.")
         }
         println("[iustitia-selftest] shard $index/$count: ${selected.size}/${scenarios.size} scenario(s)")
         return selected

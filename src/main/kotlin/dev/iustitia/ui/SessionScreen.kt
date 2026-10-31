@@ -10,7 +10,7 @@ import net.minecraft.text.Text
 import java.util.UUID
 
 /**
- * #12 (session screen): the dense one-screen session summary opened by `/ius session screen` and
+ * #12 (session screen): the dense one-screen session summary opened by `/milk session screen` and
  * the session keybind. Built on demand from the [FlagHistory] readers: tier counts over the union
  * of tracked + flagged uuids, the peak-confidence player, the top offenders by alert count, and
  * the session totals. Compact-mode renders the same data as condensed one-liners. Display-only and
@@ -62,7 +62,7 @@ class SessionScreen(private val parent: Screen?) : Screen(TITLE) {
             super.render(context, mouseX, mouseY, delta)
             val tr = this.textRenderer
             val s = summary
-            context.drawTextWithShadow(tr, Text.literal("§8[§diustitia§8] §f§lSession summary"), 10, 10, WHITE)
+            context.drawTextWithShadow(tr, Text.literal("§8[§dMilkItAC§8] §f§lSession summary"), 10, 10, WHITE)
             if (compact) {
                 context.drawTextWithShadow(tr, Text.literal(
                     "§7players §f${s.total} §7| §aG§f${s.green} §eY§f${s.yellow} §cR§f${s.red} §7| alerts §f${s.totalAlerts}" +
@@ -96,7 +96,7 @@ class SessionScreen(private val parent: Screen?) : Screen(TITLE) {
     override fun close() { client?.setScreen(parent) }
 
     companion object {
-        private val TITLE = Text.literal("Iustitia — session")
+        private val TITLE = Text.literal("MilkItAC — session")
         private const val WHITE = -1
         private val BG = 0xCC101010.toInt()
     }

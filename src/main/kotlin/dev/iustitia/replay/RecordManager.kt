@@ -7,13 +7,13 @@ import java.util.ArrayDeque
 import java.util.UUID
 
 /**
- * Manual long-recording buffer for `/ius record start|stop`. Unlike the always-on 60 s rolling
- * [ReplayBuffer] (which `/ius replay` + `/ius clip` dump the last N seconds of), this is an
+ * Manual long-recording buffer for `/milk record start|stop`. Unlike the always-on 60 s rolling
+ * [ReplayBuffer] (which `/milk replay` + `/milk clip` dump the last N seconds of), this is an
  * **explicit, opt-in** capture of arbitrary length — bounded at [MAX_RECORD_FRAMES] (10 min) per
  * segment. `start` begins an incremental world capture ([ChunkRollingCapture]) and accumulates
  * per-tick frames + block deltas; `stop` bundles frames + alerts + totems + the captured world
  * (segments) into a [ReplayBuffer.Window] and writes a normal `.iusclip` via [ClipStore.save] — so
- * `/ius playclip <name>` round-trips a recording exactly like a clip.
+ * `/milk playclip <name>` round-trips a recording exactly like a clip.
  *
  * ## Auto-split (world change + 10-min cap)
  *
@@ -26,7 +26,7 @@ import java.util.UUID
  *
  * ## Merge provenance
  *
- * Iustitia's original recorder (frames + alerts + totems + equipment) extended with SnapClip's
+ * MilkItAC's original recorder (frames + alerts + totems + equipment) extended with SnapClip's
  * incremental world + block-delta capture. **The alert timeline is preserved** — SnapClip's recorder
  * dropped it.
  *
@@ -65,7 +65,7 @@ object RecordManager {
     /** Frame count captured BEFORE [stop] clears the deque (for the feedback line). */
     private var frameCountBeforeClear: Int = 0
 
-    private val tag: String get() = "§8[§diustitia§8]"
+    private val tag: String get() = "§8[§dMilkItAC§8]"
 
     /**
      * Begin a recording. Idempotent — a second `start` while recording returns an "already recording"
@@ -75,7 +75,7 @@ object RecordManager {
     fun start(): String = try {
         // Yield long-recording to SnapClip when it's installed (it owns /record).
         if (dev.iustitia.compat.CompanionMods.snapClip) return "$tag §7recording is handled by §fSnapClip§7 (installed) — use its §f/record start§7."
-        if (recording) return "$tag §7already recording §8(§f${frameCount()}§7 frames so far) — §f/ius record stop§7 to save."
+        if (recording) return "$tag §7already recording §8(§f${frameCount()}§7 frames so far) — §f/milk record stop§7 to save."
         val cfg = ConfigManager.config
         recording = true
         segmentStartTick = Iustitia.tickCounter
@@ -99,7 +99,7 @@ object RecordManager {
             } catch (_: Throwable) {}
         }
         val mapTxt = if (mapOn) " §7+ map" else ""
-        "$tag §7recording started §8(segment §f$segmentIndex§8)§7 — §f/ius record stop§7 to save$mapTxt§7."
+        "$tag §7recording started §8(segment §f$segmentIndex§8)§7 — §f/milk record stop§7 to save$mapTxt§7."
     } catch (_: Throwable) {
         recording = false
         "$tag §cfailed to start recording."
@@ -110,7 +110,7 @@ object RecordManager {
      * Returns a chat-feedback string. Idempotent — `stop` while not recording just says so.
      */
     fun stop(name: String?): String = try {
-        if (!recording) return "$tag §7not recording. §f/ius record start§7 to begin."
+        if (!recording) return "$tag §7not recording. §f/milk record start§7 to begin."
         val saved = saveSegment(name)
         recording = false
         synchronized(frames) { frames.clear() }

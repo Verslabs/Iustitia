@@ -176,11 +176,11 @@ class ClientPlayNetworkHandlerMixin {
             }
             // EntityStatus byte 35 == Totem-of-Undying pop (broadcast to every tracking client).
             // Recorded into the replay buffer as a (tick, uuid) event → the `⚡<count>` badge on the
-            // ghost's nametag during /ius playclip when clipTotemPopCounter is on. Fail-open.
+            // ghost's nametag during /milk playclip when clipTotemPopCounter is on. Fail-open.
             if (packet.status == 35.toByte()) {
                 val who = otherPlayer(packet.getEntity(w)) ?: return
                 dev.iustitia.replay.ReplayBuffer.recordTotemPop(Iustitia.tickCounter, who)
-                // Mirror into the manual long-recording buffer (no-op unless `/ius record` is active).
+                // Mirror into the manual long-recording buffer (no-op unless `/milk record` is active).
                 try { dev.iustitia.replay.RecordManager.recordTotemPop(Iustitia.tickCounter, who) } catch (_: Throwable) {}
             }
         } catch (_: Throwable) {}
@@ -211,7 +211,7 @@ class ClientPlayNetworkHandlerMixin {
                 ?: packet.unsignedContent()?.string ?: return
             // Resolve a clean username (tab-list profile name for this sender) so the stored `name`
             // field is consistent with the decorated paths — the packet's serialized name can be a
-            // decorated display name that would break `/ius chathist <name>`'s name-match filter.
+            // decorated display name that would break `/milk chathist <name>`'s name-match filter.
             val packetName = packet.serializedParameters()?.name()?.string
                 ?: tracked.username().ifEmpty { sender.toString().take(8) }
             val name = dev.iustitia.chathist.DecoratedChatParser.resolveCleanName(sender, packetName)

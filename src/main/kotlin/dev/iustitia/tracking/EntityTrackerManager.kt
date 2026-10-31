@@ -295,7 +295,7 @@ object EntityTrackerManager {
         // `!sensitivity.valid`, so when the feed is skipped the substrate simply never converges and
         // both sub-flags self-disable — no check code needs removal, and every OTHER heuristic in
         // both checks keeps running. Default OFF = dropped (v1.1.0 FPS parity for the substrate
-        // cost); flip on via `/ius config` to re-enable the two GCD sub-flags (accepting the FPS cost).
+        // cost); flip on via `/milk config` to re-enable the two GCD sub-flags (accepting the FPS cost).
         if (ProtocolDetector.fullFloatLook && ConfigManager.config.sensitivitySubstrate) {
             val sinceTp = tick - tp.lastTeleportTick
             val combatRelevant = tick - tp.lastAttackTick <= SENS_COMBAT_WINDOW

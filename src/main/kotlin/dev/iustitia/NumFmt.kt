@@ -15,7 +15,7 @@ import java.util.Locale
  *
  * `%.2f` renders a non-finite double as the bare word `NaN` / `Infinity` — which is not valid
  * JSON, so a single runaway division in any check's evidence would silently corrupt
- * `/ius report json` for that whole report. (This is the same class of failure the locale guard
+ * `/milk report json` for that whole report. (This is the same class of failure the locale guard
  * above exists to prevent, and it is the *only* number-shaped failure that survives the
  * [java.util.Locale] fix.)
  *

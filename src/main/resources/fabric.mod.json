@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "id": "iustitia",
   "version": "${version}",
-  "name": "Iustitia",
-  "description": "Client-sided anticheat/inspector. Detects impossible world/combat interactions from other players by parsing incoming server packets. Local-only chat alerts.",
+  "name": "MilkItAC",
+  "description": "MilkItAC — client-sided anticheat/inspector. Milks the truth out of the server packets you already receive: detects impossible world/combat interactions from other players. Local-only chat alerts.",
   "icon": "iustitia.png",
   "authors": ["ThoriaDevelopment"],
   "contact": {

@@ -43,7 +43,7 @@ open class CheckContext {
      * transition, a stale-position snap), which at vanilla combat cadence is roughly once per
      * 12 ticks — a `1.0` flag per 12 ticks loses to the `0.5`/tick decay, so a cheater who
      * repeats the violation *every single hit* could never accumulate any VL at all and the
-     * check recorded in `/ius hist` while never raising a chat alert. The ring lets those
+     * check recorded in `/milk hist` while never raising a chat alert. The ring lets those
      * checks require a *pattern* (e.g. 3 of the last 4 hits) and then alert once for the
      * episode at a level that clears setbackVL.
      *

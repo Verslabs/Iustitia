@@ -27,7 +27,7 @@ import java.util.UUID
  *
  * ## Why bots instead of packets
  *
- * Iustitia's tracker polls the live client world (`EntityTrackerManager.poll`), so a
+ * MilkItAC's tracker polls the live client world (`EntityTrackerManager.poll`), so a
  * bot that is a real `OtherClientPlayerEntity` in the world IS a tracked player --
  * no injection seam, no packet replay. Combat and effect signals that the real
  * pipeline learns from rebroadcast packets are injected through the same public
@@ -186,7 +186,7 @@ object SelfTest {
             }
         }
 
-        /** Inject a hurt for this bot (it was damaged) on the Iustitia clock. */
+        /** Inject a hurt for this bot (it was damaged) on the MilkItAC clock. */
         fun hurt(attackerEntityId: Int = -1, source: HurtSource = HurtSource.ENTITY_DAMAGE) {
             publishFromClient {
                 HurtSignal(
@@ -586,7 +586,7 @@ object SelfTest {
          * Use it when the check logged *no flag at all* during the scenario, which means the
          * bot never produced the input the check reacts to. The alert assertion is therefore not
          * established either way, and writing it as a plain expectation would leave the suite
-         * permanently red for a reason that is about this file, not about Iustitia. The entry
+         * permanently red for a reason that is about this file, not about MilkItAC. The entry
          * carries the observed peak VL, so a reviewer can tell the two apart instantly: 0.00
          * means the check was never asked, anything above 0 means it reacted and the driver is
          * close.
@@ -835,7 +835,7 @@ object SelfTest {
      *
      * When it has to give up entirely, the server is frozen for good: thread dumps of that
      * state show the gametest framework's own client/server synchronizers parked forever on
-     * unreleased semaphores (nothing Iustitia touches is in the deadlock, and a forced
+     * unreleased semaphores (nothing MilkItAC touches is in the deadlock, and a forced
      * disconnect does not release them). Every later scenario then cascade-fails on "Cannot
      * create a world when a server is running" at ~2 min apiece, so continuing is pure
      * waste -- [suiteFatal] is set and [runAll] aborts the suite instead. The runner's
