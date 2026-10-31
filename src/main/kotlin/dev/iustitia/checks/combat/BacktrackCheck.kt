@@ -28,7 +28,7 @@ import kotlin.math.sqrt
  * [WINDOW] hits must be stale before the episode flags once at a level that clears setbackVL (see
  * [Check.flagEpisode]). The old per-hit level-1.0 form could never accumulate: a stale snap needs
  * ≥3 frozen samples first (a ≥4-tick cycle), so its flag rate is ≤0.25/tick against a 0.25/tick
- * decay — measured live, the drive recorded in `/ius hist` and never alerted.
+ * decay — measured live, the drive recorded in `/milk hist` and never alerted.
  */
 class BacktrackCheck : Check() {
 

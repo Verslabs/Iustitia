@@ -472,7 +472,7 @@ object Scenarios {
      *
      * - **The launch is a no-damage burst.** A wind charge deals no entity damage, so the server
      *   broadcasts no hurt, and most servers do not rebroadcast another player's
-     *   `EntityVelocityUpdate` either. Iustitia therefore detects the impulse from the motion
+     *   `EntityVelocityUpdate` either. MilkItAC therefore detects the impulse from the motion
      *   itself (`burstTick`: Δy > 0.8 with prevΔy < 0.15, armed once at the onset) -- the
      *   exemption `flyEnvelope` and `noSlow` consume. This drive presents the real arc rather
      *   than a teleport so that detector path is exercised instead of bypassed.
@@ -1040,7 +1040,7 @@ object Scenarios {
      *   because a 1-tick relay is indistinguishable from the 20 CPS autoclicker the check exists to catch.
      *   Nothing about why the arm moved reaches that gate.
      *
-     * Iustitia only ever sees the relayed stream, so a continuous digger arrives as [SwingSignal]s at a
+     * MilkItAC only ever sees the relayed stream, so a continuous digger arrives as [SwingSignal]s at a
      * constant interval. [ClickStatisticsCheck] records the tick delta between consecutive swings and flags
      * `ClickStats(StDev)` when `populationStDev < 0.45` over 40 samples. On a constant interval every delta
      * is identical, the stdev is exactly 0.0, and ordinary digging produces the flag.

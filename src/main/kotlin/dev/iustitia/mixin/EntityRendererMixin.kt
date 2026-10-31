@@ -52,7 +52,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
  *
  * ## MODERN chunk-bearing playclip — hide ALL live entities
  *
- * While a chunk-bearing `/ius playclip` runs (`chunks != null && !legacyPlayclip`), the recorded
+ * While a chunk-bearing `/milk playclip` runs (`chunks != null && !legacyPlayclip`), the recorded
  * chunk world is relocated by `relocOffset` and rendered by [dev.iustitia.render.ChunkWorldRenderer],
  * but the LIVE world's non-player entities (boats, item frames, minecarts, armor stands, paintings,
  * ...) were never recorded and keep rendering at their LIVE positions via vanilla's dispatcher —
@@ -61,7 +61,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
  * show-self rule above), so only the recorded chunk world + buffered ghosts show — the same
  * rewind-the-world suppression already applied to other players, extended to all live entities.
  * Recorded block *models* still render in the chunk world; recorded entity/block-entity NBT is a
- * documented v1 follow-up (`ChunkCapture.kt:22-23`). The legacy `/ius playclip` + `/ius replay` paths
+ * documented v1 follow-up (`ChunkCapture.kt:22-23`). The legacy `/milk playclip` + `/milk replay` paths
  * (no chunks) skip this branch entirely and keep the original "only other players hide" behavior.
  *
  * ## Cost when no replay is running

@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
- * Per-player observable counters for the transcript feature (`/ius transcript <name>` + the side
+ * Per-player observable counters for the transcript feature (`/milk transcript <name>` + the side
  * panel): swings, inferred hits, and velocity packets received. These are **read-only taps** on the
  * existing signals ([SwingSignal], [AttackEvent], [VelocitySignal]) — they change no detection
  * logic. Since the Phase A defer queue, bus subscribers run on the client tick thread; the

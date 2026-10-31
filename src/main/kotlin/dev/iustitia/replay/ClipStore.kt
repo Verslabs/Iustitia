@@ -11,7 +11,7 @@ import java.nio.file.Path
  *
  * Unlike the passive persistence store ([dev.iustitia.persistence.PersistenceManager], gated by
  * [dev.iustitia.config.IustitiaConfig.persistenceEnabled]), a clip is an EXPLICIT user export
- * (`/ius clip`), so it always writes — independent of the persistence toggle. **Local-only** —
+ * (`/milk clip`), so it always writes — independent of the persistence toggle. **Local-only** —
  * nothing is uploaded. All paths fail-open: a missing/corrupt file yields a null clip, never a throw.
  */
 object ClipStore {

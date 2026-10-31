@@ -63,7 +63,7 @@ data class ScenarioReport(
      * Harness gaps: scenarios whose DRIVE does not yet reach the check it targets.
      *
      * Distinct from [knownOpen], and the distinction is the whole point. `knownOpen` says "the
-     * detector cannot catch this yet" -- a finding about Iustitia. This says "our scripted bot
+     * detector cannot catch this yet" -- a finding about MilkItAC. This says "our scripted bot
      * does not yet reproduce the input that check reacts to" -- a finding about the TEST, which
      * is what the zero-flag signature actually means (the check logged no flag at all, so it was
      * never asked). Keeping them apart stops the suite from either reporting a broken drive as a

@@ -1,11 +1,11 @@
 ---
 name: iustitia-contributor
-description: Safely plan, implement, verify, and document changes to the Iustitia Minecraft Fabric client mod. Use for source changes, detector work, mixins, rendering, replay/clip behavior, configuration, persistence, documentation, tests, and pull-request preparation.
+description: Safely plan, implement, verify, and document changes to the MilkItAC Minecraft Fabric client mod. Use for source changes, detector work, mixins, rendering, replay/clip behavior, configuration, persistence, documentation, tests, and pull-request preparation.
 ---
 
-# Iustitia contributor skill
+# MilkItAC contributor skill
 
-You are working on Iustitia, a Kotlin/JVM Fabric client mod for Minecraft 1.21.11. Treat this repository as a safety-sensitive observer and moderation tool, not as a generic application.
+You are working on MilkItAC, a Kotlin/JVM Fabric client mod for Minecraft 1.21.11. Treat this repository as a safety-sensitive observer and moderation tool, not as a generic application.
 
 ## Non-negotiable project rules
 
@@ -176,8 +176,8 @@ Verify every entry and exit path. State must restore on:
 
 Preserve the distinction between:
 
-- `/ius replay`: same-world, absolute coordinates, no bundled map.
-- `/ius playclip`: portable clip, optional relocation and captured world.
+- `/milk replay`: same-world, absolute coordinates, no bundled map.
+- `/milk playclip`: portable clip, optional relocation and captured world.
 - Legacy playclip mode: intentionally retains older behavior.
 
 ### Persistence and imported data
@@ -275,7 +275,7 @@ suite becomes decoration, so decide it from evidence, not from what makes the ru
 | Situation | Declaration |
 |---|---|
 | the drive is wrong, or the check has a real bug | fix it, keep `expect(bot, id, mustAlert = true)` |
-| the check **logged flags** but stayed under `setbackVL` | `expectKnownOpen(...)` — a **detector gap** (Iustitia's bug) |
+| the check **logged flags** but stayed under `setbackVL` | `expectKnownOpen(...)` — a **detector gap** (MilkItAC's bug) |
 | the check logged **no flag at all** | `expectDriveGap(...)` — a **harness gap** (this drive's bug) |
 | a **legit** drive alerted | `expectDocumentedFp(...)` — a **false positive** (release-blocking) |
 

@@ -5,7 +5,7 @@ import dev.iustitia.config.PresetManager
 import dev.iustitia.selftest.SelfTest.BotHandle
 
 /**
- * Preset / config-management scenarios. Presets are observer tooling (the `/ius preset`
+ * Preset / config-management scenarios. Presets are observer tooling (the `/milk preset`
  * control surface), so they ride in the REPLAY pass group — they assert configuration
  * mechanics, not detector verdicts, and restore every field they touch.
  *
@@ -14,7 +14,7 @@ import dev.iustitia.selftest.SelfTest.BotHandle
  *
  *  1. **The disabled-check gate** — combat checks are bus-driven (each subscribes to
  *     AttackEvent/SwingSignal in its own init), so the tick loop's `if (!c.enabled)`
- *     never reached them and a toggled-off combat check kept flagging while `/ius toggle`
+ *     never reached them and a toggled-off combat check kept flagging while `/milk toggle`
  *     reported OFF. The gate now lives at the `Check.flag` chokepoint; [PresetDisabledGate]
  *     proves a disabled check produces **zero** VL accumulation and re-arms when enabled.
  *  2. **Schema-derived apply** — the old hand-written `copyPresetContent` list had drifted
@@ -68,7 +68,7 @@ object PresetScenarios {
                 "PRESET/GATE failure: check '$id' accumulated VL to $peakDisabled while its " +
                     "config slice was disabled (setbackVL=1, decay=0, so any flag would show). " +
                     "The Check.flag disabled-check gate is broken: a toggled-off check is " +
-                    "flagging/alerting behind /ius toggle's back."
+                    "flagging/alerting behind /milk toggle's back."
             }
 
             // ---- phase 2: same drive, check re-enabled -> must alert ----

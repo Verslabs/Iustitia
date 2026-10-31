@@ -11,10 +11,10 @@ import net.minecraft.client.gui.screen.Screen
 import net.minecraft.text.Text
 
 /**
- * `/ius clips` — the clip manager. A manually-rendered, scrollable list of every saved `.iusclip`
+ * `/milk clips` — the clip manager. A manually-rendered, scrollable list of every saved `.iusclip`
  * (from [ClipStore.list]) with per-clip frame/alert counts (read cheaply via [ClipCodec.readHeader]
  * — no per-snap data loaded just to show the list). **Left-click a row plays the clip** (loads it
- * fully + starts a replay, like `/ius playclip <name>`); **right-click deletes it** ([ClipStore.delete]).
+ * fully + starts a replay, like `/milk playclip <name>`); **right-click deletes it** ([ClipStore.delete]).
  *
  * Manual rendering (not [net.minecraft.client.gui.widget.ElementListWidget]) mirrors
  * [PlayerSearchScreen] — keeps the whole interaction under our control via the confirmed 1.21.11
@@ -47,11 +47,11 @@ class ClipManagerScreen(private val parent: Screen?) : Screen(TITLE) {
         try {
             context.fill(0, 0, this.width, this.height, BG)
             val tr = this.textRenderer
-            context.drawTextWithShadow(tr, Text.literal("§8[§diustitia§8] §f§lClips"), 10, 10, WHITE)
+            context.drawTextWithShadow(tr, Text.literal("§8[§dMilkItAC§8] §f§lClips"), 10, 10, WHITE)
             context.drawTextWithShadow(tr, Text.literal("§7Saved .iusclip files — §fleft-click §7to play · §fright-click §7to delete"), 10, 24, WHITE)
             context.drawTextWithShadow(tr, Text.literal("§7" + ClipStore.dirDisplay()), 10, 38, WHITE)
             if (rows.isEmpty()) {
-                context.drawTextWithShadow(tr, Text.literal("§7No saved clips. Save one with §f/ius clip <seconds> [name]§7."), 10, listTop + 2, WHITE)
+                context.drawTextWithShadow(tr, Text.literal("§7No saved clips yet — milk one with §f/milk clip <seconds> [name]§7."), 10, listTop + 2, WHITE)
                 status?.let { context.drawTextWithShadow(tr, Text.literal(it), 10, this.height - 14, WHITE) }
                 return
             }
@@ -108,8 +108,8 @@ class ClipManagerScreen(private val parent: Screen?) : Screen(TITLE) {
         return super.mouseScrolled(x, y, h, v)
     }
 
-    /** Play a clip: load it fully + start a replay (like `/ius playclip`), then close back to the game.
-     *  Delegates the load → validate → start sequence to [ClipPlayback] (shared with `/ius playclip`)
+    /** Play a clip: load it fully + start a replay (like `/milk playclip`), then close back to the game.
+     *  Delegates the load → validate → start sequence to [ClipPlayback] (shared with `/milk playclip`)
      *  so the two entry points can't drift. */
     private fun play(name: String) {
         try {
@@ -117,7 +117,7 @@ class ClipManagerScreen(private val parent: Screen?) : Screen(TITLE) {
             when (val r = ClipPlayback.start(name, ReplayState.SPEED_FULL)) {
                 is ClipPlayback.Result.Started -> {
                     mc.setScreen(null)
-                    mc.player?.sendMessage(Text.literal("§8[§diustitia§8] §7playing clip §f$name§7 at §f${NumFmt.d(digits = 2, v = ReplayState.SPEED_FULL)}×§7 — §f${r.frames}§7 frames. Auto-stops at the end (or §f/ius playclip off§7)."), false)
+                    mc.player?.sendMessage(Text.literal("§8[§dMilkItAC§8] §7playing clip §f$name§7 at §f${NumFmt.d(digits = 2, v = ReplayState.SPEED_FULL)}×§7 — §f${r.frames}§7 frames. Auto-stops at the end (or §f/milk playclip off§7)."), false)
                 }
                 is ClipPlayback.Result.LoadFailed -> {
                     // The reason rides along (truncated — the status line is one row wide).
@@ -157,7 +157,7 @@ class ClipManagerScreen(private val parent: Screen?) : Screen(TITLE) {
     }
 
     companion object {
-        private val TITLE = Text.literal("Iustitia — clips")
+        private val TITLE = Text.literal("MilkItAC — clips")
         private const val ROW_H = 14
         // Opaque white (ARGB 0xFFFFFFFF) — see PlayerSearchScreen for the 0xFFFFFF alpha-0 gotcha.
         private const val WHITE = -1

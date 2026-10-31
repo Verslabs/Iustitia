@@ -5,10 +5,10 @@ import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 
 /**
- * In-memory session store backing the usability features: per-player flag history (`/ius hist`),
- * the session health panel (`/ius status`), the alert hover tooltip counts, the mute counts, and
+ * In-memory session store backing the usability features: per-player flag history (`/milk hist`),
+ * the session health panel (`/milk status`), the alert hover tooltip counts, the mute counts, and
  * the nametag tier (green/yellow/red). All data is session-scoped (cleared by [reset] on
- * `/ius reset` and game-join) and lives only in the client process — nothing is written to disk or
+ * `/milk reset` and game-join) and lives only in the client process — nothing is written to disk or
  * sent to the server.
  *
  * Two counters per player:
@@ -102,7 +102,7 @@ object FlagHistory {
     /** Wall-clock of the last red-capable alert per player — the decay clock (idle since this). */
     private val lastAlertWallMsByUuid = ConcurrentHashMap<UUID, Long>()
     /** Game tick of the last red-capable (DEFINITIVE ∪ CORROBORATOR) alert per player — drives the
-     *  nametag burst-pulse ("fresh flag within last 3s") and the `/ius evidence`/snapshot "fresh"
+     *  nametag burst-pulse ("fresh flag within last 3s") and the `/milk evidence`/snapshot "fresh"
      *  marker. Read cross-thread from the render mixin; benign one-tick staleness, fail-open. */
     val lastRedAlertTick = ConcurrentHashMap<UUID, Int>()
     private val nameByUuid = ConcurrentHashMap<UUID, String>()
@@ -248,7 +248,7 @@ object FlagHistory {
     } catch (_: Throwable) { "clean (no red-capable alerts)" }
 
     /**
-     * Numeric cheat-confidence score 0–99 for the nametag badge + `/ius session` "who peaked
+     * Numeric cheat-confidence score 0–99 for the nametag badge + `/milk session` "who peaked
      * highest". A weighted blend of the tier base (green 15 / yellow 55 / red 82), a recency bonus
      * (0–12, fresh at the last red-capable alert, decaying to 0 over [DECAY_MS]), a diversity bonus
      * (0–8, +2 per distinct red-capable check up to 4), and a +3 corroborator bonus. Capped at 99.
@@ -323,7 +323,7 @@ object FlagHistory {
 
     /**
      * Restore persisted state for [uuid] (loaded by [dev.iustitia.persistence.PersistenceManager] on
-     * startup when persistence is on). Merges into every backing map so `/ius hist`/`/ius note`/the
+     * startup when persistence is on). Merges into every backing map so `/milk hist`/`/milk note`/the
      * tier show pre-restart data. The tier itself decays naturally from [lastAlertWallMs] (a restart
      * usually exceeds [DECAY_MS], so a stale RED fades to GREEN until the player re-alerts — the flag
      * timeline + counts persist regardless). Fail-open.
@@ -337,8 +337,8 @@ object FlagHistory {
         // filter: persisted entries for a REMOVED check (e.g. timerRate after its deletion) are
         // dropped before merging, so they can't survive forever in alertedChecks / flagCounts /
         // maxVl / flags — which would otherwise re-evaluate against the trimmed DEFINITIVE set
-        // (silently downgrading a latched RED tier) and render as dangling rows in /ius hist +
-        // /ius report. emptySet (default) = filter disabled, preserving the pre-filter behaviour
+        // (silently downgrading a latched RED tier) and render as dangling rows in /milk hist +
+        // /milk report. emptySet (default) = filter disabled, preserving the pre-filter behaviour
         // (defensive against an init-order gap where the caller can't yet read the check set).
         validCheckIds: Set<String> = emptySet(),
     ) {
@@ -450,7 +450,7 @@ object FlagHistory {
         uuid.toString().take(8)
     }
 
-    /** Names known this session (for tab-completion of `/ius hist <name>` etc.). */
+    /** Names known this session (for tab-completion of `/milk hist <name>` etc.). */
     fun knownNames(): List<String> = try {
         nameByUuid.values.distinct().sorted()
     } catch (_: Throwable) { emptyList() }
@@ -472,7 +472,7 @@ object FlagHistory {
     }
 
     /**
-     * Wipe one player's session history (used by `/ius clear <player>`). Removes every trace of
+     * Wipe one player's session history (used by `/milk clear <player>`). Removes every trace of
      * [uuid] from all backing maps so the player's tier resets to GREEN, flag timeline clears, and
      * counts/peak-VL drop — a clean slate mid-session. Note this does NOT purge the per-check VL
      * contexts (those live in [dev.iustitia.checks.Check]); the caller ([dev.iustitia.Iustitia]
@@ -485,7 +485,7 @@ object FlagHistory {
             alertedChecksByUuid.remove(uuid)
             lastAlertWallMsByUuid.remove(uuid)
             lastRedAlertTick.remove(uuid)
-            // name is intentionally KEPT so /ius hist <name> + tab-completion still resolve after a
+            // name is intentionally KEPT so /milk hist <name> + tab-completion still resolve after a
             // clear (the player is still tracked; only their flags are wiped).
             flagCounts.remove(uuid)
             maxVlByUuidCheck.remove(uuid)

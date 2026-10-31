@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the Iustitia checks documentation.
+"""Generate the MilkItAC checks documentation.
 
 Reads scripts/checks.json (one entry per check, authored from the Kotlin source)
 and emits:
@@ -51,7 +51,7 @@ def nav(active: str, depth: int) -> str:
     cls = lambda a: ' class="cur"' if a == active else ""
     return f"""  <nav class="nav">
     <div class="container nav-inner">
-      <a class="brand" href="{base}index.html"><span class="diamond"></span>IUSTITIA</a>
+      <a class="brand" href="{base}index.html"><span class="diamond"></span>MILKITAC</a>
       <div class="nav-links">
         <a href="{base}index.html#features"{cls("features")}>Features</a>
         <a href="index.html"{cls("checks")}>Docs</a>
@@ -60,7 +60,7 @@ def nav(active: str, depth: int) -> str:
         <a href="{REPO}" target="_blank" rel="noopener">GitHub</a>
       </div>
       <span class="nav-spacer"></span>
-      <span class="nav-cta"><a class="btn btn-primary" href="{RELEASES_LATEST}">Install Iustitia</a></span>
+      <span class="nav-cta"><a class="btn btn-primary" href="{RELEASES_LATEST}">Install MilkItAC</a></span>
     </div>
   </nav>"""
 
@@ -69,7 +69,7 @@ def footer(depth: int) -> str:
     base = "../" * depth
     return f"""  <footer class="footer">
     <div class="container footer-inner">
-      <div><span class="diamond" style="display:inline-block;width:14px;height:14px;background:var(--grad);transform:rotate(45deg);border-radius:3px;vertical-align:-2px;margin-right:7px"></span>Iustitia &mdash; client-sided Fabric anticheat</div>
+      <div><span class="diamond" style="display:inline-block;width:14px;height:14px;background:var(--grad);transform:rotate(45deg);border-radius:3px;vertical-align:-2px;margin-right:7px"></span>MilkItAC &mdash; client-sided Fabric anticheat</div>
       <div class="footer-links">
         <a href="{base}index.html">Home</a>
         <a href="index.html">Docs</a>
@@ -144,7 +144,7 @@ def check_page(check: dict, checks: list, idx: int) -> str:
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{esc(check['name'])} &mdash; Iustitia checks</title>
+  <title>{esc(check['name'])} &mdash; MilkItAC checks</title>
   <meta name="description" content="{esc(check['what'])}">
   <link rel="stylesheet" href="../assets/iustitia.css">
 </head>
@@ -156,7 +156,7 @@ def check_page(check: dict, checks: list, idx: int) -> str:
 {sidebar(checks, check['id'])}
     </aside>
     <main>
-      <div class="breadcrumb"><a href="../index.html">Iustitia</a> <span class="sep">/</span> <a href="index.html">Docs</a> <span class="sep">/</span> <a href="index.html#{esc(check['group'].lower())}">{esc(check['group'])}</a> <span class="sep">/</span> {esc(check['name'])}</div>
+      <div class="breadcrumb"><a href="../index.html">MilkItAC</a> <span class="sep">/</span> <a href="index.html">Docs</a> <span class="sep">/</span> <a href="index.html#{esc(check['group'].lower())}">{esc(check['group'])}</a> <span class="sep">/</span> {esc(check['name'])}</div>
       <div class="check-head">
         <div class="check-title">
           <h1>{esc(check['name'])}</h1>
@@ -187,7 +187,7 @@ def check_page(check: dict, checks: list, idx: int) -> str:
 
       <section class="doc-section slide-in-bottom">
         <h2>Configuration</h2>
-        <p style="color:var(--text-dim);font-size:14px;margin-bottom:14px">Defaults (editable in-game via the YACL config screen or <code style="font-family:var(--mono)">/ius config</code>):</p>
+        <p style="color:var(--text-dim);font-size:14px;margin-bottom:14px">Defaults (editable in-game via the YACL config screen or <code style="font-family:var(--mono)">/milk config</code>):</p>
 {cfg_table(check)}
       </section>
 
@@ -232,8 +232,8 @@ def catalog_page(checks: list) -> str:
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Checks &mdash; Iustitia</title>
-  <meta name="description" content="All 36 Iustitia anticheat checks, grouped by category: what each detects, its observer signature, false-positive guards, and configuration.">
+  <title>Checks &mdash; MilkItAC</title>
+  <meta name="description" content="All 36 MilkItAC anticheat checks, grouped by category: what each detects, its observer signature, false-positive guards, and configuration.">
   <link rel="stylesheet" href="../assets/iustitia.css">
 </head>
 <body>
@@ -241,7 +241,7 @@ def catalog_page(checks: list) -> str:
   <div class="container" style="padding:46px 24px 10px">
     <div class="section-label fade-in-scroll">Documentation</div>
     <h1 class="section-title fade-in-scroll"><span class="grad">36 checks</span>, four categories.</h1>
-    <p class="section-lead fade-in-scroll">Every check Iustitia ships &mdash; what it detects, the observer signature it keys on, the false-positive guards it applies, and its configuration defaults. Each card opens a deep page with the full detail.</p>
+    <p class="section-lead fade-in-scroll">Every check MilkItAC ships &mdash; what it detects, the observer signature it keys on, the false-positive guards it applies, and its configuration defaults. Each card opens a deep page with the full detail.</p>
   </div>
   <div class="container" style="padding:0 24px 70px">
     <div class="docs-layout" style="grid-template-columns:240px 1fr">

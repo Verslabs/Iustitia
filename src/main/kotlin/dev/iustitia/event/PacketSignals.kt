@@ -6,7 +6,7 @@ import java.util.UUID
 
 /**
  * Raw observable signals emitted by [dev.iustitia.mixin.ClientPlayNetworkHandlerMixin]
- * from read-only HEAD injects on incoming clientbound packets. Iustitia never sees a
+ * from read-only HEAD injects on incoming clientbound packets. MilkItAC never sees a
  * cheater's outgoing packets, so "an attack happened" is *inferred* downstream by
  * [dev.iustitia.inference.AttackInference] correlating [SwingSignal] with [HurtSignal].
  *
@@ -67,7 +67,7 @@ data class HurtSignal(
  *   players. Its id is `-1` exactly when the damage had no attacker, so fall / fire / drowning /
  *   void damage arrives here **unnamed**, and that is the channel the wild false positive came in
  *   on rather than the status byte.
- * - [VELOCITY] is the knockback impulse, unnamed by construction (Iustitia synthesizes the signal
+ * - [VELOCITY] is the knockback impulse, unnamed by construction (MilkItAC synthesizes the signal
  *   from `EntityVelocityUpdateS2CPacket`).
  * - [STATUS] is `EntityStatusS2CPacket` byte 2. On 1.21 that byte is `KINETIC_ATTACK` (the mace
  *   smash), not a hurt animation; the hurt animation lived there on legacy protocols (1.8-1.19.x),

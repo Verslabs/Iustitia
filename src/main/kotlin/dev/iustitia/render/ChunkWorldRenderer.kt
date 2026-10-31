@@ -37,7 +37,7 @@ import java.util.OptionalInt
  * the camera rotation × the shared origin translate) as the `"DynamicTransforms"` uniform and the
  * shared sequential quad index buffer. No per-frame per-vertex emission, no per-frame re-upload —
  * the ~90% `class_287.method_22919` emission + ~28% `nglNamedBufferSubData` upload that dominated the
- * `/ius debugfps` profile (95% of the iustitia frame) are gone; the per-frame cost is a handful of
+ * `/milk debugfps` profile (95% of the iustitia frame) are gone; the per-frame cost is a handful of
  * `setVertexBuffer` + `drawIndexed` calls.
  *
  * **Matrix semantics:** `RenderSystem.bindDefaultUniforms(pass)` binds `Projection`/`Fog`/`Globals`/
@@ -77,7 +77,7 @@ import java.util.OptionalInt
  * ## Gating
  *
  * No-op unless `ReplayState.active && ReplayState.chunks != null` — so a wireframe-terrain clip
- * (`chunks == null`) and a plain `/ius replay` are unaffected; the live world is only hidden by
+ * (`chunks == null`) and a plain `/milk replay` are unaffected; the live world is only hidden by
  * [dev.iustitia.mixin.SectionRenderStateMixin] when `chunks != null` too. [free] drops the mesher cache
  * (closing the static `GpuBuffer`s).
  */

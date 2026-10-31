@@ -6,10 +6,10 @@ import net.minecraft.registry.Registries
 import net.minecraft.world.chunk.ChunkStatus
 
 /**
- * One-shot capture of every **loaded chunk** around the local player at `/ius clip` save time, stored
- * as a [ChunkSnapshot] (palette + index per non-empty section) so `/ius playclip` can later render the
+ * One-shot capture of every **loaded chunk** around the local player at `/milk clip` save time, stored
+ * as a [ChunkSnapshot] (palette + index per non-empty section) so `/milk playclip` can later render the
  * clip's world as **solid, textured blocks** — the real map — relocated around the user, letting them
- * free-spectate anywhere including underground. This is the Iustitia-native equivalent of ReplayMod's
+ * free-spectate anywhere including underground. This is the MilkItAC-native equivalent of ReplayMod's
  * "download the world" without ReplayMod's connection-replacement (see the v1.2.0 plan).
  *
  * ## What it stores

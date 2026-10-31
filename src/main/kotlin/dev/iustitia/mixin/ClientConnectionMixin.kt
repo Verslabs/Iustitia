@@ -68,7 +68,7 @@ class ClientConnectionMixin {
     private fun iustitia_suppressGameplayPackets(packet: Packet<*>, ci: CallbackInfo) {
         try {
             // Legacy playclip (v1.1.0) skips suppression so the player can act on the live server
-            // normally while watching the clip. /ius replay passes legacy=false, so this never
+            // normally while watching the clip. /milk replay passes legacy=false, so this never
             // short-circuits on the replay path — replay suppression stays unchanged.
             if (!ReplayState.active || ReplayState.legacyPlayclip) return
             if (isGameplay(packet)) ci.cancel()

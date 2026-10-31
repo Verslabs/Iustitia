@@ -6,4 +6,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = "iustitia"
+rootProject.name = "milkitac"

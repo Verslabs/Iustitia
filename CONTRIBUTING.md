@@ -1,6 +1,6 @@
-# Contributing to Iustitia
+# Contributing to MilkItAC
 
-Thank you for helping improve Iustitia. This project is a client-side Fabric mod with anticheat detection, packet observation, replay tooling, and render-heavy moderator features. Contributions are welcome, but changes must preserve the project's safety, privacy, and fail-open guarantees.
+Thank you for helping improve MilkItAC. This project is a client-side Fabric mod with anticheat detection, packet observation, replay tooling, and render-heavy moderator features. Contributions are welcome, but changes must preserve the project's safety, privacy, and fail-open guarantees.
 
 ## Before you start
 
@@ -8,7 +8,7 @@ Thank you for helping improve Iustitia. This project is a client-side Fabric mod
 2. Read the [user manual](USERMANUAL.md) before changing user-facing commands or workflows.
 3. Read [SUPPORT.md](SUPPORT.md) to choose the right issue type.
 4. Read [SECURITY.md](SECURITY.md) before reporting a security or privacy concern.
-5. For AI-assisted work, read [docs/ai-assisted-development.md](docs/ai-assisted-development.md) and use the [Iustitia Claude Code skill](.claude/skills/iustitia-contributor/SKILL.md).
+5. For AI-assisted work, read [docs/ai-assisted-development.md](docs/ai-assisted-development.md) and use the [MilkItAC Claude Code skill](.claude/skills/iustitia-contributor/SKILL.md).
 6. Search existing issues and pull requests before opening a duplicate.
 
 ## What belongs where
@@ -21,13 +21,13 @@ Thank you for helping improve Iustitia. This project is a client-side Fabric mod
 | A new detector or moderator workflow | Feature request or design discussion |
 | A privacy, packet, telemetry, or unsafe behavior concern | Private security report |
 | A documentation correction | Documentation issue or pull request |
-| A question about using Iustitia | Discussion or support issue, not a bug report |
+| A question about using MilkItAC | Discussion or support issue, not a bug report |
 
 Do not put private account information, server credentials, IP addresses, access tokens, or unpublished exploit details in a public issue.
 
 ## Development environment
 
-Iustitia currently targets:
+MilkItAC currently targets:
 
 - Minecraft 1.21.11
 - Java 21
@@ -73,7 +73,7 @@ Include:
 - The expected violation-level and decay behavior.
 - A plan for validating the detector against both clean and cheating-like traces.
 
-Do not describe a detector as proof unless the project has evidence that supports that claim. Iustitia is inference-based and cannot see another player's outgoing packets.
+Do not describe a detector as proof unless the project has evidence that supports that claim. MilkItAC is inference-based and cannot see another player's outgoing packets.
 
 ### Mixin changes
 
@@ -200,4 +200,4 @@ Reviewers will prioritize:
 6. Clear scope and maintainable code.
 7. Documentation and migration quality.
 
-Thanks for contributing responsibly. Iustitia works best when its evidence is honest, its limitations are visible, and its tools do not interfere with the player or server.
+Thanks for contributing responsibly. MilkItAC works best when its evidence is honest, its limitations are visible, and its tools do not interfere with the player or server.

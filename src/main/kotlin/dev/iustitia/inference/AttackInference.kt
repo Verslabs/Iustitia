@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap
 /**
  * Infers "attacker A struck victim V" by correlating A's swing with V's hurt inside a
  * version-gated tick window, picking the nearest qualifying attacker. The attack
- * packet is never observed client-side (Iustitia sees only server rebroadcasts), so
+ * packet is never observed client-side (MilkItAC sees only server rebroadcasts), so
  * this correlation is the only attack signal Reach/MultiTarget can consume.
  *
  * Natural filters keep it honest: projectile/potion hurts have no attacker swing → no

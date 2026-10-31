@@ -59,7 +59,7 @@ import kotlin.math.sqrt
  * Instant-replay renderer (Phase 2): while [ReplayState] is active, draws a HUMANOID "ghost" of every
  * tracked player at the playhead frame's buffered position — head, torso, arms and legs as
  * pose-aware boxes (the vanilla player is itself a box model), advanced through the timeline at the
- * replay speed. One shared renderer serves `/ius replay` (a live-buffer window) and `/ius playclip`
+ * replay speed. One shared renderer serves `/milk replay` (a live-buffer window) and `/milk playclip`
  * (a `.iusclip` loaded into [ReplayState]).
  *
  * ## Why a humanoid model, not a single box
@@ -250,7 +250,7 @@ object ReplayRenderer {
         val o = ReplayState.relocOffset ?: net.minecraft.util.math.Vec3d.ZERO
         matrices.translate(-camPos.x + o.x, -camPos.y + o.y, -camPos.z + o.z)
         try {
-            // Chunk world (v6+ clip-only; null for /ius replay + pre-v6 clips). Solid, textured blocks
+            // Chunk world (v6+ clip-only; null for /milk replay + pre-v6 clips). Solid, textured blocks
             // — the real captured map, face-culled to the surface shell — so the user can free-spectate
             // anywhere, including underground. Drawn first (under ghosts + the v5 wireframe terrain).
             // Skipped for a Legacy playclip (v1.1.0 = ghosts over the live world, no chunk world) —
@@ -258,7 +258,7 @@ object ReplayRenderer {
             if (!ReplayState.legacyPlayclip) {
                 try { ChunkWorldRenderer.render(matrices, vcp, camPos, o) } catch (_: Throwable) {}
             }
-            // Terrain shell (clip-only; null for /ius replay). Face-culled, so only the visible
+            // Terrain shell (clip-only; null for /milk replay). Face-culled, so only the visible
             // surface blocks draw — fully-enclosed blocks contribute nothing. Fail-open per frame.
             // Also skipped for a Legacy playclip (no terrain in v1.1.0).
             if (!ReplayState.legacyPlayclip) {
@@ -1258,7 +1258,7 @@ object ReplayRenderer {
         val paused = ReplayState.isPaused()
         val focus = ReplayState.focusName() ?: "scene"
         val pauseTxt = if (paused) "§e⏸ " else ""
-        val line = Text.literal("§8[§diustitia§8] §6▶ §fReplay §e$focus §7$pauseTxt§7${NumFmt.d(digits = 2, v = speed)}×")
+        val line = Text.literal("§8[§dMilkItAC§8] §6▶ §fReplay §e$focus §7$pauseTxt§7${NumFmt.d(digits = 2, v = speed)}×")
         val padX = 6
         val sw = mc.getWindow().scaledWidth
         val sh = mc.getWindow().scaledHeight

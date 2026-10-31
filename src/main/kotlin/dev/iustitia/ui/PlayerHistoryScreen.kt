@@ -10,7 +10,7 @@ import net.minecraft.client.gui.screen.Screen
 import net.minecraft.text.Text
 
 /**
- * #1 (timeline) + #2 (profile card) in one screen — opened by `/ius hist <name>` and by clicking
+ * #1 (timeline) + #2 (profile card) in one screen — opened by `/milk hist <name>` and by clicking
  * a [PlayerSearchScreen] row.
  *
  * **Header (the #2 profile card):** tier glyph + name, first→last flag tick, alerts vs flags,
@@ -29,7 +29,7 @@ import net.minecraft.text.Text
  * `Click`-based input API. Whole body fail-open.
  */
 class PlayerHistoryScreen(private val uuid: java.util.UUID, private val parent: Screen?) :
-    Screen(Text.literal("Iustitia — player report")) {
+    Screen(Text.literal("MilkItAC — player report")) {
 
     private sealed class Item {
         data class Group(val checkId: String, val count: Int, val maxVl: Double) : Item()

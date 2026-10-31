@@ -187,7 +187,7 @@ class PlayerEntityRendererMixin {
             } else color
             // Prefix: just the tier glyph in a bracket, tier-colored (including the burst-pulse §f
             // white variant). The numeric confidence score is NOT shown on the nametag — only the
-            // glyph. (The score is still available in `/ius hist`, `/ius session`, the snapshot, and
+            // glyph. (The score is still available in `/milk hist`, `/milk session`, the snapshot, and
             // the crosshair confidence HUD.)
             val prefix = Text.literal("§${glyphColor}[$glyph]§r ")
 

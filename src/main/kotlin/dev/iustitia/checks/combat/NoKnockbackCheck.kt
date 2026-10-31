@@ -170,7 +170,7 @@ class NoKnockbackCheck : Check() {
             // (huge) ≥ WINDOW with windowDisp still 0.0 (the 1..WINDOW accumulation never ran) and
             // evaluated=false → evaluate() runs → 0.0 < threshold*expectedDisp → a bogus NoKB flag
             // on EVERY player's first tick. (It never crossed setbackVL so no alert/tier corruption,
-            // but it polluted the /ius hist flag timeline + VerboseLog counts. Real anti-KB detection
+            // but it polluted the /milk hist flag timeline + VerboseLog counts. Real anti-KB detection
             // is unaffected: a real hit sets lastHitTick ≥ 0 first.) Fail-open.
             if (ctx.lastHitTick < 0) return
             val since = tick - ctx.lastHitTick

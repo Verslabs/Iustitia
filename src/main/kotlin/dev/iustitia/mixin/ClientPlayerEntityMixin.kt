@@ -64,7 +64,7 @@ class ClientPlayerEntityMixin {
                 // PlayerInput.DEFAULT is the vanilla all-false instance (forward/backward/left/right/jump/sneak/sprint).
                 // Suppressed whenever a replay/clip is active (every mode incl. Legacy playclip) so the
                 // player never walks server-side while spectating a rewind/clip. Mouse-look (rotation)
-                // is untouched so the user can still look around in modes with no freecam (Legacy, /ius replay).
+                // is untouched so the user can still look around in modes with no freecam (Legacy, /milk replay).
                 input?.playerInput = PlayerInput.DEFAULT
             }
         } catch (_: Throwable) {

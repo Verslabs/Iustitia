@@ -10,13 +10,13 @@ assignees: ''
 
 - Check ID:
 - Result: <!-- false positive / false negative / tier or alert issue -->
-- Iustitia version/commit:
+- MilkItAC version/commit:
 - Server protocol:
 - ViaFabricPlus in use: <!-- yes/no -->
 
 ## Scenario
 
-<!-- Describe what the player was doing and what Iustitia observed. Do not identify or accuse a player beyond the evidence. -->
+<!-- Describe what the player was doing and what MilkItAC observed. Do not identify or accuse a player beyond the evidence. -->
 
 ## Why the result is incorrect or questionable
 
@@ -32,7 +32,7 @@ assignees: ''
 
 ## Scope check
 
-- [ ] I understand Iustitia observes other players indirectly and may produce false positives.
+- [ ] I understand MilkItAC observes other players indirectly and may produce false positives.
 - [ ] I removed private server/player information.
 - [ ] I searched existing reports.
 - [ ] I am not presenting an alert as proof that someone is cheating.

@@ -36,7 +36,7 @@ import dev.iustitia.checks.LagWindows
  *    *consistently short* crouch (≤2 ticks) + swing timed to crouch-end, repeated. Rain's
  *    exact values: pitch ≥ 60, crouchDuration ∈ 1..2, swing ∈ [crouchEnd, crouchEnd+1],
  *    last 3 crouch durations all ≤ 2. Rain's per-flag 60-tick cooldown was DROPPED: it was
- *    incompatible with Iustitia's added per-tick VL decay (decay 0.5 × 60-tick cooldown
+ *    incompatible with MilkItAC's added per-tick VL decay (decay 0.5 × 60-tick cooldown
  *    drained 30× the 1.0 flag before the next flag was even allowed, so vl oscillated
  *    0→1.0→0 and the path could never reach setbackVL 5.0 — it was dead). AlertManager's
  *    40-tick per-(player,check) chat throttle already prevents spam; verbose fires per-flag
@@ -60,7 +60,7 @@ import dev.iustitia.checks.LagWindows
  * **Deferred sub-signals (plan §3/§8.10 — NOT observer-feasible without expanding the mixin
  * surface; documented per the §1.8 "observer-feasible" gate):**
  *  - **RotationPlace ray-vs-block-box** (Grim): "does the look ray actually hit the block face
- *    that was placed?" requires the *placed-block position*. Iustitia has no block-place /
+ *    that was placed?" requires the *placed-block position*. MilkItAC has no block-place /
  *    block-update observation — `ClientPlayNetworkHandlerMixin` is the single read-only mixin
  *    (swing/hurt/velocity/gamejoin/effect only); a block-update (BlockUpdateS2CPacket) inject
  *    + a placer-inference layer would be needed. Deferred pending that mixin expansion.

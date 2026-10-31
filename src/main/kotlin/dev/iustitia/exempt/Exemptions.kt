@@ -4,13 +4,13 @@ import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 
 /**
- * Per-player anticheat exemption list (`/ius exempt`). An exempted player is skipped at the single
+ * Per-player anticheat exemption list (`/milk exempt`). An exempted player is skipped at the single
  * detection chokepoint [dev.iustitia.checks.Check.flag] — no VL is added, no flag is recorded, no
  * alert fires — so the player is effectively invisible to every check (movement + combat; all flags
  * route through `flag`). Tracking, replay capture, and rendering still run for the player (an exempt
  * player is simply green/never-flagged, not untracked); only detection is suppressed.
  *
- * Forward-looking only: exempting does NOT clear a player's existing flags/VL — use `/ius clear
+ * Forward-looking only: exempting does NOT clear a player's existing flags/VL — use `/milk clear
  * <player>` for that. Exemptions are NOT cleared on world change (a modder's trusted-player list
  * shouldn't wipe between servers), unlike the per-session detection state.
  *
@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap
  */
 object Exemptions {
 
-    /** uuid → last-known name (name kept only for display in `/ius exempt` listing). */
+    /** uuid → last-known name (name kept only for display in `/milk exempt` listing). */
     private val exempt = ConcurrentHashMap<UUID, String>()
 
     fun isExempt(uuid: UUID): Boolean = try { exempt.containsKey(uuid) } catch (_: Throwable) { false }
@@ -42,7 +42,7 @@ object Exemptions {
         try { exempt[uuid] = name } catch (_: Throwable) {}
     }
 
-    /** All exempted players (uuid → name), sorted by name — for the `/ius exempt` listing + serialization. */
+    /** All exempted players (uuid → name), sorted by name — for the `/milk exempt` listing + serialization. */
     fun all(): List<Pair<UUID, String>> = try {
         exempt.entries.map { it.key to it.value }.sortedBy { it.second.lowercase() }
     } catch (_: Throwable) { emptyList() }

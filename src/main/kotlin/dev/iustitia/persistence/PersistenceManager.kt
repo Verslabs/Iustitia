@@ -56,9 +56,9 @@ object PersistenceManager {
     @Volatile private var exemptionsDirty = false
     @Volatile private var writerStarted = false
     private val writerThread: Thread by lazy {
-        Thread(::writerLoop, "Iustitia-PersistenceWriter").apply { isDaemon = true }
+        Thread(::writerLoop, "MilkItAC-PersistenceWriter").apply { isDaemon = true }
     }
-    private val flushHook = Thread({ try { flush() } catch (_: Throwable) {} }, "Iustitia-PersistenceFlush")
+    private val flushHook = Thread({ try { flush() } catch (_: Throwable) {} }, "MilkItAC-PersistenceFlush")
     @Volatile private var hookAdded = false
 
     /** Load notes + history into the in-memory stores. Called from [dev.iustitia.Iustitia.init]
@@ -121,7 +121,7 @@ object PersistenceManager {
     fun saveHistory() {
         if (!enabled) return
         // The write replaces the persisted history with the in-memory one, so from here on the
-        // in-memory store is the persisted record (e.g. after `/ius clear all`).
+        // in-memory store is the persisted record (e.g. after `/milk clear all`).
         FlagHistory.markHoldsPersisted()
         schedule(historyDirty = true)
     }

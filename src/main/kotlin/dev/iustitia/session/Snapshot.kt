@@ -23,7 +23,7 @@ object Snapshot {
 
     private val GSON = GsonBuilder().setPrettyPrinting().create()
 
-    /** Build the one-line chat/clipboard summary: `[Iustitia] PlayerX: Reach 4.2 | Tier: RED [87]`. */
+    /** Build the one-line chat/clipboard summary: `[MilkItAC] PlayerX: Reach 4.2 | Tier: RED [87]`. */
     fun buildSummary(uuid: UUID, name: String): String = try {
         val tier = FlagHistory.tierFor(uuid)
         val tierName = tier.label
@@ -33,8 +33,8 @@ object Snapshot {
             (if (it.value > 1) "${it.key} ×${it.value}" else it.key)
         }
         val maxVl = (FlagHistory.maxVlByCheck(uuid).values.maxOrNull() ?: 0.0)
-        "[Iustitia] $name: $top | max vl ${String.format(java.util.Locale.US, "%.1f", maxVl)} | Tier: $tierName [$score]"
-    } catch (_: Throwable) { "[Iustitia] $name: (snapshot unavailable)" }
+        "[MilkItAC] $name: $top | max vl ${String.format(java.util.Locale.US, "%.1f", maxVl)} | Tier: $tierName [$score]"
+    } catch (_: Throwable) { "[MilkItAC] $name: (snapshot unavailable)" }
 
     /** Build the small JSON snapshot (tier, score, confidence, last flags with evidence). Built with
      *  Gson so every string field (name, confidence, checkId, label) is fully escaped — the old
@@ -93,7 +93,7 @@ object Snapshot {
                     client.inGameHud?.chatHud?.addMessage(Text.literal(summary))
                     try { client.keyboard.setClipboard(summary) } catch (_: Throwable) {}
                     if (fileFailed) client.inGameHud?.chatHud?.addMessage(Text.literal(
-                        "§8[§diustitia§8] §csnapshot file could not be written (disk error) — chat + clipboard still have the summary."))
+                        "§8[§dMilkItAC§8] §csnapshot file could not be written (disk error) — chat + clipboard still have the summary."))
                 } catch (_: Throwable) {}
             }
             try { captureScreenshot(name, uuid) } catch (_: Throwable) {}

@@ -5,7 +5,7 @@ import java.util.UUID
 
 /**
  * The per-flag "why" payload carried on [FlagHistory.Flag] so the history screen, the profile
- * card, and the `/ius report` export can show *what triggered a flag* — the reach distance that
+ * card, and the `/milk report` export can show *what triggered a flag* — the reach distance that
  * fired, the fly Δy, the blocked LOS rays, the triggerbot fast-hit ratio — instead of just the
  * check label + instantaneous VL.
  *

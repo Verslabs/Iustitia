@@ -1,10 +1,10 @@
-# Iustitia
+# MilkItAC
 
 A client-sided anticheat for Minecraft 1.21.11 (Fabric) that watches other players from your own client. No server install, no permissions needed, no outgoing packets, no telemetry. It just watches what the server already sends you and turns it into clear, trustworthy cheat detection.
 
 ## Why client sided?
 
-Most anticheats run on the server. Iustitia runs on *your* client, so it works anywhere you can join: vanilla servers, minigame networks, realms, even servers you do not own or moderate. You see every other player's cheat tier right on their nametag, and you decide what to do with it.
+Most anticheats run on the server. MilkItAC runs on *your* client, so it works anywhere you can join: vanilla servers, minigame networks, realms, even servers you do not own or moderate. You see every other player's cheat tier right on their nametag, and you decide what to do with it.
 
 ## 36 read only checks
 
@@ -17,14 +17,14 @@ Combat, movement, rotation, and packet checks, running per tracked player per cl
 
 ## A full moderator toolkit
 
-Iustitia is not just flags. It is a whole workflow for catching and documenting cheaters:
+MilkItAC is not just flags. It is a whole workflow for catching and documenting cheaters:
 
-- **Instant replay** (`/ius replay`) rewinds the last 60 seconds and replays the scene in world as ghost models of every tracked player at their real positions. Scrub, slow it down, step frame by frame, switch cameras.
-- **Chat history** (`/ius chathist`) keeps a per player chat log, and it actually works on the servers people play. Hypixel, ArchMC, Minemen, and more all decorate chat with ranks, stars, and suffixes, and Iustitia parses past that to recover the real sender and message. Search by player, by phrase, or by both. It is stored per server and it persists.
+- **Instant replay** (`/milk replay`) rewinds the last 60 seconds and replays the scene in world as ghost models of every tracked player at their real positions. Scrub, slow it down, step frame by frame, switch cameras.
+- **Chat history** (`/milk chathist`) keeps a per player chat log, and it actually works on the servers people play. Hypixel, ArchMC, Minemen, and more all decorate chat with ranks, stars, and suffixes, and MilkItAC parses past that to recover the real sender and message. Search by player, by phrase, or by both. It is stored per server and it persists.
 - **Live side panels** keep a player's transcript or chat history open in a corner overlay while the game keeps running underneath, so you never have to leave the scene to read up on someone.
-- **Evidence clips** (`/ius clip`, `/ius playclip`) export the last few seconds of the scene to a portable `.iusclip` file you can replay later or hand to another moderator. 1.4 captures the whole scene: every tracked player and every block edit in range, so what you replay is what you saw. Clips also save without freezing the game.
-- **Long recordings** (`/ius record`) for when the 60 second replay window is not enough. A rolling memory budget keeps long sessions stable.
-- **Player exemptions** (`/ius exempt`) so a trusted regular never flags, and session stats, transcripts, and moderator notes that follow players across sessions.
+- **Evidence clips** (`/milk clip`, `/milk playclip`) export the last few seconds of the scene to a portable `.iusclip` file you can replay later or hand to another moderator. 1.4 captures the whole scene: every tracked player and every block edit in range, so what you replay is what you saw. Clips also save without freezing the game.
+- **Long recordings** (`/milk record`) for when the 60 second replay window is not enough. A rolling memory budget keeps long sessions stable.
+- **Player exemptions** (`/milk exempt`) so a trusted regular never flags, and session stats, transcripts, and moderator notes that follow players across sessions.
 
 ## Honest about what it is
 
@@ -37,7 +37,7 @@ Iustitia is not just flags. It is a whole workflow for catching and documenting 
 
 Fabric Loader, Fabric API, Fabric Language Kotlin, and Minecraft 1.21.11.
 
-Run `/ius help` in game for the full command list, or `/ius config` to tune every check, set alert presets, and turn features on or off.
+Run `/milk help` in game for the full command list, or `/milk config` to tune every check, set alert presets, and turn features on or off.
 
 ---
 

@@ -6,10 +6,10 @@ import net.fabricmc.loader.api.FabricLoader
  * Companion-mod detection + feature yielding.
  *
  * SnapClip (`snapclip`), Scrollback (`scrollback`), and FollowCam (`followcam`) are single-feature
- * extracts of Iustitia. When one is installed alongside Iustitia the two would otherwise run the
+ * extracts of MilkItAC. When one is installed alongside MilkItAC the two would otherwise run the
  * SAME machinery twice — two rolling capture buffers, two replay cameras fighting over
  * `Camera.update`, two input-suppression paths, two chat-history stores — and would also fight over
- * the same default keybinds. Iustitia therefore YIELDS the overlapping feature to the standalone
+ * the same default keybinds. MilkItAC therefore YIELDS the overlapping feature to the standalone
  * mod: it stops capturing / stops starting its own playback / stops capturing chat, and lets the
  * companion own it.
  *
@@ -18,31 +18,31 @@ import net.fabricmc.loader.api.FabricLoader
  *
  * ## Mixin-level conflict
  *
- * Yielding at the feature level is not enough for SnapClip: Iustitia's [dev.iustitia.mixin.GameRendererMixin]
+ * Yielding at the feature level is not enough for SnapClip: MilkItAC's [dev.iustitia.mixin.GameRendererMixin]
  * and [dev.iustitia.mixin.WorldRendererMixin] `@Redirect` the **exact same** call sites SnapClip
  * redirects, and two `@Redirect`s on one instruction is a hard mixin-apply failure. Those two mixins
  * are therefore skipped entirely when SnapClip is present — see
  * [dev.iustitia.mixin.IustitiaMixinPlugin], which consults [snapClip] at mixin-config load time.
  *
  * Detection is a one-shot `isModLoaded` lookup, cached after first read. Fail-open: any error reads
- * as "not present", which leaves Iustitia's own feature enabled — always the safe default.
+ * as "not present", which leaves MilkItAC's own feature enabled — always the safe default.
  */
 object CompanionMods {
 
     /** SnapClip owns replay / clip / playclip / record. */
     val snapClip: Boolean by lazy { loaded("snapclip") }
 
-    /** Scrollback owns per-player chat history (`/ius chathist`). */
+    /** Scrollback owns per-player chat history (`/milk chathist`). */
     val scrollback: Boolean by lazy { loaded("scrollback") }
 
-    /** FollowCam owns the watch follow-cam (`/ius spectate`). */
+    /** FollowCam owns the watch follow-cam (`/milk spectate`). */
     val followCam: Boolean by lazy { loaded("followcam") }
 
-    /** True when at least one companion owns an Iustitia feature. */
+    /** True when at least one companion owns a MilkItAC feature. */
     val any: Boolean get() = snapClip || scrollback || followCam
 
     /**
-     * Human-readable list of the features Iustitia is yielding, or null when nothing is installed.
+     * Human-readable list of the features MilkItAC is yielding, or null when nothing is installed.
      * Used for the one-line startup notice so a user who installed both knows why a command deferred.
      */
     fun yieldSummary(): String? {

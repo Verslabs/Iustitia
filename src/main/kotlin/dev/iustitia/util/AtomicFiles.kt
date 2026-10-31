@@ -6,7 +6,7 @@ import java.nio.file.StandardCopyOption
 import java.util.concurrent.Executors
 
 /**
- * Shared file-write plumbing for every persisted Iustitia file (config, presets, notes/history,
+ * Shared file-write plumbing for every persisted MilkItAC file (config, presets, notes/history,
  * snapshots/exports, chat history, clips, debug reports).
  *
  * **Atomic writes:** [write] / [writeBytes] stage the content at `<path>.tmp` and then
@@ -30,7 +30,7 @@ object AtomicFiles {
     private const val TMP_SUFFIX = ".tmp"
 
     private val ioExecutor = Executors.newSingleThreadExecutor { r ->
-        Thread(r, "Iustitia-FileIO").apply { isDaemon = true }
+        Thread(r, "MilkItAC-FileIO").apply { isDaemon = true }
     }
 
     /** Run [block] on the shared daemon IO thread. Never throws; errors inside [block] are the

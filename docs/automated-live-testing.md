@@ -1,11 +1,11 @@
 # Automated live testing
 
 This is the standard path for verifying a change against the **real client** without a
-human at the keyboard. If you are an AI agent contributing to Iustitia, this document
+human at the keyboard. If you are an AI agent contributing to MilkItAC, this document
 is part of your procedure: static checks prove the code compiles, this proves it
 behaves — and it is runnable, headless, and repeatable.
 
-The suite is a Fabric **client gametest**: it boots Minecraft 1.21.11 with Iustitia
+The suite is a Fabric **client gametest**: it boots Minecraft 1.21.11 with MilkItAC
 loaded, creates a deterministic flat world, spawns scriptable bot players, drives them
 through vanilla-accurate or cheat-accurate behavior, and then asserts on what the real
 detection pipeline actually caught. Nothing leaves the machine; there is no server, no
@@ -82,7 +82,7 @@ VL, so `0.00` (never asked) is visibly different from `1.00` (reached it, ceilin
 
 ## 2. What the harness actually exercises
 
-Iustitia's pipeline is driven by two inputs: **polled client-world state** and
+MilkItAC's pipeline is driven by two inputs: **polled client-world state** and
 **rebroadcast packet signals**. The harness reproduces both at the same seams:
 
 | Real input | Harness equivalent | Why it is faithful |
@@ -298,9 +298,9 @@ outcomes are deliberately distinct and the runner reports them in separate secti
 | State | Meaning | Whose bug |
 |---|---|---|
 | caught | the cheat drive alerted | none -- gate established |
-| **detector gap** (`knownOpen`) | the drive reached the check and it cannot alert | Iustitia's detector |
+| **detector gap** (`knownOpen`) | the drive reached the check and it cannot alert | MilkItAC's detector |
 | **harness gap** (`driveGaps`) | the check logged **no flag at all** -- never asked | this suite's drive |
-| **false positive** (`documentedFp`) | a legit drive alerted | Iustitia's detector, release-blocking |
+| **false positive** (`documentedFp`) | a legit drive alerted | MilkItAC's detector, release-blocking |
 
 ### Established gates (29)
 
@@ -340,7 +340,7 @@ outcomes are deliberately distinct and the runner reports them in separate secti
 
 These entries are declared where a drive does not reach its check, so no alert assertion can be
 made yet. Writing one as an ordinary expectation before the drive reaches it would leave the suite
-permanently red for a reason that is about the test, not about Iustitia -- which is how a suite
+permanently red for a reason that is about the test, not about MilkItAC -- which is how a suite
 trains people to ignore it. The reporter prints the observed peak VL so the two states are told
 apart at a glance: `never logged a flag` means the check was never asked, and `reacted (peakVL=N)`
 means it was asked and the entry has gone stale. `noSlow` was the second kind and left this queue
@@ -419,7 +419,7 @@ gate-off (its own known-open VL economy), and asserting quiet there would be vac
 | Playback controls | `replay-playback-controls` |
 | Camera modes (incl. freecam enter/exit restore) | `replay-camera-modes` |
 | `.iusclip` export -> metadata -> load -> play -> delete | `replay-clip-roundtrip` |
-| `/ius playclip` relocation + captured-world rendering | `replay-playclip-relocation` |
+| `/milk playclip` relocation + captured-world rendering | `replay-playclip-relocation` |
 | Show-self: your own snap in the buffer, its survival through the clip round trip, and the live-body hide | `replay-show-self` |
 | Disabled-check gate (toggled-off check = zero VL; re-enabled = alerts) | `preset-disabled-check-gate` |
 | Preset apply (schema-derived coverage + documented exclusions + standard semantics) | `preset-apply-coverage` |
@@ -433,7 +433,7 @@ gate-off (its own known-open VL economy), and asserting quiet there would be vac
 | Dig-state production (`onBlockBreakingProgress` -> `DiggingSignal`) | Same reason, and worse: the bots are client-side display entities, so the server never sends a `BlockBreakingProgressS2CPacket` for them at all. The suite drives the consumers via `bot.dig()` (`cheat-reach-digging-koid`, `legit-mining-cadence`, `legit-mining-near-hurt`); the inject itself is the manual dig step in [live-verification.md](live-verification.md) | manual, on a test server |
 | 1.8-era protocol behavior (ViaFabricPlus) | Requires a 1.8 server + protocol translation | manual, on a test server |
 | Rendering: nametags, ghosts, HUD, screenshots | Needs pixel/comparison work, not logic | [live-verification.md](live-verification.md) rendering section |
-| Alert chat text/format | Presentation; the suite asserts on the alert *event* | manual + `/ius hist` |
+| Alert chat text/format | Presentation; the suite asserts on the alert *event* | manual + `/milk hist` |
 
 ---
 
@@ -659,7 +659,7 @@ and every one still alerts -- the fixes removed only the legitimate shapes.
 
 **Resolved (2026-09, this cycle): the swing-source pair.** A player holding left click on a block
 that never breaks swings on a clock the *server* sets, not one they choose. Nemesis guards its
-autoclicker and attack-inference paths against exactly this; the Iustitia port had no digging
+autoclicker and attack-inference paths against exactly this; the MilkItAC port had no digging
 awareness at all, so the porting gap below went unnoticed until the audit. Both entries were
 falsified *and* measured before being fixed: the two drives below were written first, run against the
 unfixed tree, and recorded as RED.

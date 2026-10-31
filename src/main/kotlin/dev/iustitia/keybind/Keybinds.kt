@@ -7,8 +7,8 @@ import net.minecraft.util.Identifier
 import org.lwjgl.glfw.GLFW
 
 /**
- * The Iustitia keybind registry (Phase 2 #14). Each bind is a vanilla [KeyBinding] in the
- * "Iustitia" category (rebindable in Controls → Iustitia), registered through Fabric's
+ * The MilkItAC keybind registry (Phase 2 #14). Each bind is a vanilla [KeyBinding] in the
+ * "MilkItAC" category (rebindable in Controls → MilkItAC), registered through Fabric's
  * [KeyBindingHelper] so it shows up in the vanilla keybinds screen and coexists with other mods.
  *
  * **Decoupled design:** the [Bind] metadata (id / label / description / default key) is constructed
@@ -59,12 +59,12 @@ object Keybinds {
         bind("compact", GLFW.GLFW_KEY_F7, "Compact mode",
             "Toggle compact one-line alerts + condensed screens."),
         bind("watch", GLFW.GLFW_KEY_F9, "Watch (follow-cam)",
-            "Follow-cam orbit on your crosshair target — same as /ius spectate. Forces F1 and a " +
+            "Follow-cam orbit on your crosshair target — same as /milk spectate. Forces F1 and a " +
                 "third-party view with all entities visible; move the mouse to orbit, walk or get " +
                 "hit to stop, press the bind again to exit. Handled by FollowCam when that mod is " +
                 "installed."),
         bind("replayPause", GLFW.GLFW_KEY_KP_5, "Replay pause/resume",
-            "Pause or resume an active instant-replay (/ius replay). Default: numpad 5."),
+            "Pause or resume an active instant-replay (/milk replay). Default: numpad 5."),
         bind("replaySeekFwd", GLFW.GLFW_KEY_KP_ADD, "Replay seek +5s",
             "Jump an active replay 5 seconds forward (works while playing). Default: numpad +."),
         bind("replaySeekBack", GLFW.GLFW_KEY_KP_SUBTRACT, "Replay seek −5s",

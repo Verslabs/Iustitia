@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap
  * vl > setbackVL and the per-(player,check) throttle + join-grace allow it. All paths
  * fail-open — a thrown check is caught upstream and skipped, never propagated.
  *
- * [cfg] is resolved live from [ConfigManager] by [id] on every read, so `/iustitia`
+ * [cfg] is resolved live from [ConfigManager] by [id] on every read, so `/milkitac`
  * edits and config reloads take effect without rebuilding the check registry.
  */
 abstract class Check {
@@ -100,7 +100,7 @@ abstract class Check {
      * A combat check whose cheapest flag cadence is one per attack (≈1 per 12 ticks at vanilla
      * cooldown) cannot accumulate past the 0.5–1.0/tick decay no matter how blatant the cheat is —
      * measured live, `keepSprint`, `wTap`, `hitFlick`, `noKnockback`, `backtrack` and
-     * `hitsWithoutSwing` all recorded in `/ius hist` and never alerted. Such a check pairs
+     * `hitsWithoutSwing` all recorded in `/milk hist` and never alerted. Such a check pairs
      * [sustained] (does the *pattern* hold?) with this one-shot: the episode alerts at a level that
      * clears [setbackVL] in a single flag, and the latch re-arms only once the pattern breaks, so a
      * cheater who keeps doing it is reported once (not silenced, and not spammed) while one stray
@@ -135,26 +135,26 @@ abstract class Check {
         evidence: dev.iustitia.history.Evidence? = null,
     ) {
         try {
-            // Disabled-check gate: a check whose config slice is disabled (via /ius toggle, the
+            // Disabled-check gate: a check whose config slice is disabled (via /milk toggle, the
             // YACL screen, or a preset apply, which ships its own enabled flags because `enabled`
             // is preset content) produces NO flags at all — no VL accumulation, no FlagHistory/tier
             // update, no alert. This gate
             // lives at the flag chokepoint rather than at the dispatch sites because combat checks
             // are bus-driven (each subscribes to AttackEvent/SwingSignal in its own init), so the
             // tick loop's `if (!c.enabled) continue` never reaches them: without this gate a
-            // toggled-off combat check kept flagging silently while /ius toggle reported OFF
+            // toggled-off combat check kept flagging silently while /milk toggle reported OFF
             // (verified live). cfg resolves live from ConfigManager, so a preset apply mid-session
             // takes effect on the next flag site — no registry rebuild.
             if (!cfg.enabled) return
-            // Exempt chokepoint: a player on the /ius exempt list is invisible to EVERY check
+            // Exempt chokepoint: a player on the /milk exempt list is invisible to EVERY check
             // (movement + combat; all flags route through here). Skip before any VL/state write so
             // an exempt player stays clean. Tracking/replay/render still run (only detection is
-            // suppressed). Forward-looking only — does NOT clear existing flags (use /ius clear).
+            // suppressed). Forward-looking only — does NOT clear existing flags (use /milk clear).
             if (dev.iustitia.exempt.Exemptions.isExempt(tp.uuid)) return
             // Creative/spectator flight exemption (NARROW — movement only, see
             // [CreativeFlight]): a player whose server-sent tab-list game mode is CREATIVE
             // or SPECTATOR skips exactly the movement checks lawful flight trips, so an admin
-            // flying around stops flagging fly/speed without anyone running /ius exempt —
+            // flying around stops flagging fly/speed without anyone running /milk exempt —
             // while combat checks (killaura, reach, …) keep full coverage on them. Gated by
             // the `creativeFlightExempt` toggle (off = check everyone). Runs at most once
             // per flag() call — i.e. only on ticks where a check is already flagging, never
@@ -165,7 +165,7 @@ abstract class Check {
             ) return
             ctx.addVl(level)
             VerboseLog.countFlag()
-            // Session flag history (drives /ius hist, status counts, alert hover, nametag tier).
+            // Session flag history (drives /milk hist, status counts, alert hover, nametag tier).
             // Fail-open: a history error must never block a flag.
             try {
                 dev.iustitia.history.FlagHistory.recordFlag(tp.uuid, tp.username(), id, label, ctx.vl, tick, evidence)

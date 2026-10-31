@@ -7,7 +7,7 @@ import net.minecraft.world.chunk.ChunkStatus
 
 /**
  * Captures a bounded cube of the loaded terrain around a clip's action and returns a
- * [TerrainSnapshot] (run-length encoded) to bundle into the `.iusclip`. Called from the `/ius clip`
+ * [TerrainSnapshot] (run-length encoded) to bundle into the `.iusclip`. Called from the `/milk clip`
  * handler on the client thread.
  *
  * ## Why the bbox, not the whole loaded area

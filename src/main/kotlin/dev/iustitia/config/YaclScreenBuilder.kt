@@ -23,8 +23,8 @@ object YaclScreenBuilder {
     fun build(parent: Screen?): Screen {
         val cfg = ConfigManager.config
         val category = ConfigCategory.createBuilder()
-            .name(Text.literal("Iustitia"))
-            .tooltip(Text.literal("Client-sided anticheat — local-only chat alerts."))
+            .name(Text.literal("MilkItAC"))
+            .tooltip(Text.literal("Client-sided anticheat — milked from the packets you already receive; local-only chat alerts."))
             .group(
                 OptionGroup.createBuilder()
                     .name(Text.literal("General"))
@@ -35,9 +35,9 @@ object YaclScreenBuilder {
                     .option(bool("LegitScaffold strict gates", "Extra motion/cadence gates for the LegitScaffold path (off = baseline Rain path). Flip on only to A/B-test a stationary-builder FP.", { cfg.legitScaffoldStrictGates }) { cfg.legitScaffoldStrictGates = it })
                     .option(bool("Sensitivity substrate (GCD sub-flags)", "Converges each player's mouse sensitivity to drive the KillAura + RotationTracking GCD (constant-rotation / too-clean pitch-step) sub-flags. OFF by default — the convergence is the dense-crowd FPS hog (profiled ~32% of render time on high-turnover servers); with it off both GCD sub-flags self-disable (fail-open) and every other heuristic keeps running. Flip on to re-enable them, accepting the FPS cost.", { cfg.sensitivitySubstrate }) { cfg.sensitivitySubstrate = it })
                     .option(bool("Creative flight exemption", "Skip the movement checks lawful creative/spectator flight trips (fly, speed, long-jump, no-fall, backward-sprint, wall-sprint, step; spectators also phase). Combat checks keep running. Game mode comes from the tab list. Off = check everyone (for creative-PvP testing servers).", { cfg.creativeFlightExempt }) { cfg.creativeFlightExempt = it })
-                    .option(bool("Chat alerts", "Master switch for chat alert lines. Off = silence all alerts (detection + nametag tier keep running). Same as bare /ius alerts.", { cfg.alertsEnabled }) { cfg.alertsEnabled = it })
+                    .option(bool("Chat alerts", "Master switch for chat alert lines. Off = silence all alerts (detection + nametag tier keep running). Same as bare /milk alerts.", { cfg.alertsEnabled }) { cfg.alertsEnabled = it })
                     .option(bool("Nametag prefixes", "Show a cheat-tier prefix (green [+] / yellow [!] / red [X]) above other players' names.", { cfg.nametagPrefixes }) { cfg.nametagPrefixes = it })
-                    .option(bool("Show green tick on clean players", "Show the green [+] on low-flag players. Off = only mark yellow/red (less visual noise). Mute a check/player via /ius alerts.", { cfg.nametagGreenEnabled }) { cfg.nametagGreenEnabled = it })
+                    .option(bool("Show green tick on clean players", "Show the green [+] on low-flag players. Off = only mark yellow/red (less visual noise). Mute a check/player via /milk alerts.", { cfg.nametagGreenEnabled }) { cfg.nametagGreenEnabled = it })
                     .build()
             )
             .group(
@@ -51,7 +51,7 @@ object YaclScreenBuilder {
                     .option(double("Audio volume", "Cue volume (0..1).", { cfg.audioVolume }, 0.0, 1.0) { cfg.audioVolume = it })
                     .option(bool("Soften alerts on server lag", "Prefix [lag] and (under quiet) drop non-red alerts during a lag burst.", { cfg.lagSuppressAlerts }) { cfg.lagSuppressAlerts = it })
                     .option(bool("Compact mode", "One-line alert + screen summaries (less clutter).", { cfg.compactMode }) { cfg.compactMode = it })
-                    .option(int("Evidence window (ticks)", "/ius evidence lookback (200 = 10s).", { cfg.evidenceWindowTicks }, 20, 1200) { cfg.evidenceWindowTicks = it })
+                    .option(int("Evidence window (ticks)", "/milk evidence lookback (200 = 10s).", { cfg.evidenceWindowTicks }, 20, 1200) { cfg.evidenceWindowTicks = it })
                     .option(bool("Transcript side panel", "Auto-show the transcript panel for your crosshair target.", { cfg.transcriptPanel }) { cfg.transcriptPanel = it })
                     .option(bool("Crosshair confidence HUD", "Draw a compact panel near the crosshair: the looked-at player's tier glyph + score + why-this-tier + FP hint. Display-only.", { cfg.confidenceHud }) { cfg.confidenceHud = it })
                     .option(bool("Server-lag HUD indicator", "Draw a top-left ⚠ lag marker while a server-lag burst is recent. Display-only.", { cfg.lagHudIcon }) { cfg.lagHudIcon = it })
@@ -66,11 +66,11 @@ object YaclScreenBuilder {
             .group(
                 OptionGroup.createBuilder()
                     .name(Text.literal("Replay & Clip"))
-                    .option(bool("Replay capture buffer", "Keep a rolling 60s buffer of every tracked player's position + every alert, so /ius replay and /ius clip can rewind/export the last N seconds. Off = skip the per-tick capture (disables replay + clip; detection keeps running).", { cfg.replayCapture }) { cfg.replayCapture = it })
-                    .option(bool("Replay hides live players", "While a replay (/ius replay or /ius playclip) is active, hide every live OTHER player so only the buffered ghost copies render — a rewind-the-world feel. Off = overlay ghosts on the live scene. Render-only.", { cfg.replayHideLive }) { cfg.replayHideLive = it })
+                    .option(bool("Replay capture buffer", "Keep a rolling 60s buffer of every tracked player's position + every alert, so /milk replay and /milk clip can rewind/export the last N seconds. Off = skip the per-tick capture (disables replay + clip; detection keeps running).", { cfg.replayCapture }) { cfg.replayCapture = it })
+                    .option(bool("Replay hides live players", "While a replay (/milk replay or /milk playclip) is active, hide every live OTHER player so only the buffered ghost copies render — a rewind-the-world feel. Off = overlay ghosts on the live scene. Render-only.", { cfg.replayHideLive }) { cfg.replayHideLive = it })
                     .option(bool("Replay player models", "Render replay/clip ghosts as the real Minecraft player model wearing each player's REAL skin (fetched from the tab list; Steve/Alex fallback) instead of the tier-colored humanoid box outline. On by default. The block scale + pose transforms are runtime-verified only — if a ghost renders at the wrong size or not at all, the box outline shows as fallback.", { cfg.replayPlayerModels }) { cfg.replayPlayerModels = it })
                     .option(int("Replay keybind seconds", "Seconds of buffered scene replayed when the replay-toggle keybind (numpad * by default) is pressed. 1..60 (capped to the 60s replay buffer).", { cfg.replayKeybindSeconds }, 1, 60) { cfg.replayKeybindSeconds = it })
-                    .option(bool("Chat history capture", "Capture messages from tracked OTHER players (not you, not system messages) for /ius chathist <user> / phrase / target. Per-server: persists across reconnects when 'Persist across sessions' is on, else in-memory only. Additive.", { cfg.chathistEnabled }) { cfg.chathistEnabled = it })
+                    .option(bool("Chat history capture", "Capture messages from tracked OTHER players (not you, not system messages) for /milk chathist <user> / phrase / target. Per-server: persists across reconnects when 'Persist across sessions' is on, else in-memory only. Additive.", { cfg.chathistEnabled }) { cfg.chathistEnabled = it })
                     .option(bool("Chat history: capture unknown senders", "Permissive / cross-server mode (OFF by default). Decorated chat (rank/star servers like Hypixel, ArchMC, Minemen) normally anchors the sender to the tab list — a sender not in the tab list is dropped. With this ON, those senders are still captured (best-effort: the last word before the separator), so Bungee/Velocity cross-sub-server chat is recorded. Less accurate on suffix-decorated formats (Minemen can mis-attribute), hence the OFF default.", { cfg.chathistCaptureUnknown }) { cfg.chathistCaptureUnknown = it })
                     .build()
             )
@@ -85,28 +85,28 @@ object YaclScreenBuilder {
                         fun modern() = cfg.playclipMode == IustitiaConfig.PlayclipMode.MODERN
                         // Built first so the mode listener below can grab references to toggle them.
                         val relocate = boolAvail("Relocate scene to me",
-                            "On /ius playclip, translate the whole ghost scene (and chunk world) so the focus player starts at YOUR position instead of floating at the recorded coords. Modern-only — Legacy always plays a clip at the recorded coordinates.",
+                            "On /milk playclip, translate the whole ghost scene (and chunk world) so the focus player starts at YOUR position instead of floating at the recorded coords. Modern-only — Legacy always plays a clip at the recorded coordinates.",
                             { cfg.replayRelocate }, { cfg.replayRelocate = it }, ::modern)
                         val terrain = boolAvail("Clip captures terrain",
-                            "On /ius clip, also snapshot the loaded terrain around the action and render it (relocated to you) on playclip. Modern-only — Legacy clips are ghosts-only.",
+                            "On /milk clip, also snapshot the loaded terrain around the action and render it (relocated to you) on playclip. Modern-only — Legacy clips are ghosts-only.",
                             { cfg.clipTerrain }, { cfg.clipTerrain = it }, ::modern)
                         val chunkWorld = boolAvail("Clip captures full world",
-                            "On /ius clip, snapshot every loaded chunk around you (full 16×16 columns, ALL Y sections — includes underground) and render the clip's world as SOLID textured blocks (the real map) with the live world hidden — free-spectate anywhere incl. underground. Modern-only — Legacy never downloads the world.",
+                            "On /milk clip, snapshot every loaded chunk around you (full 16×16 columns, ALL Y sections — includes underground) and render the clip's world as SOLID textured blocks (the real map) with the live world hidden — free-spectate anywhere incl. underground. Modern-only — Legacy never downloads the world.",
                             { cfg.clipChunkWorld }, { cfg.clipChunkWorld = it }, ::modern)
                         val chunkRadius = intAvail("Chunk capture radius",
-                            "Radius (in chunks) around you that /ius clip captures for the full world. 8 → 17×17 = 289 chunks. Larger = more of the map but a bigger clip file + a heavier bake. Modern-only.",
+                            "Radius (in chunks) around you that /milk clip captures for the full world. 8 → 17×17 = 289 chunks. Larger = more of the map but a bigger clip file + a heavier bake. Modern-only.",
                             { cfg.clipChunkRadius }, 4, 16, { cfg.clipChunkRadius = it }, ::modern)
                         val chunkRenderDist = intAvail("Chunk render distance",
-                            "Max chunks from the camera that /ius playclip renders of the captured chunk world per frame. Bounds per-frame cost (and thus FPS). Modern-only.",
+                            "Max chunks from the camera that /milk playclip renders of the captured chunk world per frame. Bounds per-frame cost (and thus FPS). Modern-only.",
                             { cfg.clipChunkRenderDistance }, 4, 12, { cfg.clipChunkRenderDistance = it }, ::modern)
                         val healthInd = boolAvail("Health indicator on clips",
-                            "Show a numeric health line (e.g. 14/20) above each ghost's nametag during /ius playclip, plus a transient -dmg popup when a recorded player is hit. Natively off. Modern-only.",
+                            "Show a numeric health line (e.g. 14/20) above each ghost's nametag during /milk playclip, plus a transient -dmg popup when a recorded player is hit. Natively off. Modern-only.",
                             { cfg.clipHealthIndicator }, { cfg.clipHealthIndicator = it }, ::modern)
                         val totemInd = boolAvail("Totem pop counter on clips",
-                            "Show a totem-pop count badge on each ghost's nametag during /ius playclip (Totem of Undying pops within the clip). Natively off. Modern-only.",
+                            "Show a totem-pop count badge on each ghost's nametag during /milk playclip (Totem of Undying pops within the clip). Natively off. Modern-only.",
                             { cfg.clipTotemPopCounter }, { cfg.clipTotemPopCounter = it }, ::modern)
                         val ghostEquip = boolAvail("Ghost equipment on clips",
-                            "Render each ghost's held items + armor (main hand, off hand, head, chest, legs, feet) during /ius playclip & /ius replay — what the player actually held/wore at the recorded tick. Lossy (no enchant glint). Natively on. Modern-only.",
+                            "Render each ghost's held items + armor (main hand, off hand, head, chest, legs, feet) during /milk playclip & /milk replay — what the player actually held/wore at the recorded tick. Lossy (no enchant glint). Natively on. Modern-only.",
                             { cfg.clipGhostEquipment }, { cfg.clipGhostEquipment = it }, ::modern)
                         val clipEntities = boolAvail("Clip captures entities",
                             "Capture + render non-player entities (mobs, animals, boats, minecarts) within 64 blocks while a replay/clip window is live, so playback shows the whole scene instead of players only. Modern-only.",
@@ -115,7 +115,7 @@ object YaclScreenBuilder {
                             "Max non-player entities captured per tick. Bounds the per-tick cost and the clip's size. Modern-only.",
                             { cfg.clipEntityCap }, 0, 256, { cfg.clipEntityCap = it }, ::modern)
                         val rollingCap = intAvail("Rolling world budget (sections)",
-                            "Total non-empty chunk sections the rolling per-segment world capture holds across ALL segments before the oldest (never the current one) is evicted. A section is up to 4096 bytes, so 24000 is roughly 20–95 MB depending on how full the segments are. Lower it on a memory-tight client; raise it if a long /ius record keeps losing its earliest world. Modern-only.",
+                            "Total non-empty chunk sections the rolling per-segment world capture holds across ALL segments before the oldest (never the current one) is evicted. A section is up to 4096 bytes, so 24000 is roughly 20–95 MB depending on how full the segments are. Lower it on a memory-tight client; raise it if a long /milk record keeps losing its earliest world. Modern-only.",
                             { cfg.clipRollingChunkCap }, 4096, 131072, { cfg.clipRollingChunkCap = it }, ::modern)
                         val segThreshold = doubleAvail("New-segment distance",
                             "Distance (blocks) you must move in one tick — or a world/dimension change — to start a NEW capture segment. Each segment keeps its own world snapshot + block edits, so a clip that spans a teleport replays both places. Lower = more, smaller segments. Modern-only.",
@@ -150,7 +150,7 @@ object YaclScreenBuilder {
             category.group(checkGroup(id, cc))
         }
         return YetAnotherConfigLib.createBuilder()
-            .title(Text.literal("Iustitia"))
+            .title(Text.literal("MilkItAC"))
             .save {
                 ConfigManager.save()
                 // The persistence toggle may have just flipped — react so a freshly-enabled store

@@ -11,13 +11,13 @@ import kotlin.math.ceil
 
 /**
  * Renders the fixed alert layout:
- *   §8[§diustitia§8] §f(Name) §<sev>(Check) §<sev>(VL)
+ *   §8[§dMilkItAC§8] §f(Name) §<sev>(Check) §<sev>(VL)
  * Severity color scales with the violation ratio (vl / setbackVL):
  *   < 2× → §e (yellow), < 3× → §6 (orange), >= 3× → §c (red).
  * The violation count is shown as the integer ceiling of the VL.
  *
  * The line is also self-documenting: hovering shows what the check detects + this player's
- * session alert count + the severity legend, and clicking runs `/ius hist <name>` to open that
+ * session alert count + the severity legend, and clicking runs `/milk hist <name>` to open that
  * player's flag history. Both are client-side chat-component events (no packet is sent). All
  * enrichment is fail-open — if the history/info lookup fails we still return the plain alert.
  */
@@ -33,7 +33,7 @@ object AlertFormatter {
         val sev = sevChar(band(vl, setbackVL))
         val count = ceil(vl).toInt().coerceAtLeast(1)
         val raw = buildString {
-            append("§8[§diustitia§8] §f")
+            append("§8[§dMilkItAC§8] §f")
             append(name)
             append(" §")
             append(sev)
@@ -48,7 +48,7 @@ object AlertFormatter {
         val base = Text.literal(raw)
         return try {
             val hover = buildHover(uuid, checkId, check)
-            val click = ClickEvent.RunCommand("/ius hist $name")
+            val click = ClickEvent.RunCommand("/milk hist $name")
             base.styled { s: Style ->
                 s.withClickEvent(click).withHoverEvent(HoverEvent.ShowText(hover))
             }
@@ -62,7 +62,7 @@ object AlertFormatter {
      * Collapsed batch line for the smart-batching flush: `§8[iustitia§8] §f<name> §<sev>(Reach ×4,
      * Backtrack ×2) §7(last 5s)`. [parts] are the per-check "label ×count" strings; [worstBand]
      * drives the severity color. [lag] prefixes `§7[lag] ` when softened during a server-lag burst.
-     * [compact] drops the hover tail. Click → `/ius hist <name>`.
+     * [compact] drops the hover tail. Click → `/milk hist <name>`.
      */
     fun formatBatch(
         name: String, parts: List<String>, worstBand: Int, windowSec: Int,
@@ -71,7 +71,7 @@ object AlertFormatter {
         val sev = sevChar(worstBand)
         val raw = buildString {
             if (lag) append("§7[lag] ")
-            append("§8[§diustitia§8] §f")
+            append("§8[§dMilkItAC§8] §f")
             append(name)
             append(" §")
             append(sev)
@@ -88,7 +88,7 @@ object AlertFormatter {
                 .append(Text.literal("§7${FlagHistory.confidenceExplanation(uuid)}"))
                 .append(Text.literal("\n§7click for flag history"))
             base.styled { s: Style ->
-                s.withClickEvent(ClickEvent.RunCommand("/ius hist $name")).withHoverEvent(HoverEvent.ShowText(hover))
+                s.withClickEvent(ClickEvent.RunCommand("/milk hist $name")).withHoverEvent(HoverEvent.ShowText(hover))
             }
         } catch (_: Throwable) { base }
     }
@@ -98,7 +98,7 @@ object AlertFormatter {
         val sev = sevChar(band(vl, setbackVL))
         val count = ceil(vl).toInt().coerceAtLeast(1)
         val raw = buildString {
-            append("§8[§diustitia§8] §f")
+            append("§8[§dMilkItAC§8] §f")
             append(name)
             append(" §")
             append(sev)
@@ -108,7 +108,7 @@ object AlertFormatter {
         }
         val base = Text.literal(raw)
         return try {
-            base.styled { s: Style -> s.withClickEvent(ClickEvent.RunCommand("/ius hist $name")) }
+            base.styled { s: Style -> s.withClickEvent(ClickEvent.RunCommand("/milk hist $name")) }
         } catch (_: Throwable) { base }
     }
 

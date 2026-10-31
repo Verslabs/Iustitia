@@ -10,7 +10,7 @@ import java.util.UUID
  *
  * ## Threading / single-frame guarantee
  *
- * - [arm] is called on the **client thread** (the snapshot keybind / `/ius snapshot` path).
+ * - [arm] is called on the **client thread** (the snapshot keybind / `/milk snapshot` path).
  * - The [dev.iustitia.mixin.CameraMixin] `Camera.update` TAIL inject runs on the **render thread**;
  *   it consumes [pending] (sets it to null) and, if the offender entity is loaded, repoints the
  *   camera at the offender and stashes the request in [activeReq] + raises [frameActive].

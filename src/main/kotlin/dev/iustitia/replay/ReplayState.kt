@@ -39,7 +39,7 @@ object ReplayState {
      *  focus ghost (mouse-driven, like [dev.iustitia.render.WatchState]); POV puts the camera at the
      *  focus ghost's eye looking along its buffered yaw+pitch (see the world from their view); FREECAM
      *  detaches the camera entirely so you can fly it anywhere in the clip's solid world (including
-     *  underground) with WASD + mouse — the Iustitia-native free-spectate, used when [chunks] != null. */
+     *  underground) with WASD + mouse — the MilkItAC-native free-spectate, used when [chunks] != null. */
     enum class CameraMode { FREE, FOLLOW, POV, FREECAM }
 
     /** Supported playback speeds. Stored as "playhead-tick advance per real tick". */
@@ -116,7 +116,7 @@ object ReplayState {
 
     /**
      * Terrain snapshot bundled with a clip (v5+), rendered as a face-culled shell by
-     * [dev.iustitia.render.TerrainOverlay]. `null` for `/ius replay` (replay never bundles the map —
+     * [dev.iustitia.render.TerrainOverlay]. `null` for `/milk replay` (replay never bundles the map —
      * you're already on it) and for pre-v5 clips. Read cross-thread by the terrain overlay.
      */
     @Volatile var terrain: TerrainSnapshot? = null
@@ -125,7 +125,7 @@ object ReplayState {
     /**
      * Full-chunk world snapshot bundled with a clip (v6+), rendered as **solid, textured blocks** by
      * [dev.iustitia.render.ChunkWorldRenderer] (baked once via [dev.iustitia.render.ChunkMesher]) so the
-     * user can free-spectate anywhere, including underground. `null` for `/ius replay`, pre-v6 clips,
+     * user can free-spectate anywhere, including underground. `null` for `/milk replay`, pre-v6 clips,
      * and when `clipChunkWorld` is off — in those cases the [terrain] wireframe / ghosts render as
      * before. When non-null, [dev.iustitia.mixin.WorldRendererMixin] suppresses the live world's chunk
      * render so the clip's world replaces it. Read cross-thread by the chunk world renderer +
@@ -160,7 +160,7 @@ object ReplayState {
      *  [ReplayBuffer.Segment.firstFrameIndex]. Empty when the clip has no segments. */
     private var frameSegIndex: IntArray = IntArray(0)
 
-    /** Whether this playback relocates segments to the user (true for `/ius playclip`). Re-derived per
+    /** Whether this playback relocates segments to the user (true for `/milk playclip`). Re-derived per
      *  segment on [switchToSegment]. Client-thread only. */
     private var relocate: Boolean = false
 
@@ -180,7 +180,7 @@ object ReplayState {
      * is `(tick, uuid)` — the tick the pop happened + the player who popped. Set from [start] (copied from
      * the [ReplayBuffer.Window]) and cleared in [stop]; read cross-thread by [dev.iustitia.render.ReplayRenderer]
      * via [totemCountFor] to draw the `⚡<count>` badge on a ghost's nametag when
-     * [dev.iustitia.config.IustitiaConfig.clipTotemPopCounter] is on. Empty for `/ius replay` and pre-v7
+     * [dev.iustitia.config.IustitiaConfig.clipTotemPopCounter] is on. Empty for `/milk replay` and pre-v7
      * clips (no totems recorded → no badge). Fail-open.
      */
     @Volatile var totems: List<ReplayBuffer.TotemRec> = emptyList()
@@ -247,7 +247,7 @@ object ReplayState {
      *  [legacy] arg. Consumed by the input/packet-suppression mixins ([dev.iustitia.mixin.ClientPlayerEntityMixin],
      *  [dev.iustitia.mixin.ClientConnectionMixin]) + the chunk/terrain render + live-terrain gates to
      *  DISABLE those post-v1.1.0 behaviors for a Legacy playclip (player walks + acts normally, live
-     *  world renders, no freecam). Always false for `/ius replay` (which passes `legacy=false`) so
+     *  world renders, no freecam). Always false for `/milk replay` (which passes `legacy=false`) so
      *  replay keeps its current spectator-like suppression unchanged. */
     @Volatile var legacyPlayclip: Boolean = false
         private set
@@ -256,7 +256,7 @@ object ReplayState {
      *  the playhead reaches the last frame; cleared in [start]/[stop] and whenever a seek/step moves
      *  the playhead off the last frame. While true, [tick] does not advance and [stop] is NOT called
      *  — the mode stays active (freecam, ghosts, controls all live) until the user explicitly exits
-     *  (/ius replay|playclip off, the numpad-0 exit keybind, or the replayToggle keybind). */
+     *  (/milk replay|playclip off, the numpad-0 exit keybind, or the replayToggle keybind). */
     @Volatile var held: Boolean = false
         private set
 
@@ -275,15 +275,15 @@ object ReplayState {
 
     /**
      * Begin a replay/clip-playback of [window].frames at [speed]. [focus] is the highlighted player
-     * (the `/ius replay <player>` subject; null for a generic clip). [relocate] controls whether the
-     * scene is shifted to the user's current position: **`/ius replay` passes `false`** so ghosts
+     * (the `/milk replay <player>` subject; null for a generic clip). [relocate] controls whether the
+     * scene is shifted to the user's current position: **`/milk replay` passes `false`** so ghosts
      * render at their exact recorded world coordinates (v1.1.0 behavior — replay is instant, same
-     * server/dimension, no anchoring); **`/ius playclip` passes `true`** so a clip recorded elsewhere
+     * server/dimension, no anchoring); **`/milk playclip` passes `true`** so a clip recorded elsewhere
      * plays around the user (the [IustitiaConfig.replayRelocate] toggle still gates it for clips).
      * Returns false if there are no frames. Idempotent: starting while active first stops the prior one.
      */
     fun start(window: ReplayBuffer.Window, focus: UUID?, speed: Float, hideLive: Boolean, relocate: Boolean, legacy: Boolean): Boolean {
-        // Yield playback to SnapClip when it's installed: it owns replay/clip, so Iustitia must not
+        // Yield playback to SnapClip when it's installed: it owns replay/clip, so MilkItAC must not
         // run a second camera/ghost pipeline or a second input-suppression path. Capture is already
         // off (ReplayBuffer.enabled), so no window would exist anyway; this closes the direct-start
         // paths (command, keybind, ClipPlayback) too.
@@ -393,7 +393,7 @@ object ReplayState {
      * (so the focus ghost begins at the user) or the first-frame centroid when there's no focus.
      * Returns null when relocation is disabled in config, no frames, or the local player is unavailable
      * — the renderer then falls back to absolute recorded coords. Client-thread only (reads the local
-     * player); called from [start] only when [relocate] is true (i.e. `/ius playclip`). `/ius replay`
+     * player); called from [start] only when [relocate] is true (i.e. `/milk playclip`). `/milk replay`
      * never calls this (it passes [relocate]=false) so replay stays at exact recorded coords.
      */
     private fun computeRelocOffset(window: ReplayBuffer.Window, focus: UUID?): Vec3d? = try {
@@ -722,7 +722,7 @@ object ReplayState {
     } catch (_: Throwable) { null }
 
     /** The active replay's full window (frames + alerts + any bundled terrain/chunks), for
-     *  `/ius replay save`. Empty when inactive. Client-thread only (command handler).
+     *  `/milk replay save`. Empty when inactive. Client-thread only (command handler).
      *
      *  A segment-based window carries its world in [segments], so the top-level [chunks] is dropped in
      *  that case — otherwise the export would write the same snapshot twice (top-level + inside the
@@ -816,7 +816,7 @@ object ReplayState {
         if (!active || frames.isEmpty()) null else frames.first().tick..frames.last().tick
     } catch (_: Throwable) { null }
 
-    // ---- playback controls (client thread; called from /ius replay subcommands + keybinds) ----
+    // ---- playback controls (client thread; called from /milk replay subcommands + keybinds) ----
 
     /** Toggle pause. Returns the new paused state (for chat feedback). */
     fun togglePause(): Boolean { paused = !paused; return paused }

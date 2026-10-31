@@ -1,6 +1,6 @@
 # Code of Conduct
 
-Iustitia contributors, maintainers, issue reporters, and reviewers are expected to help keep the project welcoming and technically honest.
+MilkItAC contributors, maintainers, issue reporters, and reviewers are expected to help keep the project welcoming and technically honest.
 
 ## Expected behavior
 
@@ -21,7 +21,7 @@ Iustitia contributors, maintainers, issue reporters, and reviewers are expected 
 - Hiding a known false positive or compatibility limitation.
 - Falsifying test results, live verification, benchmarks, or reproduction steps.
 - Using an AI agent to mass-submit low-effort issues or pull requests.
-- Attempting to turn Iustitia into a remote reporting, banning, or server-interference tool without an explicit project decision.
+- Attempting to turn MilkItAC into a remote reporting, banning, or server-interference tool without an explicit project decision.
 
 ## Enforcement
 

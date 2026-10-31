@@ -8,7 +8,7 @@ assignees: ''
 
 ## Environment
 
-- Iustitia version/commit:
+- MilkItAC version/commit:
 - Minecraft version:
 - Fabric Loader:
 - Fabric API:
@@ -38,6 +38,6 @@ assignees: ''
 
 ## Minimal setup
 
-- [ ] The issue reproduces with only Iustitia and required dependencies.
+- [ ] The issue reproduces with only MilkItAC and required dependencies.
 - [ ] I tested without the suspected conflicting mod.
 - [ ] I searched existing compatibility reports.

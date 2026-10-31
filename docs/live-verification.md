@@ -33,13 +33,13 @@ For every runtime change:
 
 1. Confirm the client reaches the title screen without a mixin application error.
 2. Create or join a test world.
-3. Confirm `/ius status` opens and reports the expected check count.
+3. Confirm `/milk status` opens and reports the expected check count.
 4. Confirm the config screen opens.
 5. Confirm the client can disconnect and return to the title screen.
 6. Confirm the feature is inert or unchanged when its toggle is off.
 7. Enable verbose logging only when needed, then turn it off after the test.
 
-Verbose output is written **asynchronously**: `/ius` hands each line to a background writer so
+Verbose output is written **asynchronously**: `/milk` hands each line to a background writer so
 logging can never stall the tick thread (a dense player fight produces flags far faster than the
 console appender can write them, and doing that on the tick thread froze the client). Two
 consequences for a validation pass:
@@ -49,14 +49,14 @@ consequences for a validation pass:
   session's transcript is on disk once the client has exited.
 - Under heavy load the bounded queue drops lines rather than blocking. The pipeline heartbeat
   reports them as `dropped=N`; `dropped=0` is what tells you the transcript is complete. Drops are
-  transcript-only — `/ius hist` and the report timeline read the synchronously-written flag
+  transcript-only — `/milk hist` and the report timeline read the synchronously-written flag
   history, so detection data is exact regardless.
 
 ## Detection changes
 
 For a changed check:
 
-1. Confirm the check appears in `/ius list`.
+1. Confirm the check appears in `/milk list`.
 2. Confirm its config slice is present and editable.
 3. Confirm a normal movement/combat trace does not immediately produce an alert.
 4. If the detector was narrowed, play the legitimate shape it was narrowed around and
@@ -68,10 +68,10 @@ For a changed check:
    and the other attack-driven checks (see the dig pass in the packet section, since that
    one needs a real server).
 5. Exercise the intended suspicious-like trace in a controlled test.
-6. Confirm flags appear in `/ius hist` when expected.
+6. Confirm flags appear in `/milk hist` when expected.
 7. Confirm alert throttling, join grace, decay, and tier behavior.
 8. Confirm disabling the check stops new flags while preserving expected history behavior.
-9. Confirm `/ius clear <name>` resets the detection record without removing tracking.
+9. Confirm `/milk clear <name>` resets the detection record without removing tracking.
 10. Confirm world change and disconnect reset transient state safely.
 
 A synthetic or controlled trace is evidence of code behavior, not proof that the detector is correct on every server.
@@ -80,7 +80,7 @@ A synthetic or controlled trace is evidence of code behavior, not proof that the
 
 1. Launch with the development client and inspect the log for mixin errors.
 2. Join a test world with at least one other player if possible.
-3. Confirm `/ius status` reports tracked players.
+3. Confirm `/milk status` reports tracked players.
 4. Exercise the relevant packet event: swing, hurt, velocity, effect, chat, join, respawn, or disconnect.
 5. Confirm verbose logs show the expected signal or inferred event.
 6. Test duplicate packet channels where applicable.
@@ -98,7 +98,7 @@ account, or on any server where another player will take damage near you:
 
 1. Hold left click on a block you cannot break (bedrock, or obsidian with a wooden pickaxe) and
    keep holding for at least a minute, long enough for `clickStatistics` to accumulate well past its
-   5.0 setback if the fix were absent. Confirm no alert, and confirm `/ius hist` shows no
+   5.0 setback if the fix were absent. Confirm no alert, and confirm `/milk hist` shows no
    `ClickStats` flags for you.
 2. Confirm the signal reached the pipeline at all. The dig state is otherwise silent, so watch for
    `DiggingSignal` in the verbose log (or confirm the second step below behaves differently when you
@@ -131,7 +131,7 @@ accounts:
 1. Join a 1.8 server through ViaFabricPlus and confirm the client reaches the world without a mixin
    or translation error.
 2. Trade normal melee hits between the two accounts at close range. Confirm the hits are attributed:
-   `/ius hist` on the observer shows correlated attacks, and the attack-driven checks get their
+   `/milk hist` on the observer shows correlated attacks, and the attack-driven checks get their
    input at all. Attribution dying here would mean detection is silently dead on every legacy server.
 3. Play the shape that has to keep working without a named cause: attack with a suppressed or
    mistimed swing. Confirm `hitsWithoutSwing` still builds its no-swing episode, which is the proof
@@ -167,8 +167,8 @@ For any new or changed mixin:
 4. Test a target behind terrain where depth testing should apply.
 5. Test an unloaded or removed entity.
 6. Test a crowded scene if performance is relevant, and measure it rather than eyeball
-   it when a per-frame path changed: run `/ius debugfps`, spend a minute in a dense area
-   (a busy replay or clip with several players and mobs in view), then `/ius debugfps
+   it when a per-frame path changed: run `/milk debugfps`, spend a minute in a dense area
+   (a busy replay or clip with several players and mobs in view), then `/milk debugfps
    stop` and read the report it writes under `.iustitia/debugfps/`. Compare the changed
    path's share of frame time against the same run before the change.
 7. Check that the overlay does not appear over configuration or history screens.
@@ -178,17 +178,17 @@ For any new or changed mixin:
 ## Replay, clips, and freecam
 
 1. Fill the replay buffer with a few seconds of tracked movement.
-2. Start `/ius replay`.
+2. Start `/milk replay`.
 3. Test pause, resume, seek, step, speed, and stop.
 4. Confirm live players are restored immediately after stop.
 5. Confirm your own replayed body is visible and appears exactly once in each camera mode
    (`freecam`, `pov`, `follow`, `free`). Your live body is hidden for the duration, so a second
    body on screen, or none at all, means the show-self gate is wrong.
-6. Record a clip and repeat check 5 with `/ius playclip` in both Modern and Legacy mode. A clip
+6. Record a clip and repeat check 5 with `/milk playclip` in both Modern and Legacy mode. A clip
    written by an older build carries no snap of you, and there your live body must stay visible
    rather than vanishing.
-7. Test `/ius clip` and inspect that the file is written locally.
-8. Load it with `/ius playclip`.
+7. Test `/milk clip` and inspect that the file is written locally.
+8. Load it with `/milk playclip`.
 9. Test legacy and modern playclip modes if either was changed.
 10. Test freecam movement and mouse look if affected.
 11. Confirm chat, commands, inventory, and hotbar behavior matches the documented mode.
@@ -201,15 +201,15 @@ For any new or changed mixin:
 
 1. Capture a window that contains non-player entities; confirm the ghosts match kind and position, and that **Clip captures entities** off hides them all.
 2. Place and break blocks during a window, then replay/clip it; confirm the world shows the edits, and that seeking **backwards** restores the earlier state.
-3. Teleport (or change dimension) mid-window, export a clip, and confirm `/ius clip` reports more than one segment and replays each place instead of only the last.
-4. Confirm `/ius clip` returns without a multi-second freeze, and that turning **Clip
+3. Teleport (or change dimension) mid-window, export a clip, and confirm `/milk clip` reports more than one segment and replays each place instead of only the last.
+4. Confirm `/milk clip` returns without a multi-second freeze, and that turning **Clip
    captures full world** off stops the rolling capture.
 5. Explore fast for over a minute through terrain you have not visited (a boat or elytra
    run), then export. Confirm the clip holds the ground from the end of the run, not only
    the first stretch; a capture that stops collecting once the rolling budget fills is the
    failure this step is for.
 6. Confirm the segment's baked world is re-meshed after edits (no stale chunks or leaked buffers across segment switches).
-7. Confirm `/ius replay` still renders ghosts over the **live** world (it must not pull in a captured world).
+7. Confirm `/milk replay` still renders ghosts over the **live** world (it must not pull in a captured world).
 8. Confirm an older clip (v2-v12) still loads and that a SnapClip-era clip loads without a fabricated alert timeline. Confirm a clip with a truncated or trailing-byte tail is refused with a message rather than loaded from a shifted parse.
 
 ## Persistence and configuration

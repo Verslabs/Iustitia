@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
  * Tab-list badge (Phase B): prepends the cheat-tier prefix (green [+] / yellow [!] / red [X]) to
  * each OTHER player's name in the Tab (player list) HUD, so the tier cue is visible without looking
  * at the player in-world. Just the tier glyph — no numeric confidence score on the tab (the score
- * is still available in `/ius hist`, `/ius session`, the snapshot, and the crosshair confidence HUD).
+ * is still available in `/milk hist`, `/milk session`, the snapshot, and the crosshair confidence HUD).
  *
  * Read-only on the tab render path: it rewrites the **return value** of `PlayerListHud.getPlayerName`
  * (`@At("RETURN")`, cancellable) — the single per-entry name source that both the row text and the

@@ -12,7 +12,7 @@ import net.minecraft.util.shape.VoxelShapes
  * Renders the terrain shell bundled in a v5+ clip as a face-culled wireframe overlay, relocated to
  * the user by [ReplayState.relocOffset] (the same shared origin translate [ReplayRenderer] applies,
  * so terrain + ghosts move together). Drawn only when [ReplayState.terrain] is non-null — i.e. a
- * `/ius playclip` of a terrain-bearing clip; a `/ius replay` (terrain null) renders no map.
+ * `/milk playclip` of a terrain-bearing clip; a `/milk replay` (terrain null) renders no map.
  *
  * ## Face culling — "don't render impossible-to-see blocks"
  *
@@ -65,7 +65,7 @@ object TerrainOverlay {
             // which fully supersedes this wireframe shell — drawing both at once is the "block outlines
             // on top of solid blocks" double-render. Skip the wireframe whenever a chunk world is present;
             // it only shows for a terrain-only (v5) clip with no chunk world. ChunkWorldRenderer itself
-            // no-ops when chunks == null, so for /ius replay + pre-v5 clips this stays a no-op too.
+            // no-ops when chunks == null, so for /milk replay + pre-v5 clips this stays a no-op too.
             if (ReplayState.chunks != null) return
             val ts = ReplayState.terrain ?: return
             ensureBuilt(ts)

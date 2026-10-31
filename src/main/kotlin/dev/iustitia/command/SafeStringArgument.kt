@@ -13,7 +13,7 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType
  * `[Render thread/WARN]` lines some launchers (Modrinth) surface as "fatal errors".
  *
  * The warning fires whenever a string argument is a **sibling** of literal subcommands, e.g.
- * `/ius replay <target>` sitting next to `/ius replay off|pause|resume|seek|...`. Brigadier's
+ * `/milk replay <target>` sitting next to `/milk replay off|pause|resume|seek|...`. Brigadier's
  * `CommandNode.findAmbiguities` takes each sibling literal's example word (the literal's own name)
  * and tests it against the argument's `ArgumentCommandNode.isValidInput`, which runs [parse] and
  * returns **false** on a [com.mojang.brigadier.exceptions.CommandSyntaxException]. The stock

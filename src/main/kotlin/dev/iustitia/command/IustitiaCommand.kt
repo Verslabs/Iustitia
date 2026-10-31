@@ -40,7 +40,7 @@ import java.util.UUID
 import kotlin.math.ceil
 
 /**
- * `/iustitia` and `/ius` — client-only control surface. Both aliases expose the same subcommands:
+ * `/milkitac` and `/milk` — client-only control surface. Both aliases expose the same subcommands:
  *  - `list`                 show checks + enabled state
  *  - `toggle <check>`       flip a check's enabled flag
  *  - `threshold <check> <v>` set a check's primary threshold
@@ -58,7 +58,7 @@ import kotlin.math.ceil
  */
 object IustitiaCommand {
 
-    private val tag: String get() = "§8[§diustitia§8]"
+    private val tag: String get() = "§8[§dMilkItAC§8]"
 
     // Derived from the live config so the command never drifts from the registry.
     private val checkIds: List<String>
@@ -67,45 +67,45 @@ object IustitiaCommand {
     private val subcommands: List<Pair<String, String>> = listOf(
         "list" to "show all checks + enabled state",
         "status" to "health panel: master, tracked players, protocol, alerts",
-        "hist" to "flag history: /ius hist [name] [check]",
-        "report" to "copy a player's report card to clipboard: /ius report <name> [markdown|json|text]  (text = the chat-friendly transcript form)",
-        "transcript" to "print a player's session timeline to chat (text form of /ius report): /ius transcript <name>  (or /ius transcript panel [name] to toggle the side panel)",
-        "evidence" to "one chat line of a player's last few seconds of flags: /ius evidence <name>",
-        "note" to "moderator tag a player: /ius note <name> <closet|blatant|needsReview|legit> <text...>  (or /ius note <name> to view)",
-        "session" to "session summary: tracked players, tier counts, who peaked highest  (or /ius session screen for the timeline screen)",
-        "snapshot" to "evidence snapshot of your crosshair target: /ius snapshot [name]",
-        "spectate" to "watch follow-cam on a player: /ius spectate [name]  (no name = crosshair target; /ius spectate off to stop; same as the watch keybind)",
-        "replay" to "instant replay: /ius replay [<player>|<seconds>] [<seconds>] [1|0.5|0.25]  — rewinds the world and plays back ghost positions+look at FULL speed by default (add 0.5 or 0.25 for slow-mo). Examples: /ius replay 60 (60s, no focus), /ius replay thoria 60 0.5 (focus thoria, 60s, slow-mo). Controls while running: /ius replay pause|resume|seek <s>|step +|-|speed <1|0.5|0.25>|cam <free|follow|pov>|off  (numpad 5 = pause, +/- = seek 5s, numpad 0 = exit). Also /ius replay save <name> to save the replay you're watching as a clip.",
-        "clip" to "export the last N seconds to a .iusclip file: /ius clip <seconds> [name]  (name = the clip's filename; also sets the focus player if name matches someone online; omit for scene_<tick>)",
-        "playclip" to "play back a saved .iusclip in-world at FULL speed by default: /ius playclip <name> [1|0.5|0.25]  (no name = list saved clips)",
+        "hist" to "flag history: /milk hist [name] [check]",
+        "report" to "copy a player's report card to clipboard: /milk report <name> [markdown|json|text]  (text = the chat-friendly transcript form)",
+        "transcript" to "print a player's session timeline to chat (text form of /milk report): /milk transcript <name>  (or /milk transcript panel [name] to toggle the side panel)",
+        "evidence" to "one chat line of a player's last few seconds of flags: /milk evidence <name>",
+        "note" to "moderator tag a player: /milk note <name> <closet|blatant|needsReview|legit> <text...>  (or /milk note <name> to view)",
+        "session" to "session summary: tracked players, tier counts, who peaked highest  (or /milk session screen for the timeline screen)",
+        "snapshot" to "evidence snapshot of your crosshair target: /milk snapshot [name]",
+        "spectate" to "watch follow-cam on a player: /milk spectate [name]  (no name = crosshair target; /milk spectate off to stop; same as the watch keybind)",
+        "replay" to "instant replay: /milk replay [<player>|<seconds>] [<seconds>] [1|0.5|0.25]  — rewinds the world and plays back ghost positions+look at FULL speed by default (add 0.5 or 0.25 for slow-mo). Examples: /milk replay 60 (60s, no focus), /milk replay thoria 60 0.5 (focus thoria, 60s, slow-mo). Controls while running: /milk replay pause|resume|seek <s>|step +|-|speed <1|0.5|0.25>|cam <free|follow|pov>|off  (numpad 5 = pause, +/- = seek 5s, numpad 0 = exit). Also /milk replay save <name> to save the replay you're watching as a clip.",
+        "clip" to "export the last N seconds to a .iusclip file: /milk clip <seconds> [name]  (name = the clip's filename; also sets the focus player if name matches someone online; omit for scene_<tick>)",
+        "playclip" to "play back a saved .iusclip in-world at FULL speed by default: /milk playclip <name> [1|0.5|0.25]  (no name = list saved clips)",
         "clips" to "open the clip manager screen: list saved .iusclip files, play or delete each",
-        "deleteclip" to "delete a saved clip by name: /ius deleteclip <name>  (alias /ius delclip <name>)",
-        "delclip" to "alias for /ius deleteclip",
-        "record" to "record the live scene for later export: /ius record  (start), /ius record stop [name]  (save as <name>.iusclip, capped at 10 min/segment)",
-        "chathist" to "chat history for tracked players: /ius chathist <username> [page], /ius chathist phrase <phrase> [page], /ius chathist target <username> <phrase> [page], /ius chathist panel user|phrase|target ...",
+        "deleteclip" to "delete a saved clip by name: /milk deleteclip <name>  (alias /milk delclip <name>)",
+        "delclip" to "alias for /milk deleteclip",
+        "record" to "record the live scene for later export: /milk record  (start), /milk record stop [name]  (save as <name>.iusclip, capped at 10 min/segment)",
+        "chathist" to "chat history for tracked players: /milk chathist <username> [page], /milk chathist phrase <phrase> [page], /milk chathist target <username> <phrase> [page], /milk chathist panel user|phrase|target ...",
         // The built-in list is derived, so adding a preset cannot leave this row claiming the old set.
-        "preset" to "apply a named config preset: /ius preset <name>  (bare = list; built-ins: ${dev.iustitia.config.PresetManager.builtInNames.joinToString("/")}; custom presets via /ius createpreset)",
-        "presets" to "list all presets (built-in + custom): /ius presets",
-        "createpreset" to "save the current config as a custom preset: /ius createpreset <name>",
-        "deletepreset" to "delete a custom preset: /ius deletepreset <name>  (built-ins can't be deleted)",
+        "preset" to "apply a named config preset: /milk preset <name>  (bare = list; built-ins: ${dev.iustitia.config.PresetManager.builtInNames.joinToString("/")}; custom presets via /milk createpreset)",
+        "presets" to "list all presets (built-in + custom): /milk presets",
+        "createpreset" to "save the current config as a custom preset: /milk createpreset <name>",
+        "deletepreset" to "delete a custom preset: /milk deletepreset <name>  (built-ins can't be deleted)",
         "wizard" to "re-run the first-launch setup wizard",
         "keybinds" to "open the keybind hub screen (lists binds, highlights conflicts)",
-        "help" to "this help, or /ius help <check|subcommand|feature>",
-        "alerts" to "toggle all chat alerts: /ius alerts  (or mute one: /ius alerts <name|check> [on|off])",
-        "toggle" to "enable/disable a check: /ius toggle <check>",
-        "threshold" to "set or restore a check's threshold: /ius threshold <check> <v|default|reset>",
+        "help" to "this help, or /milk help <check|subcommand|feature>",
+        "alerts" to "toggle all chat alerts: /milk alerts  (or mute one: /milk alerts <name|check> [on|off])",
+        "toggle" to "enable/disable a check: /milk toggle <check>",
+        "threshold" to "set or restore a check's threshold: /milk threshold <check> <v|default|reset>",
         "config" to "open the config screen",
         "verbose" to "toggle verbose console logging",
         "reload" to "reload config from disk",
         "reset" to "reset all tracker/check/alert/history state",
-        "clear" to "reset one player's flags (tier→green) or everyone's: /ius clear <name|all>",
-        "exempt" to "exempt a player from all checks: /ius exempt [name [on|off]]  (bare = list exempted)",
-        "debugfps" to "render-thread sampling profiler: /ius debugfps  (start), /ius debugfps stop  (write a text report to %APPDATA%/.iustitia/debugfps/)",
+        "clear" to "reset one player's flags (tier→green) or everyone's: /milk clear <name|all>",
+        "exempt" to "exempt a player from all checks: /milk exempt [name [on|off]]  (bare = list exempted)",
+        "debugfps" to "render-thread sampling profiler: /milk debugfps  (start), /milk debugfps stop  (write a text report to %APPDATA%/.iustitia/debugfps/)",
     )
 
     fun register(dispatcher: CommandDispatcher<FabricClientCommandSource>) {
-        dispatcher.register(buildRoot("iustitia"))
-        dispatcher.register(buildRoot("ius"))
+        dispatcher.register(buildRoot("milkitac"))
+        dispatcher.register(buildRoot("milk"))
     }
 
     private fun buildRoot(name: String): LiteralArgumentBuilder<FabricClientCommandSource> =
@@ -198,8 +198,8 @@ object IustitiaCommand {
                         .suggests { _, b -> suggestFiltered(b, dev.iustitia.replay.ClipStore.list()); b.buildFuture() }
                         .executes { replaySave(it, StringArgumentType.getString(it, "name")) }))
                 // <target> is overloaded: a NUMBER = the seconds to replay (no focus, 1×), e.g.
-                // `/ius replay 60`; a NAME = the focus player, optionally followed by <seconds> [speed],
-                // e.g. `/ius replay thoria 60 0.5`. A bare `/ius replay` replays the default window.
+                // `/milk replay 60`; a NAME = the focus player, optionally followed by <seconds> [speed],
+                // e.g. `/milk replay thoria 60 0.5`. A bare `/milk replay` replays the default window.
                 .then(ClientCommandManager.argument("target", SafeStringArgument.wordExcluding("off", "pause", "resume", "seek", "step", "speed", "cam", "save"))
                     .suggests { _, b -> suggestNames(b); b.buildFuture() }
                     .executes { replay(it, StringArgumentType.getString(it, "target"), null) }
@@ -310,7 +310,7 @@ object IustitiaCommand {
                             .executes { chathistTarget(it, StringArgumentType.getString(it, "username"), StringArgumentType.getString(it, "phrase"), 1) }
                             .then(ClientCommandManager.argument("page", IntegerArgumentType.integer(1))
                                 .executes { chathistTarget(it, StringArgumentType.getString(it, "username"), StringArgumentType.getString(it, "phrase"), IntegerArgumentType.getInteger(it, "page")) }))))
-                // `/ius chathist panel <action> [username] [word] [pageamount]` — same queries as the
+                // `/milk chathist panel <action> [username] [word] [pageamount]` — same queries as the
                 // chat-print chathist, rendered in a live side panel that mirrors TranscriptPanelScreen.
                 .then(ClientCommandManager.literal("panel")
                     .executes { chathistPanelUsage(it) }
@@ -344,8 +344,8 @@ object IustitiaCommand {
     }
 
     // ---- companion-mod yield guards ----
-    // SnapClip / Scrollback / FollowCam are single-feature extracts of Iustitia. When one is
-    // installed it owns its feature, so the matching Iustitia commands defer with a pointer instead
+    // SnapClip / Scrollback / FollowCam are single-feature extracts of MilkItAC. When one is
+    // installed it owns its feature, so the matching MilkItAC commands defer with a pointer instead
     // of running a second copy (double capture / double camera / double chat store). Core detection
     // and every other command are unaffected. See dev.iustitia.compat.CompanionMods.
     private fun companionOwnsReplay(ctx: CommandContext<FabricClientCommandSource>): Boolean {
@@ -419,7 +419,7 @@ object IustitiaCommand {
                 send(ctx, " §7$backlog line(s) still queued — still writing to §flogs/latest.log§7 in the background.")
             }
             if (dropped > 0L) {
-                send(ctx, " §7note: §f$dropped§7 verbose line(s) were dropped this session (appender could not keep up), so the transcript is §fpartial§7. Detection data is unaffected — §f/ius hist§7 keeps the exact per-flag record.")
+                send(ctx, " §7note: §f$dropped§7 verbose line(s) were dropped this session (appender could not keep up), so the transcript is §fpartial§7. Detection data is unaffected — §f/milk hist§7 keeps the exact per-flag record.")
             }
         }
         return 1
@@ -462,10 +462,10 @@ object IustitiaCommand {
         return 1
     }
 
-    /** Bare `/ius toggle` (no check arg) — print usage instead of Brigadier's cryptic
+    /** Bare `/milk toggle` (no check arg) — print usage instead of Brigadier's cryptic
      *  "Unknown or incomplete command". Same for [thresholdUsage]. */
     private fun toggleUsage(ctx: CommandContext<FabricClientCommandSource>): Int {
-        send(ctx, "$tag §7usage: §f/ius toggle <check>")
+        send(ctx, "$tag §7usage: §f/milk toggle <check>")
         send(ctx, " §7checks: §f${checkIds.joinToString(" ")}")
         return 0
     }
@@ -499,15 +499,15 @@ object IustitiaCommand {
     }
 
     private fun thresholdUsage(ctx: CommandContext<FabricClientCommandSource>): Int {
-        send(ctx, "$tag §7usage: §f/ius threshold <check> <value|default|reset>")
+        send(ctx, "$tag §7usage: §f/milk threshold <check> <value|default|reset>")
         send(ctx, " §7checks: §f${checkIds.joinToString(" ")}")
         return 0
     }
 
     // ---- clear (reset a player's or everyone's flags) ----
-    /** Bare `/ius clear` — print usage (a bare clear is too easy to fat-finger into a wipe). */
+    /** Bare `/milk clear` — print usage (a bare clear is too easy to fat-finger into a wipe). */
     private fun clearUsage(ctx: CommandContext<FabricClientCommandSource>): Int {
-        send(ctx, "$tag §7usage: §f/ius clear <name>§7 (reset one player's flags → §agreen§7) or §f/ius clear all§7 (everyone).")
+        send(ctx, "$tag §7usage: §f/milk clear <name>§7 (reset one player's flags → §agreen§7) or §f/milk clear all§7 (everyone).")
         send(ctx, " §7detection vl, flag timeline, tier + alert routing are wiped; tracking/replay keep running. Exemptions are untouched.")
         return 0
     }
@@ -526,17 +526,17 @@ object IustitiaCommand {
     }
 
     // ---- exempt (skip a player at the Check.flag chokepoint) ----
-    /** Bare `/ius exempt` — list currently-exempted players. */
+    /** Bare `/milk exempt` — list currently-exempted players. */
     private fun exemptList(ctx: CommandContext<FabricClientCommandSource>): Int {
         val all = try { dev.iustitia.exempt.Exemptions.all() } catch (_: Throwable) { emptyList() }
-        if (all.isEmpty()) { send(ctx, "$tag §7no exempted players. §f/ius exempt <name>§7 to exempt one (they stop flagging)."); return 1 }
+        if (all.isEmpty()) { send(ctx, "$tag §7no exempted players. §f/milk exempt <name>§7 to exempt one (they stop flagging)."); return 1 }
         send(ctx, "$tag §7exempted players §8(${all.size})§7 — invisible to every check:")
         all.forEach { (uuid, name) -> send(ctx, " §f$name §8$uuid") }
-        send(ctx, " §7toggle with §f/ius exempt <name>§7 or §f/ius exempt <name> off§7. Persists with the persistence toggle; not cleared on world change.")
+        send(ctx, " §7toggle with §f/milk exempt <name>§7 or §f/milk exempt <name> off§7. Persists with the persistence toggle; not cleared on world change.")
         return 1
     }
 
-    /** `/ius exempt <name> [on|off]` — set or toggle a player's exemption. Bare name = toggle. */
+    /** `/milk exempt <name> [on|off]` — set or toggle a player's exemption. Bare name = toggle. */
     private fun exemptToggle(ctx: CommandContext<FabricClientCommandSource>, stateArg: String?): Int {
         val name = StringArgumentType.getString(ctx, "name")
         val uuid = resolveUuid(name)
@@ -553,12 +553,12 @@ object IustitiaCommand {
             null -> dev.iustitia.exempt.Exemptions.toggle(uuid, name)
         }
         send(ctx, "$tag §7player §f$name §7exempt ${if (nowOn) "§aON§7 (no check will flag them)" else "§cOFF§7 (checks run normally again)"}.")
-        if (nowOn) send(ctx, " §7existing flags were §fnot§7 cleared — use §f/ius clear $name§7 to reset their tier.")
+        if (nowOn) send(ctx, " §7existing flags were §fnot§7 cleared — use §f/milk clear $name§7 to reset their tier.")
         return 1
     }
 
     // ---- debugfps (live render-thread sampler; diagnostic for the FPS investigation) ----
-    /** `/ius debugfps` (or `/ius debugfps start`) — start sampling the render thread every ~5ms.
+    /** `/milk debugfps` (or `/milk debugfps start`) — start sampling the render thread every ~5ms.
      *  Not gated on verbose: the profiler's purpose is to measure the configuration we actually
      *  ship, and gating it on verbose meant every profile was taken with verbose on — i.e. it
      *  could not measure the verbose-off case at all. Start/stop is the only gate. MUST run on the
@@ -567,16 +567,16 @@ object IustitiaCommand {
     private fun profileStart(ctx: CommandContext<FabricClientCommandSource>): Int {
         val err = dev.iustitia.profiling.RenderProfiler.start()
         if (err != null) { send(ctx, "$tag §7profiler §c$err§7."); return 0 }
-        send(ctx, "$tag §aprofiler running§7 — sampling the render thread every 5ms. Reproduce the lag now (walk through the dense-player area). When done: §f/ius debugfps stop§7 → writes a text report to §f%APPDATA%/.iustitia/debugfps/§7.")
+        send(ctx, "$tag §aprofiler running§7 — sampling the render thread every 5ms. Reproduce the lag now (walk through the dense-player area). When done: §f/milk debugfps stop§7 → writes a text report to §f%APPDATA%/.iustitia/debugfps/§7.")
         return 1
     }
 
-    /** `/ius debugfps stop` — stop sampling and write the text report to
+    /** `/milk debugfps stop` — stop sampling and write the text report to
      *  `%APPDATA%/.iustitia/debugfps/iustitia-debugfps-<timestamp>.txt`. Returns the path on success. */
     private fun profileStop(ctx: CommandContext<FabricClientCommandSource>): Int {
         val res = dev.iustitia.profiling.RenderProfiler.stop()
         when {
-            res == "not running" -> { send(ctx, "$tag §cprofiler not running (start with §f/ius debugfps§7)."); return 0 }
+            res == "not running" -> { send(ctx, "$tag §cprofiler not running (start with §f/milk debugfps§7)."); return 0 }
             res.startsWith("failed") -> { send(ctx, "$tag §c$res"); return 0 }
             else -> {
                 send(ctx, "$tag §7profiler §astopped§7 — report written: §f$res")
@@ -586,7 +586,7 @@ object IustitiaCommand {
         return 1
     }
 
-    /** `/ius record start` — begin a manual long recording (capped at 10 min per segment; auto-saves
+    /** `/milk record start` — begin a manual long recording (capped at 10 min per segment; auto-saves
      *  a segment on world change + at the cap and keeps recording). The world map is rolled up in small
      *  per-tick pieces while recording (no save-time sweep), plus every block edit observed. Feedback
      *  via [dev.iustitia.replay.RecordManager.start]. */
@@ -600,33 +600,33 @@ object IustitiaCommand {
         return 1
     }
 
-    /** `/ius record stop [name]` — save the active recording as `<name>.iusclip` (default
-     *  `record_<tick>_<idx>`) → plays back with `/ius playclip <name>`. Feedback via [RecordManager.stop]. */
+    /** `/milk record stop [name]` — save the active recording as `<name>.iusclip` (default
+     *  `record_<tick>_<idx>`) → plays back with `/milk playclip <name>`. Feedback via [RecordManager.stop]. */
     private fun recordStop(ctx: CommandContext<FabricClientCommandSource>, name: String?): Int {
         if (companionOwnsReplay(ctx)) return 1
         send(ctx, dev.iustitia.replay.RecordManager.stop(name))
         return 1
     }
 
-    // ---- /ius chathist (per-player chat history, paginated + clickable) ----
+    // ---- /milk chathist (per-player chat history, paginated + clickable) ----
 
     private val chatTimeFmt = SimpleDateFormat("HH:mm:ss")
 
-    /** Bare `/ius chathist` / `/ius chathist phrase` usage hint. */
+    /** Bare `/milk chathist` / `/milk chathist phrase` usage hint. */
     private fun chathistUsage(ctx: CommandContext<FabricClientCommandSource>): Int {
         if (companionOwnsChat(ctx)) return 1
         send(ctx, "$tag §7usage:")
-        send(ctx, " §f/ius chathist <username> [page]§7 — a player's messages (newest first).")
-        send(ctx, " §f/ius chathist phrase <phrase> [page]§7 — everyone who said <phrase>, in order.")
-        send(ctx, " §f/ius chathist target <username> <phrase> [page]§7 — <username>'s messages with <phrase>.")
-        send(ctx, " §f/ius chathist panel user <username> [n]§7 — side panel of <username>'s last [n] msgs (default 15).")
-        send(ctx, " §f/ius chathist panel phrase <word> [n]§7 — side panel of everyone who said <word>.")
-        send(ctx, " §f/ius chathist panel target <username> <word> [n]§7 — side panel of <username>'s msgs with <word>.")
+        send(ctx, " §f/milk chathist <username> [page]§7 — a player's messages (newest first).")
+        send(ctx, " §f/milk chathist phrase <phrase> [page]§7 — everyone who said <phrase>, in order.")
+        send(ctx, " §f/milk chathist target <username> <phrase> [page]§7 — <username>'s messages with <phrase>.")
+        send(ctx, " §f/milk chathist panel user <username> [n]§7 — side panel of <username>'s last [n] msgs (default 15).")
+        send(ctx, " §f/milk chathist panel phrase <word> [n]§7 — side panel of everyone who said <word>.")
+        send(ctx, " §f/milk chathist panel target <username> <word> [n]§7 — side panel of <username>'s msgs with <word>.")
         send(ctx, " §7captures tracked OTHER players only; per-server (persists with the persistence toggle).")
         return 1
     }
 
-    /** `/ius chathist <username> [page]` — that player's messages, newest-first, 8/page. */
+    /** `/milk chathist <username> [page]` — that player's messages, newest-first, 8/page. */
     private fun chathistUser(ctx: CommandContext<FabricClientCommandSource>, username: String, page: Int): Int {
         if (companionOwnsChat(ctx)) return 1
         val rows = dev.iustitia.chathist.ChatHistory.rowsForUser(username)
@@ -634,7 +634,7 @@ object IustitiaCommand {
         return 1
     }
 
-    /** `/ius chathist phrase <phrase> [page]` — every player who said [phrase], in order, 8/page. */
+    /** `/milk chathist phrase <phrase> [page]` — every player who said [phrase], in order, 8/page. */
     private fun chathistPhrase(ctx: CommandContext<FabricClientCommandSource>, phrase: String, page: Int): Int {
         if (companionOwnsChat(ctx)) return 1
         val rows = dev.iustitia.chathist.ChatHistory.rowsForPhrase(phrase)
@@ -642,7 +642,7 @@ object IustitiaCommand {
         return 1
     }
 
-    /** `/ius chathist target <username> <phrase> [page]` — [username]'s messages containing [phrase]. */
+    /** `/milk chathist target <username> <phrase> [page]` — [username]'s messages containing [phrase]. */
     private fun chathistTarget(ctx: CommandContext<FabricClientCommandSource>, username: String, phrase: String, page: Int): Int {
         if (companionOwnsChat(ctx)) return 1
         val rows = dev.iustitia.chathist.ChatHistory.rowsForUserPhrase(username, phrase)
@@ -652,30 +652,30 @@ object IustitiaCommand {
 
     // ---- chathist panel — live side panel mirroring TranscriptPanelScreen ----
 
-    /** Bare `/ius chathist panel` usage hint. */
+    /** Bare `/milk chathist panel` usage hint. */
     private fun chathistPanelUsage(ctx: CommandContext<FabricClientCommandSource>): Int {
         if (companionOwnsChat(ctx)) return 1
         send(ctx, "$tag §7usage:")
-        send(ctx, " §f/ius chathist panel user <username> [n]§7 — side panel of <username>'s last [n] msgs (default 15).")
-        send(ctx, " §f/ius chathist panel phrase <word> [n]§7 — side panel of everyone who said <word>.")
-        send(ctx, " §f/ius chathist panel target <username> <word> [n]§7 — side panel of <username>'s msgs with <word>.")
+        send(ctx, " §f/milk chathist panel user <username> [n]§7 — side panel of <username>'s last [n] msgs (default 15).")
+        send(ctx, " §f/milk chathist panel phrase <word> [n]§7 — side panel of everyone who said <word>.")
+        send(ctx, " §f/milk chathist panel target <username> <word> [n]§7 — side panel of <username>'s msgs with <word>.")
         send(ctx, " §7[n] = max messages to show; panel refreshes live while open.")
         return 1
     }
 
-    /** `/ius chathist panel user <username> [pageamount]` — live side panel of a player's newest messages. */
+    /** `/milk chathist panel user <username> [pageamount]` — live side panel of a player's newest messages. */
     private fun chathistPanelUser(ctx: CommandContext<FabricClientCommandSource>, username: String, limit: Int): Int {
         openChatPanel(ctx, username, { dev.iustitia.chathist.ChatHistory.rowsForUser(username) }, limit)
         return 1
     }
 
-    /** `/ius chathist panel phrase <word> [pageamount]` — live side panel of every message containing [word]. */
+    /** `/milk chathist panel phrase <word> [pageamount]` — live side panel of every message containing [word]. */
     private fun chathistPanelPhrase(ctx: CommandContext<FabricClientCommandSource>, word: String, limit: Int): Int {
         openChatPanel(ctx, "phrase: $word", { dev.iustitia.chathist.ChatHistory.rowsForPhrase(word) }, limit)
         return 1
     }
 
-    /** `/ius chathist panel target <username> <word> [pageamount]` — live side panel of [username]'s msgs with [word]. */
+    /** `/milk chathist panel target <username> <word> [pageamount]` — live side panel of [username]'s msgs with [word]. */
     private fun chathistPanelTarget(ctx: CommandContext<FabricClientCommandSource>, username: String, word: String, limit: Int): Int {
         openChatPanel(ctx, "$username · $word", { dev.iustitia.chathist.ChatHistory.rowsForUserPhrase(username, word) }, limit)
         return 1
@@ -708,16 +708,16 @@ object IustitiaCommand {
         // so emit the tag on its own line first, then the un-prefixed divider one row lower — it
         // left-aligns with the rows and the bottom divider.
         src.sendFeedback(Text.literal(tag))
-        // top divider: ...---[IUS ChatHistory]---...
-        src.sendFeedback(Text.literal("§8...§7---§f[§bIUS ChatHistory§f]§7---§8..."))
+        // top divider: ...---[MilkItAC ChatHistory]---...
+        src.sendFeedback(Text.literal("§8...§7---§f[§bMilkItAC ChatHistory§f]§7---§8..."))
         for (r in pageRows) {
             val ts = try { chatTimeFmt.format(java.util.Date(r.wallClockMs)) } catch (_: Throwable) { "??:??:??" }
             src.sendFeedback(Text.literal("§8[$ts] §7[§f${r.name}§7]§r ${r.text}"))
         }
         // bottom divider: [<]...---[Page N/M]---...[>], clickable where valid.
         val bottom: MutableText = Text.literal("")
-        val prevCmd = "/ius $cmdPrefix ${p - 1}"
-        val nextCmd = "/ius $cmdPrefix ${p + 1}"
+        val prevCmd = "/milk $cmdPrefix ${p - 1}"
+        val nextCmd = "/milk $cmdPrefix ${p + 1}"
         bottom.append(clickButton("§3<§r", if (p > 1) prevCmd else null, "Previous page"))
         bottom.append(Text.literal("§8...§7---§f[§7Page §f$p§7/$totalPages§f]§7---§8...§r"))
         bottom.append(clickButton("§3>§r", if (p < totalPages) nextCmd else null, "Next page"))
@@ -734,7 +734,7 @@ object IustitiaCommand {
 
     // ---- history ----
 
-    /** Bare `/ius hist` — opens the searchable player list (#1). Mirrors the [openConfig]
+    /** Bare `/milk hist` — opens the searchable player list (#1). Mirrors the [openConfig]
      *  `MinecraftClient.execute{}` + fail-open pattern; falls back to the chat top-offenders
      *  dump if the screen can't be opened (e.g. opened from a non-foreground context). */
     private fun histTop(ctx: CommandContext<FabricClientCommandSource>): Int {
@@ -757,7 +757,7 @@ object IustitiaCommand {
         return 1
     }
 
-    /** `/ius hist <name> [check]` — resolves the player (by flagged name, then by a
+    /** `/milk hist <name> [check]` — resolves the player (by flagged name, then by a
      *  tracked-player name match for fresh joins) and opens [PlayerHistoryScreen] (#1 + #2).
      *  Falls back to the existing chat dump if the uuid can't be resolved or the screen
      *  can't open, so the command never regresses. */
@@ -783,7 +783,7 @@ object IustitiaCommand {
     }
 
     /** Chat fallback for [histPlayer] — used if the GUI fails to open. Keeps the
-     *  pre-GUI `/ius hist <name>` behavior intact as a safety net. */
+     *  pre-GUI `/milk hist <name>` behavior intact as a safety net. */
     private fun histPlayerChat(ctx: CommandContext<FabricClientCommandSource>, uuid: UUID, name: String, checkFilter: String?): Int {
         val flags = FlagHistory.flags(uuid)
         if (flags.isEmpty()) { send(ctx, "$tag §7no flags recorded for §f$name§7."); return 1 }
@@ -798,10 +798,10 @@ object IustitiaCommand {
     }
 
     // ---- report (#9) ----
-    /** `/ius report <name> [format]` — builds a report card from the FlagHistory aggregators
+    /** `/milk report <name> [format]` — builds a report card from the FlagHistory aggregators
      *  (same data as [PlayerHistoryScreen]) and copies it to the clipboard. `format` defaults
      *  to `markdown`; `json` emits the same data as a JSON object; `text` emits the chat-friendly
-     *  transcript form (the same builder `/ius transcript <name>` prints to chat — session stats +
+     *  transcript form (the same builder `/milk transcript <name>` prints to chat — session stats +
      *  moderator note + timeline). One builder ([reportText]) backs both so the two commands can
      *  never drift. Never sends anything to the server (clipboard is client-only). Fail-open. */
     private fun report(ctx: CommandContext<FabricClientCommandSource>, format: String): Int {
@@ -841,7 +841,7 @@ object IustitiaCommand {
         val totalFlags = counts.values.sum()
         val maxVl = maxVlMap.values.maxOrNull() ?: 0.0
         val spanTxt = if (sp == null) "no flags" else "first flag @t${sp.first} | last flag @t${sp.second}"
-        sb.append("# Iustitia report — $name\n\n")
+        sb.append("# MilkItAC report — $name\n\n")
         sb.append("tier: $tierName | $spanTxt | alerts: $alerts | flags: $totalFlags | max vl: ${fmt(maxVl)}\n")
         sb.append("confidence: ${FlagHistory.confidenceLine(uuid)}\n")
         val topCheck = FlagHistory.topCheck(uuid)
@@ -961,8 +961,8 @@ object IustitiaCommand {
     private fun crosshairTarget(): Pair<java.util.UUID, String>? = dev.iustitia.Iustitia.currentTarget()
 
     // ---- transcript (#4) — chat-print form of the report engine ----
-    /** `/ius transcript <name>` — prints the [reportText] builder to chat (and saves it to an
-     *  export file when persistence is on). This is the in-game, paste-ready form of `/ius report
+    /** `/milk transcript <name>` — prints the [reportText] builder to chat (and saves it to an
+     *  export file when persistence is on). This is the in-game, paste-ready form of `/milk report
      *  <name> text` — same builder, different output channel: transcript → chat + export file,
      *  report → clipboard. `panel` is a separate live overlay surface ([TranscriptPanelScreen]). */
     private fun transcriptPrint(ctx: CommandContext<FabricClientCommandSource>): Int {
@@ -979,9 +979,9 @@ object IustitiaCommand {
             val exported = try { PersistenceManager.saveExport("transcript", name, text) } catch (_: Throwable) { false }
             if (!exported) send(ctx, "$tag §ctranscript export failed (disk error) — chat still has the full text.")
         }
-        send(ctx, "$tag §7transcript for §f$name§7 printed §8(paste into a report; same as §f/ius report $name text§7)")
+        send(ctx, "$tag §7transcript for §f$name§7 printed §8(paste into a report; same as §f/milk report $name text§7)")
         // If the transcript side panel is enabled in config, also pop it open for this player —
-        // same surface the keybind / `/ius transcript panel` use, so the chat print + the live panel
+        // same surface the keybind / `/milk transcript panel` use, so the chat print + the live panel
         // aren't mutually exclusive. Fail-open (a screen-open error never blocks the chat print).
         if (ConfigManager.config.transcriptPanel) {
             val mc = MinecraftClient.getInstance()
@@ -991,7 +991,7 @@ object IustitiaCommand {
     }
 
     /** Shared text-format builder for the report engine — the chat-friendly transcript form.
-     *  Backs both `/ius transcript <name>` (printed to chat) and `/ius report <name> text`
+     *  Backs both `/milk transcript <name>` (printed to chat) and `/milk report <name> text`
      *  (copied to clipboard), so the two commands share one source of truth. Includes the
      *  session stats + moderator note that the markdown/json forms don't surface. */
     private fun reportText(uuid: java.util.UUID, name: String): String {
@@ -999,7 +999,7 @@ object IustitiaCommand {
         val tier = FlagHistory.tierFor(uuid)
         val score = FlagHistory.confidenceScore(uuid)
         val st = SessionStats.stats(uuid)
-        sb.append("=== Iustitia transcript: $name (tier ${tier.label} [$score]) ===\n")
+        sb.append("=== MilkItAC transcript: $name (tier ${tier.label} [$score]) ===\n")
         sb.append("session: swings=${st.swings.get()} hits=${st.hits.get()} velocity=${st.velocity.get()}\n")
         sb.append("alerts=${FlagHistory.sessionAlertCount(uuid)} flags=${FlagHistory.flagCounts(uuid).values.sum()}")
         FlagHistory.topCheck(uuid)?.let { sb.append(" top=$it") }
@@ -1028,14 +1028,14 @@ object IustitiaCommand {
         try {
             if (mc.currentScreen is TranscriptPanelScreen) { mc.setScreen(null); send(ctx, "$tag §7transcript panel closed."); return 1 }
             val target = crosshairTarget()
-            if (target == null) { send(ctx, "$tag §7look at a player to open their transcript panel (or use §f/ius transcript panel <name>§7)."); return 0 }
+            if (target == null) { send(ctx, "$tag §7look at a player to open their transcript panel (or use §f/milk transcript panel <name>§7)."); return 0 }
             mc.execute { try { mc.setScreen(TranscriptPanelScreen(target.first, target.second, null)) } catch (_: Throwable) {} }
             send(ctx, "$tag §7transcript panel: §f${target.second}")
         } catch (_: Throwable) { send(ctx, "$tag §cfailed to toggle transcript panel."); }
         return 1
     }
 
-    /** `/ius transcript panel <name>` — open the side panel for a named player (no crosshair needed). */
+    /** `/milk transcript panel <name>` — open the side panel for a named player (no crosshair needed). */
     private fun transcriptPanelNamed(ctx: CommandContext<FabricClientCommandSource>): Int {
         val name = StringArgumentType.getString(ctx, "name")
         val uuid = resolveUuid(name)
@@ -1130,15 +1130,15 @@ object IustitiaCommand {
         val target: Pair<java.util.UUID, String>? = if (nameArg != null) {
             val u = resolveUuid(nameArg); if (u != null) u to nameArg else null
         } else crosshairTarget()
-        if (target == null) { send(ctx, "$tag §7look at a player (or use §f/ius snapshot <name>§7)."); return 0 }
+        if (target == null) { send(ctx, "$tag §7look at a player (or use §f/milk snapshot <name>§7)."); return 0 }
         Snapshot.capture(target.first, target.second)
         send(ctx, "$tag §7snapshot of §f${target.second}§7 posted + copied to clipboard")
         return 1
     }
 
     // ---- spectate (watch follow-cam command form; same as the `watch` keybind) ----
-    /** `/ius spectate [name]` — start the watch follow-cam on the named player, or the crosshair
-     *  target when no name is given. `/ius spectate off` stops it. Bare `/ius spectate` toggles
+    /** `/milk spectate [name]` — start the watch follow-cam on the named player, or the crosshair
+     *  target when no name is given. `/milk spectate off` stops it. Bare `/milk spectate` toggles
      *  (stops if already watching). Mirrors the `watch` keybind but works by name without needing
      *  the target under the crosshair. The player must be currently loaded/rendered for the camera
      *  to position on them; switching targets mid-watch restores the saved HUD/perspective state
@@ -1158,7 +1158,7 @@ object IustitiaCommand {
             return 1
         }
         if (!ConfigManager.config.watchFollowCam) {
-            send(ctx, "$tag §7watch follow-cam is §cdisabled§7 in config (enable it via §f/ius config§7).")
+            send(ctx, "$tag §7watch follow-cam is §cdisabled§7 in config (enable it via §f/milk config§7).")
             return 0
         }
         // Bare command while already watching → toggle off (press-again semantics).
@@ -1172,7 +1172,7 @@ object IustitiaCommand {
         } else crosshairTarget()
         if (target == null) {
             send(ctx, if (nameArg == null)
-                "$tag §7look at a player (or use §f/ius spectate <name>§7) to watch them."
+                "$tag §7look at a player (or use §f/milk spectate <name>§7) to watch them."
                 else "$tag §cno data for §f$nameArg§7 (must be tracked or have flagged first).")
             return 0
         }
@@ -1187,12 +1187,12 @@ object IustitiaCommand {
         // isn't re-saved as the new baseline (would lose the user's original view on exit).
         if (active) { try { dev.iustitia.render.WatchState.disableNow("switched") } catch (_: Throwable) {} }
         dev.iustitia.render.WatchState.enable(target.first)
-        send(ctx, "$tag §7watching §f${target.second}§7 — orbit follow-cam §aON§7. Mouse to look around; move or get hit to stop (or §f/ius spectate off§7).")
+        send(ctx, "$tag §7watching §f${target.second}§7 — orbit follow-cam §aON§7. Mouse to look around; move or get hit to stop (or §f/milk spectate off§7).")
         return 1
     }
 
     // ---- replay / clip / playclip (Phase 2 instant-replay suite) ----
-    /** `/ius replay off` + `/ius playclip off` — stop any active replay/clip-playback; live rendering
+    /** `/milk replay off` + `/milk playclip off` — stop any active replay/clip-playback; live rendering
      *  snaps back immediately (hide-live mixin re-enables). Idempotent. */
     private fun replayStop(ctx: CommandContext<FabricClientCommandSource>): Int {
         if (companionOwnsReplay(ctx)) return 1
@@ -1208,7 +1208,7 @@ object IustitiaCommand {
     private fun replayPause(ctx: CommandContext<FabricClientCommandSource>): Int {
         if (!replayActive(ctx)) return 1
         val paused = dev.iustitia.replay.ReplayState.togglePause()
-        send(ctx, "$tag §7replay ${if (paused) "§e⏸ paused§7 (§f/ius replay resume§7)" else "§aresumed§7"}.")
+        send(ctx, "$tag §7replay ${if (paused) "§e⏸ paused§7 (§f/milk replay resume§7)" else "§aresumed§7"}.")
         return 1
     }
 
@@ -1237,7 +1237,7 @@ object IustitiaCommand {
     private fun replayStep(ctx: CommandContext<FabricClientCommandSource>, dir: Int): Int {
         if (!replayActive(ctx)) return 1
         if (!dev.iustitia.replay.ReplayState.isPaused()) {
-            send(ctx, "$tag §7step works while §epaused§7 (§f/ius replay pause§7 first)."); return 1
+            send(ctx, "$tag §7step works while §epaused§7 (§f/milk replay pause§7 first)."); return 1
         }
         dev.iustitia.replay.ReplayState.step(dir)
         send(ctx, "$tag §7stepped ${if (dir > 0) "forward" else "back"} one frame.")
@@ -1264,7 +1264,7 @@ object IustitiaCommand {
             "freecam" -> dev.iustitia.replay.ReplayState.CameraMode.FREECAM
             else -> { send(ctx, "$tag §7camera mode must be §ffree§7/§ffollow§7/§fpov§7/§ffreecam§7."); return 0 } }
         // FREECAM needs a chunk world to fly through — it's the free-spectate mode for a chunk-bearing
-        // /ius playclip. Refuse (with a hint) when there's no chunk world so the camera doesn't end up
+        // /milk playclip. Refuse (with a hint) when there's no chunk world so the camera doesn't end up
         // floating in void with nothing to look at.
         if (mode == dev.iustitia.replay.ReplayState.CameraMode.FREECAM &&
             dev.iustitia.replay.ReplayState.chunks == null) {
@@ -1284,12 +1284,12 @@ object IustitiaCommand {
     private fun replayActive(ctx: CommandContext<FabricClientCommandSource>): Boolean {
         if (companionOwnsReplay(ctx)) return false
         val active = try { dev.iustitia.replay.ReplayState.active } catch (_: Throwable) { false }
-        if (!active) send(ctx, "$tag §7no replay running (start one with §f/ius replay <sec>§7 or §f/ius replay <name> <sec>§7).")
+        if (!active) send(ctx, "$tag §7no replay running (start one with §f/milk replay <sec>§7 or §f/milk replay <name> <sec>§7).")
         return active
     }
 
     /** Map a "1"/"0.5"/"0.25" speed arg to a [dev.iustitia.replay.ReplayState] speed. `null` (and "1")
-     *  → FULL speed — the default for both `/ius replay` and `/ius playclip`. Any other value sends a
+     *  → FULL speed — the default for both `/milk replay` and `/milk playclip`. Any other value sends a
      *  usage error and returns null (caller aborts). Shared by [replay] and [playclip]. */
     private fun parseSpeed(ctx: CommandContext<FabricClientCommandSource>, speedArg: String?): Float? = when (speedArg) {
         null, "1", "1.0" -> dev.iustitia.replay.ReplayState.SPEED_FULL
@@ -1298,30 +1298,30 @@ object IustitiaCommand {
         else -> { send(ctx, "$tag §cspeed must be §f1§7, §f0.5 §7or §f0.25§7."); null }
     }
 
-    /** Default window (seconds) when none is given — bare `/ius replay` or `/ius replay <name>`. */
+    /** Default window (seconds) when none is given — bare `/milk replay` or `/milk replay <name>`. */
     private val DEFAULT_REPLAY_SECS: Int = 30
 
     /** The report/transcript timeline promises "last 50" — enforce it on every surface (markdown,
      *  JSON, text) so a heavy session can't bloat the clipboard copy or a chat dump. */
     private const val REPORT_TIMELINE_CAP = 50
 
-    /** `/ius replay [<target>] [<seconds>] [1|0.5|0.25]` — reconstruct an "instant replay" from the rolling
+    /** `/milk replay [<target>] [<seconds>] [1|0.5|0.25]` — reconstruct an "instant replay" from the rolling
      *  capture buffer: ghosts of every tracked player at their buffered positions, played back at FULL
      *  speed by default (add 0.5 or 0.25 for slow-mo), with the live world hidden (rewind feel) by
      *  default.
      *
      *  `<target>` is overloaded so the player arg is OPTIONAL:
-     *   - `/ius replay 60`        → 60s, no focus, 1× (a NUMBER = the duration).
-     *   - `/ius replay thoria`    → default window, focus thoria, 1× (a NAME = the focus player).
-     *   - `/ius replay thoria 60` → 60s, focus thoria, 1×; add a speed for slow-mo.
-     *   - `/ius replay`            → default window, no focus, 1×.
+     *   - `/milk replay 60`        → 60s, no focus, 1× (a NUMBER = the duration).
+     *   - `/milk replay thoria`    → default window, focus thoria, 1× (a NAME = the focus player).
+     *   - `/milk replay thoria 60` → 60s, focus thoria, 1×; add a speed for slow-mo.
+     *   - `/milk replay`            → default window, no focus, 1×.
      *  A name that isn't tracked/online still replays everyone (no focus) with a warning. Stops on
      *  finish / world-change / re-run. Fail-open, client-only. */
     private fun replay(ctx: CommandContext<FabricClientCommandSource>, target: String?, speedArg: String?): Int {
         if (companionOwnsReplay(ctx)) return 1
         val cfg = ConfigManager.config
         if (!cfg.replayCapture) {
-            send(ctx, "$tag §7replay capture is §cdisabled§7 in config (enable via §f/ius config§7) — nothing buffered.")
+            send(ctx, "$tag §7replay capture is §cdisabled§7 in config (enable via §f/milk config§7) — nothing buffered.")
             return 0
         }
         val speed = parseSpeed(ctx, speedArg) ?: return 0
@@ -1336,12 +1336,12 @@ object IustitiaCommand {
             target == null -> { focus = null; secs = DEFAULT_REPLAY_SECS; focusTxt = "everyone" }
             target.toDoubleOrNull() != null -> {
                 focus = null
-                // A trailing <seconds> arg wins over the target number (`/ius replay 60 30` parses
+                // A trailing <seconds> arg wins over the target number (`/milk replay 60 30` parses
                 // "60" as <target> and "30" as <seconds>). A value below 1.0 cannot reach this
                 // node at all (the argument is `doubleArg(1.0, 60.0)`), so "0.5" is only ever
                 // the [speed] word. Without this read the trailing value was silently
                 // discarded and the target number used instead. A fractional <target>
-                // (`/ius replay 1.5`) resolves as seconds here, not as a player name.
+                // (`/milk replay 1.5`) resolves as seconds here, not as a player name.
                 val s = try { DoubleArgumentType.getDouble(ctx, "seconds") } catch (_: Throwable) { -1.0 }
                 secs = (if (s >= 1.0) s else target.toDouble()).toInt()
                     .coerceIn(1, dev.iustitia.replay.ReplayBuffer.MAX_SECONDS)
@@ -1371,11 +1371,11 @@ object IustitiaCommand {
         val started = try { dev.iustitia.replay.ReplayState.start(window, focus, speed, cfg.replayHideLive, relocate = false, legacy = false) } catch (_: Throwable) { false }
         if (!started) { send(ctx, "$tag §7couldn't start the replay (empty window)."); return 0 }
         val hideTxt = if (cfg.replayHideLive) " §7(live players hidden)" else ""
-        send(ctx, "$tag §7replaying last §f${secs}s §7for §f$focusTxt§7 at §f${NumFmt.d(digits = 2, v = speed)}×§7 — ghosts drawn in-world$hideTxt. Holds at the end (or §f/ius replay off§7).")
+        send(ctx, "$tag §7replaying last §f${secs}s §7for §f$focusTxt§7 at §f${NumFmt.d(digits = 2, v = speed)}×§7 — ghosts drawn in-world$hideTxt. Holds at the end (or §f/milk replay off§7).")
         return 1
     }
 
-    /** `/ius replay save <name>` — export the active replay's window to a `.iusclip` without exiting
+    /** `/milk replay save <name>` — export the active replay's window to a `.iusclip` without exiting
      *  the replay. Requires an active replay (playing or held); errors if none. Contents match the
      *  configured playclipMode: MODERN → frames + alerts + the per-segment world/block edits from the
      *  rolling capture (a one-shot sweep is the fallback when nothing was rolled up) ; LEGACY → frames +
@@ -1383,7 +1383,7 @@ object IustitiaCommand {
     private fun replaySave(ctx: CommandContext<FabricClientCommandSource>, nameArg: String): Int {
         if (companionOwnsReplay(ctx)) return 1
         if (!dev.iustitia.replay.ReplayState.active) {
-            send(ctx, "$tag §cno active replay to save§7 — start one with §f/ius replay§7 first.")
+            send(ctx, "$tag §cno active replay to save§7 — start one with §f/milk replay§7 first.")
             return 0
         }
         val cfg = ConfigManager.config
@@ -1393,9 +1393,9 @@ object IustitiaCommand {
         }
         if (base.frames.isEmpty()) { send(ctx, "$tag §7replay window is empty — nothing to save."); return 0 }
         // Capture terrain + chunks at save time only when MODERN and the replay isn't already
-        // carrying them (a /ius replay window has none; a playclip-modern window already has them).
+        // carrying them (a /milk replay window has none; a playclip-modern window already has them).
         val modern = cfg.playclipMode == dev.iustitia.config.IustitiaConfig.PlayclipMode.MODERN
-        // Attach the per-segment world + block deltas from the rolling capture. A live `/ius replay`
+        // Attach the per-segment world + block deltas from the rolling capture. A live `/milk replay`
         // window carries none (it renders over the live world), so it's derived here; a
         // playclip-modern window already owns its segments and is kept as-is.
         val withSegments = if (modern && base.segments.isEmpty()) {
@@ -1419,7 +1419,7 @@ object IustitiaCommand {
         val deltaCount = w2.segments.sumOf { it.blockDeltas.size }
         val deltaTxt = if (deltaCount > 0) "§8, $deltaCount block edits§7" else ""
         send(ctx, "$tag §7replay saved as clip §f$saved§7 §8($frames frames, $alerts alerts$terrainTxt$chunksTxt$segTxt$deltaTxt) §7→ §f${dev.iustitia.replay.ClipStore.dirDisplay()}§7. Replay still active.")
-        send(ctx, " §7play it back with §f/ius playclip $saved§7.")
+        send(ctx, " §7play it back with §f/milk playclip $saved§7.")
         return 1
     }
 
@@ -1448,9 +1448,9 @@ object IustitiaCommand {
         } catch (_: Throwable) { window }
     }
 
-    /** `/ius clip <seconds> [name]` — dump the last N seconds of positions + alerts to a portable
+    /** `/milk clip <seconds> [name]` — dump the last N seconds of positions + alerts to a portable
      *  `.iusclip` file under `%APPDATA%/.iustitia/clips` (explicit export, always writes regardless
-     *  of the persistence toggle). [name] is the clip's FILENAME (verbatim) so `/ius playclip <name>`
+     *  of the persistence toggle). [name] is the clip's FILENAME (verbatim) so `/milk playclip <name>`
      *  round-trips; it also sets the focus player when it matches someone online. Omitted → `scene_<tick>`. Fail-open. */
     private fun clip(ctx: CommandContext<FabricClientCommandSource>, nameArg: String?): Int {
         if (companionOwnsReplay(ctx)) return 1
@@ -1475,13 +1475,13 @@ object IustitiaCommand {
             send(ctx, "$tag §7no buffered data for the last §f${secs}s§7 (not tracked yet).")
             return 0
         }
-        // The clip FILENAME is the user's [name] verbatim — so `/ius playclip <name>` round-trips.
+        // The clip FILENAME is the user's [name] verbatim — so `/milk playclip <name>` round-trips.
         // Only auto-name (scene_<tick>) when [name] is omitted. [name] ALSO doubles as the focus
-        // player: resolveUuid returns null for a non-player string, so `/ius clip 10 myclip` saves
-        // `myclip.iusclip` with no focus, while `/ius clip 10 thoria` saves `thoria.iusclip` AND
+        // player: resolveUuid returns null for a non-player string, so `/milk clip 10 myclip` saves
+        // `myclip.iusclip` with no focus, while `/milk clip 10 thoria` saves `thoria.iusclip` AND
         // highlights thoria if they're online. Filename is sanitized in ClipStore.save.
         val clipName = nameArg ?: "scene_${now}"
-        // Optionally snapshot the loaded terrain around the action so /ius playclip can render the
+        // Optionally snapshot the loaded terrain around the action so /milk playclip can render the
         // map around the user on a different server/dimension. Client only has loaded chunks in
         // render distance, so capture is the action bbox + margin (volume-capped) — fail-open to a
         // terrain-less clip if capture throws or clipTerrain is off. Replay never carries terrain
@@ -1515,33 +1515,33 @@ object IustitiaCommand {
         val deltaCount = windowWithWorld.segments.sumOf { it.blockDeltas.size }
         val deltaTxt = if (deltaCount > 0) "§8, $deltaCount block edits§7" else ""
         send(ctx, "$tag §7clip saved: §f$saved§7 §8($frames frames, $alerts alerts, ${secs}s$terrainTxt$chunksTxt$segTxt$deltaTxt) §7→ §f${dev.iustitia.replay.ClipStore.dirDisplay()}")
-        send(ctx, " §7play it back with §f/ius playclip $saved§7.")
+        send(ctx, " §7play it back with §f/milk playclip $saved§7.")
         return 1
     }
 
-    /** `/ius playclip [name] [1|0.5|0.25]` — load a `.iusclip` and play it back in-world as ghost
-     *  positions at FULL speed by default (like `/ius replay` but from a saved file). No name = list
+    /** `/milk playclip [name] [1|0.5|0.25]` — load a `.iusclip` and play it back in-world as ghost
+     *  positions at FULL speed by default (like `/milk replay` but from a saved file). No name = list
      *  saved clips. Validates the speed arg, then delegates load → start to [ClipPlayback] (shared with
      *  the clip-manager screen's left-click Play) so the two entry points can't drift. Fail-open. */
     private fun playclip(ctx: CommandContext<FabricClientCommandSource>, nameArg: String?, speedArg: String?): Int {
         if (companionOwnsReplay(ctx)) return 1
         if (nameArg == null) {
             val clips = try { dev.iustitia.replay.ClipStore.list() } catch (_: Throwable) { emptyList() }
-            if (clips.isEmpty()) { send(ctx, "$tag §7no saved clips yet. Save one with §f/ius clip <seconds> [name]§7."); return 1 }
+            if (clips.isEmpty()) { send(ctx, "$tag §7no saved clips yet. Save one with §f/milk clip <seconds> [name]§7."); return 1 }
             send(ctx, "$tag §7saved clips §8(${dev.iustitia.replay.ClipStore.dirDisplay()}§8)§7:")
-            clips.forEach { send(ctx, " §f$it §7— §f/ius playclip $it") }
+            clips.forEach { send(ctx, " §f$it §7— §f/milk playclip $it") }
             return 1
         }
         val speed = parseSpeed(ctx, speedArg) ?: return 0
         when (val r = ClipPlayback.start(nameArg, speed)) {
             is ClipPlayback.Result.Started -> {
                 val focusTxt = r.focus?.let { " §7focus §f${FlagHistory.nameOrShort(it)}" } ?: ""
-                send(ctx, "$tag §7playing clip §f$nameArg§7 at §f${NumFmt.d(digits = 2, v = speed)}×§7 — §f${r.frames}§7 frames$focusTxt. Holds at the end (or §f/ius playclip off§7).")
+                send(ctx, "$tag §7playing clip §f$nameArg§7 at §f${NumFmt.d(digits = 2, v = speed)}×§7 — §f${r.frames}§7 frames$focusTxt. Holds at the end (or §f/milk playclip off§7).")
                 return 1
             }
             is ClipPlayback.Result.LoadFailed -> {
                 val why = r.reason?.let { " §8— $it" } ?: ""
-                send(ctx, "$tag §cno clip §f$nameArg§7$why §7(save one with /ius clip; check the name with /ius playclip).")
+                send(ctx, "$tag §cno clip §f$nameArg§7$why §7(save one with /milk clip; check the name with /milk playclip).")
             }
             ClipPlayback.Result.StartFailed -> {
                 send(ctx, "$tag §ccouldn't start the clip (playback failed).")
@@ -1563,7 +1563,7 @@ object IustitiaCommand {
         return 1
     }
 
-    /** `/ius clips` — open the clip manager (list saved `.iusclip` files with Play + Delete). */
+    /** `/milk clips` — open the clip manager (list saved `.iusclip` files with Play + Delete). */
     private fun clipsScreen(ctx: CommandContext<FabricClientCommandSource>): Int {
         if (companionOwnsReplay(ctx)) return 1
         val mc = MinecraftClient.getInstance()
@@ -1571,7 +1571,7 @@ object IustitiaCommand {
         return 1
     }
 
-    /** `/ius deleteclip <name>` (alias `/ius delclip <name>`) — delete a saved `.iusclip` by name.
+    /** `/milk deleteclip <name>` (alias `/milk delclip <name>`) — delete a saved `.iusclip` by name.
      *  Wires the existing [dev.iustitia.replay.ClipStore.delete]; fail-open with chat feedback. */
     private fun deleteClip(ctx: CommandContext<FabricClientCommandSource>): Int {
         if (companionOwnsReplay(ctx)) return 1
@@ -1580,12 +1580,12 @@ object IustitiaCommand {
         if (ok) {
             send(ctx, "$tag §7deleted clip §f$name§7 → §f${dev.iustitia.replay.ClipStore.dirDisplay()}")
         } else {
-            send(ctx, "$tag §cno clip named §f$name§7 (check §f/ius playclip§7 for the list).")
+            send(ctx, "$tag §cno clip named §f$name§7 (check §f/milk playclip§7 for the list).")
         }
         return if (ok) 1 else 0
     }
 
-    /** `/ius preset` / `/ius presets` — list all presets (built-ins + customs). The built-in lines
+    /** `/milk preset` / `/milk presets` — list all presets (built-ins + customs). The built-in lines
      *  carry the profile's own blurb, so a reader learns what a profile costs before applying it and
      *  not after; the same wording the setup wizard's buttons show. */
     private fun presetList(ctx: CommandContext<FabricClientCommandSource>): Int {
@@ -1596,32 +1596,32 @@ object IustitiaCommand {
                 b.diagnostic -> " §8(diagnostic, not offered by the wizard)"
                 else -> ""
             }
-            send(ctx, " §b${b.label}§7$mark §8— §f/ius preset ${b.name}")
+            send(ctx, " §b${b.label}§7$mark §8— §f/milk preset ${b.name}")
             b.blurb.forEach { line -> send(ctx, "   §7$line") }
         }
         val customs = try { dev.iustitia.config.PresetManager.listCustom() } catch (_: Throwable) { emptyList() }
         if (customs.isEmpty()) {
-            send(ctx, " §7no custom presets. Save one with §f/ius createpreset <name>§7.")
+            send(ctx, " §7no custom presets. Save one with §f/milk createpreset <name>§7.")
         } else {
-            customs.forEach { n -> send(ctx, " §d$n §7— §f/ius preset $n §8(custom; /ius deletepreset $n)§7") }
+            customs.forEach { n -> send(ctx, " §d$n §7— §f/milk preset $n §8(custom; /milk deletepreset $n)§7") }
         }
         return 1
     }
 
-    /** `/ius preset <name>` — apply a built-in or custom preset to the live config + save. */
+    /** `/milk preset <name>` — apply a built-in or custom preset to the live config + save. */
     private fun presetApply(ctx: CommandContext<FabricClientCommandSource>): Int {
         val name = StringArgumentType.getString(ctx, "name")
         val ok = try { dev.iustitia.config.PresetManager.apply(name) } catch (_: Throwable) { false }
         if (ok) {
             val kind = if (dev.iustitia.config.PresetManager.isBuiltIn(name)) "built-in" else "custom"
-            send(ctx, "$tag §7applied $kind preset §f$name§7 — config saved. §8(/ius list§7 to see it; /ius status§7 for the panel.)")
+            send(ctx, "$tag §7applied $kind preset §f$name§7 — config saved. §8(/milk list§7 to see it; /milk status§7 for the panel.)")
         } else {
-            send(ctx, "$tag §ccouldn't apply preset §f$name§7 §8(not found, or the preset file is unreadable)§7. Built-ins: §f${dev.iustitia.config.PresetManager.builtInNames.joinToString("/")}§7. List all with §f/ius presets§7.")
+            send(ctx, "$tag §ccouldn't apply preset §f$name§7 §8(not found, or the preset file is unreadable)§7. Built-ins: §f${dev.iustitia.config.PresetManager.builtInNames.joinToString("/")}§7. List all with §f/milk presets§7.")
         }
         return if (ok) 1 else 0
     }
 
-    /** `/ius createpreset <name>` — save the current config as a custom preset. */
+    /** `/milk createpreset <name>` — save the current config as a custom preset. */
     private fun presetCreate(ctx: CommandContext<FabricClientCommandSource>): Int {
         val name = StringArgumentType.getString(ctx, "name")
         if (dev.iustitia.config.PresetManager.isBuiltIn(name)) {
@@ -1629,12 +1629,12 @@ object IustitiaCommand {
             return 0
         }
         val ok = try { dev.iustitia.config.PresetManager.saveCustom(name) } catch (_: Throwable) { false }
-        if (ok) send(ctx, "$tag §7saved custom preset §f$name§7 from the current config. Apply it anytime with §f/ius preset $name§7.")
+        if (ok) send(ctx, "$tag §7saved custom preset §f$name§7 from the current config. Apply it anytime with §f/milk preset $name§7.")
         else send(ctx, "$tag §cfailed to save preset §f$name§7 (disk error / bad name).")
         return if (ok) 1 else 0
     }
 
-    /** `/ius deletepreset <name>` — delete a custom preset (built-ins can't be deleted). */
+    /** `/milk deletepreset <name>` — delete a custom preset (built-ins can't be deleted). */
     private fun presetDelete(ctx: CommandContext<FabricClientCommandSource>): Int {
         val name = StringArgumentType.getString(ctx, "name")
         if (dev.iustitia.config.PresetManager.isBuiltIn(name)) {
@@ -1643,14 +1643,14 @@ object IustitiaCommand {
         }
         val ok = try { dev.iustitia.config.PresetManager.deleteCustom(name) } catch (_: Throwable) { false }
         if (ok) send(ctx, "$tag §7deleted custom preset §f$name§7.")
-        else send(ctx, "$tag §cno custom preset §f$name§7 (list with §f/ius presets§7).")
+        else send(ctx, "$tag §cno custom preset §f$name§7 (list with §f/milk presets§7).")
         return if (ok) 1 else 0
     }
 
     // ---- help ----
     private fun help(ctx: CommandContext<FabricClientCommandSource>, topic: String?): Int {
         if (topic == null) {
-            send(ctx, "$tag §7commands (alias: §f/ius§7):")
+            send(ctx, "$tag §7commands (alias: §f/milk§7):")
             subcommands.forEach { (s, d) -> send(ctx, " §f$s §7— $d") }
             send(ctx, CheckInfo.SEVERITY_LEGEND)
             send(ctx, "§7nametag: §a[+] §7clean §e[!] §7suspect (≥1 red-capable or lone killAura) §c[X] §7caught (≥2 distinct)§7. Fades one tier per ~10 min idle. Hover an alert for details, click it for history.")
@@ -1675,12 +1675,12 @@ object IustitiaCommand {
         // feature? (transcript/evidence/note/session/snapshot/wizard/keybinds/compact/hist/report/alerts/watch)
         val feature = FeatureInfo.describe(topic)
         if (feature != null) { send(ctx, "$tag §f$topic §7— $feature"); return 1 }
-        send(ctx, "$tag §cunknown topic: $topic §7(try a subcommand, check id, or feature; /ius help lists them).")
+        send(ctx, "$tag §cunknown topic: $topic §7(try a subcommand, check id, or feature; /milk help lists them).")
         return 0
     }
 
     // ---- alerts (mute) ----
-    /** Bare `/ius alerts` (no args) — toggles ALL chat alerts on/off (a global chat mute).
+    /** Bare `/milk alerts` (no args) — toggles ALL chat alerts on/off (a global chat mute).
      *  Detection, tiering and the nametag prefix keep running; only the chat lines are silenced.
      *  Reports the new state and the per-check / per-player mutes for reference. */
     private fun alertsList(ctx: CommandContext<FabricClientCommandSource>): Int {
@@ -1695,7 +1695,7 @@ object IustitiaCommand {
             catch (_: Throwable) { uuid.take(8) }
         }
         send(ctx, "$tag §7muted players: §f${playerNames.ifEmpty { "(none)" }}")
-        send(ctx, "§7detection/tier keep running — only chat is silenced. Per-check: /ius alerts <check>")
+        send(ctx, "§7detection/tier keep running — only chat is silenced. Per-check: /milk alerts <check>")
         return 1
     }
 
@@ -1715,7 +1715,7 @@ object IustitiaCommand {
             // the toggle (null) share this one semantics, and the display line below reads the
             // same way for checks and players. (The prior code inverted this: typing "on"
             // *muted* the check, and the check- and player-paths even disagreed on what nowOn
-            // meant — so `/ius alerts reach on` silently muted reach.)
+            // meant — so `/milk alerts reach on` silently muted reach.)
             val nowOn = when (wantOn) {
                 true  -> { cfg.mutedChecks.remove(checkMatch); true }
                 false -> { if (checkMatch !in cfg.mutedChecks) cfg.mutedChecks.add(checkMatch); false }
@@ -1746,7 +1746,7 @@ object IustitiaCommand {
     /**
      * Suggest each value only if it starts with the user's current partial input
      * ([SuggestionsBuilder.remaining]). Brigadier's `suggest(String)` in this version does NOT
-     * auto-filter by the typed prefix, so without this `/ius report M` would show every known name
+     * auto-filter by the typed prefix, so without this `/milk report M` would show every known name
      * instead of just the M-names, and typing `MA` wouldn't narrow it. Case-insensitive.
      */
     private fun suggestFiltered(b: SuggestionsBuilder, values: Collection<String>) {

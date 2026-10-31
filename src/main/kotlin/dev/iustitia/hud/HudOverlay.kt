@@ -20,7 +20,7 @@ import java.util.UUID
  * [FlagHistory] / [EntityTrackerManager] state and draws text; it touches no check, no packet, no
  * local-player state. Whole render body is fail-open (a HUD error must never crash the frame).
  *
- * Two overlays, each behind its own config toggle (default on, disable in `/ius config`):
+ * Two overlays, each behind its own config toggle (default on, disable in `/milk config`):
  *
  * 1. **Server-lag indicator** (`cfg.lagHudIcon`): a small top-left `§c⚠ §7lag` marker drawn while a
  *    server-wide lag spike / lag burst is recent (within [LAG_RECENT_TICKS] of
@@ -130,7 +130,7 @@ object HudOverlay {
             FlagHistory.Tier.YELLOW -> "e" to "!"
             FlagHistory.Tier.RED -> "c" to "X"
         }
-        val head = Text.literal("§8[§diustitia§8] §f$name §${color}[$glyph $score]")
+        val head = Text.literal("§8[§dMilkItAC§8] §f$name §${color}[$glyph $score]")
 
         val explanation = try { FlagHistory.confidenceExplanation(uuid) } catch (_: Throwable) { "" }
         val explLine = if (explanation.isEmpty()) null else Text.literal("§7$explanation")
@@ -191,7 +191,7 @@ object HudOverlay {
             FlagHistory.Tier.RED -> "c" to "X"
         }
         val lines = ArrayList<Text>(5)
-        lines.add(Text.literal("§8[§diustitia§8] §f$name §${color}[$glyph $score]"))
+        lines.add(Text.literal("§8[§dMilkItAC§8] §f$name §${color}[$glyph $score]"))
         val explanation = try { FlagHistory.confidenceExplanation(uuid) } catch (_: Throwable) { "" }
         if (explanation.isNotEmpty()) lines.add(Text.literal("§7$explanation"))
         try {

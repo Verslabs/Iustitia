@@ -14,7 +14,7 @@ import net.minecraft.text.Text
  * saves, and closes back to the game. Fail-open throughout.
  *
  * Driving the buttons from [PresetManager.builtIns] is the point of the current shape: the labels,
- * the blurbs and the profiles cannot drift from what `/ius preset <name>` applies, because there is
+ * the blurbs and the profiles cannot drift from what `/milk preset <name>` applies, because there is
  * one list. Every button applies a WHOLE preset, so all of them set detection scope and calibration
  * and not just display fields. The old hand-rolled Moderation and Ranked Player field lists were
  * display/alert profiles that left detection scope wherever it was; they are gone.
@@ -26,7 +26,7 @@ import net.minecraft.text.Text
  * something to switch on without being asked.
  *
  * `debug` has no button. It turns everything on and drops both suppression timers, which is not
- * something to hand a first-launch user; it stays reachable by command (`/ius preset debug`). Blurb
+ * something to hand a first-launch user; it stays reachable by command (`/milk preset debug`). Blurb
  * lines are wrapped to the button width and truncated on a short window ([blurbBudget]), so four
  * buttons plus the skip row fit at GUI scale 3 and degrade to label-only at scale 4 instead of
  * running off the bottom of the screen.
@@ -75,7 +75,7 @@ class SetupWizardScreen(private val parent: Screen?) : Screen(TITLE) {
 
     /** How many blurb lines a button has room for on this window. GUI scale 4 on a 1080p display
      *  leaves about 270 GUI pixels of height, which fits four labels and nothing else; the labels
-     *  still name every profile, and the header points at `/ius config` for the rest. */
+     *  still name every profile, and the header points at `/milk config` for the rest. */
     private fun blurbBudget(): Int = when {
         this.height >= 330 -> 2
         this.height >= 280 -> 1
@@ -162,7 +162,7 @@ class SetupWizardScreen(private val parent: Screen?) : Screen(TITLE) {
     }
 
     companion object {
-        private val TITLE = Text.literal("Iustitia setup")
+        private val TITLE = Text.literal("MilkItAC — setup")
         private const val WHITE = -1
         private val BG = 0xCC101010.toInt()
         private const val LINE_H = 10
@@ -178,10 +178,11 @@ class SetupWizardScreen(private val parent: Screen?) : Screen(TITLE) {
         /** Hand-split rather than wrapped: these carry color codes, and a wrap that broke between a
          *  `§` and its letter would print the letter as text. */
         private val HEADER = listOf(
-            "§8[§diustitia§8] §f§lFirst-launch setup",
+            "§8[§dMilkItAC§8] §f§lFirst-launch setup",
+            "§7Milk the truth out of their packets — nothing leaves your client.",
             "§7Pick the profile that matches how you play.",
             "§fStandard §7is the recommended starting point.",
-            "§7You can change any of it later in §f/ius config§7.",
+            "§7You can change any of it later in §f/milk config§7.",
         )
 
         private const val SKIP_LABEL = "§7Skip / keep defaults §8(no preset applied)"
